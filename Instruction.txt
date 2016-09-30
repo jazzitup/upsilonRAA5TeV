@@ -1,0 +1,80 @@
+Instructionfor this analysis machinery 
+Created by Yongsun Kim kingmking@gmail.com on Aug 30th 2016
+
+# Step1 - Step3 are done for the default binning and template setting.   You may skip these and proceed to step4 ( data fit directry) 
+
+Step1 : Check out the source files from git space 
+git clone jazzitup@nuclear.korea.ac.kr:/home/jazzitup/ysGit/upsilonRAA
+
+Step2 : setup the soft link to the input skim file : 
+#cp /home/jazzitup/analysis/upsilonRAA/skimmedFiles/*.root ./skimmedFiles/ 
+ln -s /home/jazzitup/analysis/upsilonRAA/skimmedFiles/*.root ./skimmedFiles/
+
+Step3 : 
+Make the Upsilon 1S templates from PYTHIA MC.   2S and 3S templates will be made by scaling 1S template by their mass ratio in PDG value
+
+./runFit_mc.sh
+
+This will produce a subdirectory ./fitResults/mcFit_MuPt4_2016_08_30
+Go to there and read the CrystalBall Parameters from the log file : 
+
+Step3-1
+For pp : 
+ more  *'(8'*20160830.out | grep binM
+
+You will see bunch of parameter sets as following : 
+..
+..
+if ( binMatched( 4, 8, 30, 1.2, 2.4) )   { setSignalParMC( 1.4, 1.95769, 0.1135, 9.44726, 0.726272, 1.66378 );}
+..
+..
+
+And import the output texts into PsetCollection.h, in the block indecated as below : 
+
+*********************************************
+void PSetUpsAndBkg::SetMCSgl() {
+...
+    if ( collId == kPPDATA) {
+
+<< HERE >> 
+
+}
+*********************************************
+
+
+Step3-2 
+For PbPb : 
+This step is identical to Step3-1 with a few modification :
+
+Use
+       more  *'(11'*20160830.out | grep binM
+instead of  
+       more  *'(8'*20160830.out | grep binM
+ 
+And 
+Add the parameters in the block of     
+    	if ( collId == kAADATA) {
+instead of 
+        if ( collId == kPPDATA) {
+
+
+Step4 : 
+Finally, fit the data! 
+*****
+./runFit_data.sh
+
+The results will be accumulated in this directory : 
+ ./fitResults/dataFit_fixParam1MuPt4_2016_08_30
+
+
+Step5 : 
+Efficiency calculation 
+cd ./efficiency
+./runEff.sh
+
+
+Step6 :
+Compute the RAA!!! 
+root -l  'getSpectra.C+(1)' # for 1S
+root -l  'getSpectra.C+(2)' # for 2S
+root -l  'getSpectra.C+(3)' # for 3S
