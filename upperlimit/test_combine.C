@@ -34,7 +34,7 @@ RooWorkspace* test_combine(const char* name_pbpb="../fitResults/fitresults_upsil
 	QQsign.defineType("PlusMinus", 0);
 	QQsign.defineType("PlusPlus", 1);
 	QQsign.defineType("MinusMinus", 2);
-	RooRealVar * mass = ws->var("invariantMass");
+	RooRealVar * mass = ws->var("mass");
         //currently not in my Workspace, to be revisited
 	//RooRealVar vProb("vProb","vProb",0.05,1);
 	//   RooRealVar upsEta("upsEta","#eta(#Upsilon)",0.,"");
@@ -42,7 +42,7 @@ RooWorkspace* test_combine(const char* name_pbpb="../fitResults/fitresults_upsil
 	
          
 	if (!mass) {
-		mass = new RooRealVar("invariantMass", "#mu#mu mass", mmin, mmax, 
+		mass = new RooRealVar("mass", "#mu#mu mass", mmin, mmax, 
 				"GeV/c^{2}");
 	}
 
@@ -55,7 +55,7 @@ RooWorkspace* test_combine(const char* name_pbpb="../fitResults/fitresults_upsil
         //renaming pp variable and pdfs ... with _pp
 	wcombo->import(*pdf_pp, RooFit::RenameAllNodes("pp"),
 			RooFit::RenameAllVariablesExcept("pp",
-				"invariantMass"
+				"mass"
 				//"prior,"
 				//"mean,"
 				//"turnOn,"
