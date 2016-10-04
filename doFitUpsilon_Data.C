@@ -39,18 +39,21 @@ void doFitUpsilon_Data(
   float massLowForPlot = massLow;    
   float massHighForPlot = massHigh;
 
-  int   nMassBin  = (massHigh-massLow)*20;
+  int   nMassBin  = (massHigh-massLow)*10;
+  TFile* f1;
+  if      ( collId == kPPDATA) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kPPMCUps1S) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
+  else if ( collId == kAAMCUps1S) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
+ 
+  if(collId == kAADATAPeri) collId =2; 
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, muPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString kineCut = Form("pt>%.2f && pt<%.2f && abs(y)>%.2f && abs(y)<%.2f",ptLow, ptHigh, yLow, yHigh);
   if (muPtCut>0) kineCut = kineCut + Form(" && (pt1>%.2f) && (pt2>%.2f)", (float)muPtCut, (float)muPtCut );
   if ( (collId == kAADATA) || (collId == kPADATA) || (collId == kAAMC) || (collId == kPAMC) || (collId == kAADATACentL3) || (collId==kAADATAPeri) )
     kineCut = kineCut + Form(" && (cBin>=%d && cBin<%d) && ( abs(abs(dphiEp2/3.141592)-0.5)>%.3f && abs(abs(dphiEp2/3.141592)-0.5)<%.3f )",cLow, cHigh, dphiEp2Low, dphiEp2High);
   
-  TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kPPMCUps1S) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
-  else if ( collId == kAAMCUps1S) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
   
   TTree* tree = (TTree*) f1->Get("mm");
   RooDataSet *dataset = (RooDataSet*)f1->Get("dataset");
@@ -157,7 +160,7 @@ void doFitUpsilon_Data(
   RooAddPdf*  cb2s = new RooAddPdf("cb2s","Signal 2S",RooArgList(*cb2s_1,*cb2s_2), RooArgList(*f1s) );
   RooAddPdf*  cb3s = new RooAddPdf("cb3s","Signal 3S",RooArgList(*cb3s_1,*cb3s_2), RooArgList(*f1s) );
 
-  RooRealVar *nSig1s= new RooRealVar("nSig1s"," 1S signals",1000,0,100000);
+  RooRealVar *nSig1s= new RooRealVar("nSig1s"," 1S signals",4000,0,100000);
   RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",1000,0,100000);
   RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",100, 0,10000);
   
@@ -176,11 +179,15 @@ void doFitUpsilon_Data(
   if(init_mu_min <0) init_mu_min = 0;
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
-  
+ 
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
+  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
+  /* 
   RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, init_lambda_min, init_lambda_max);
-  
+  */
   RooGenericPdf *bkg;
   RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
   RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));

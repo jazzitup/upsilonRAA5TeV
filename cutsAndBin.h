@@ -30,8 +30,9 @@ const int nPtBins3s  = 2;   double ptBin3s[nPtBins3s+1] = {0,8,30};
 const int nYBins  = 2;   double yBin[nYBins+1] ={0, 1.2, 2.4};
 
 
-const int nCentBins1s  = 8;   double centBin1s[nCentBins1s+1] = {0,10,20,40,60,80,100,140,200};
-const int nCentBins2s  = 4;   double centBin2s[nCentBins2s+1] = {0,20,60,100,200};
+const int nCentBins1s  = 9;   double centBin1s[nCentBins1s+1] = {0,10,20,40,60,80,100,120,140,200};
+const int nCentBins2s  = 9;   double centBin2s[nCentBins2s+1] = {0,10,20,40,60,80,100,120,140,200};
+//const int nCentBins2s  = 4;   double centBin2s[nCentBins2s+1] = {0,20,60,100,200};
 const int nCentBins3s  = 4;   double centBin3s[nCentBins3s+1] = {0,20,60,100,200};
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
@@ -63,7 +64,8 @@ TString getCollID( int collid ) {
   else if ( collid == kPPMC ) return "PP_MC";
   else if ( collid == kPAMC ) return "PA_MC";
   else if ( collid == kAAMC ) return "AA_MC";
-  else if ( collid == kAADATAPeri ) return "AA_DATA_PeriL1";
+//  else if ( collid == kAADATAPeri ) return "AA_DATA_PeriL1";
+  else if ( collid == kAADATAPeri ) return "AA_DATA";
   else if ( collid == kAADATACentL3 ) return "AA_DATA_CentL3";
   else if ( collid == kPPMCUps1S ) return "PP_MC_Ups1S";
   else if ( collid == kPPMCUps2S ) return "PP_MC_Ups2S";
