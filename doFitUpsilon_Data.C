@@ -183,7 +183,13 @@ void doFitUpsilon_Data(
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
-  /* 
+  /* 2-4pT PbPb
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
+  RooRealVar m_lambda("#lambda","m_lambda",  5, 0,23);
+  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
+  */ 
+  /*
   RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, init_lambda_min, init_lambda_max);

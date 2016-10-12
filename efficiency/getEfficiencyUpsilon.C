@@ -40,7 +40,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     setupMultiTreeTool(recoPP, kPPMCUps1S, false);  
   }
   else if ( state == 2 ) { 
-    nPtBins = nPtBins2s;    ptBin = ptBin2s;
+    nPtBins = nPtBins1s;    ptBin = ptBin1s;
     nCentBins = nCentBins2s;  centBin = centBin2s;
     setupMultiTreeTool(genAA, kAAMCUps2S, true);  // isGen = 1
     setupMultiTreeTool(recoAA, kAAMCUps2S, false);  
@@ -66,10 +66,29 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   TH1D* hcentRecoAA[nYBins+1];
   TH1D* hcentGenPP[nYBins+1];
   TH1D* hcentRecoPP[nYBins+1];
-  bool doCent = true; 
 
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    TCut yCut = Form("(y>=%f) && ( y<%f)", float(yBin[iy-1]), float(yBin[iy]));
+  TH1D* hcentintGenAA;
+  TH1D* hcentintRecoAA;
+  TH1D* hcentintGenPP;
+  TH1D* hcentintRecoPP;
+
+  hcentintGenAA = new TH1D("hcentintGenAA","",1,0,2);
+  hcentintRecoAA = (TH1D*) hcentintGenAA->Clone("hcentintRecoAA");
+  hcentintGenPP = (TH1D*) hcentintGenAA->Clone("hcentintGenPP");
+  hcentintRecoPP = (TH1D*) hcentintGenAA->Clone("hcentintRecoPP");
+
+  genAA->Draw2(hcentintGenAA,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
+  recoAA->Draw2(hcentintRecoAA,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
+  genPP->Draw2(hcentintGenPP,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
+  recoPP->Draw2(hcentintRecoPP,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
+
+  bool doCent = true; 
+  TCut yCut;
+  for ( int iy=0 ; iy<=nYBins ; iy++) 
+  {
+    if(iy==0) yCut = "(y>=0.0) && ( y<2.4)";
+    else yCut = Form("(y>=%f) && ( y<%f)", float(yBin[iy-1]), float(yBin[iy]));
+    
 
     hptGenAA[iy] = new TH1D( Form("hptGenAA_iy%d",iy),"; p_{T} (GeV/c) ; ", nPtBins, ptBin);
     hptRecoAA[iy] = (TH1D*)hptGenAA[iy]->Clone(Form("hptRecoAA_iy%d",iy));
@@ -81,23 +100,28 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     genPP->Draw2( hptGenPP[iy], "pt", accCut && yCut ,"weight") ;
     recoPP->Draw2( hptRecoPP[iy], "pt", accCut && yCut,"weight") ;
 
-    if ( doCent ) { 
+    if ( doCent ) 
+    { 
+      yCut = "(y>=0) && (y<2.4)";
+      TCut ptCut = "(pt<=30) && (pt>=0)";
       hcentGenAA[iy] = new TH1D( Form("hcentGenAA_iy%d",iy),"; centrality bin ; ", nCentBins, centBin);
       hcentRecoAA[iy] = (TH1D*)hcentGenAA[iy]->Clone(Form("hcentRecoAA_iy%d",iy));
-      genAA->Draw2( hcentGenAA[iy], "cBin", accCut && yCut, "weight" ) ;
-      recoAA->Draw2( hcentRecoAA[iy], "cBin", accCut && yCut,"weight" ) ;
+      hcentGenPP[iy] = (TH1D*)hcentGenAA[iy]->Clone(Form("hcentGenPP_iy%d",iy));
+      hcentRecoPP[iy] = (TH1D*)hcentGenAA[iy]->Clone(Form("hcentRecoPP_iy%d",iy));
+ 
+      genAA->Draw2( hcentGenAA[iy], "cBin", accCut && yCut && ptCut, "weight" ) ;
+      recoAA->Draw2( hcentRecoAA[iy], "cBin", accCut && yCut && ptCut,"weight" ) ;
       
-      hcentGenPP[iy] = new TH1D( Form("hcentGenPP_iy%d",iy),"; centrality bin ; ", 1, 0, 200);
-      hcentRecoPP[iy] = (TH1D*)hcentGenPP[iy]->Clone(Form("hcentRecoPP_iy%d",iy));
-      genPP->Draw2( hcentGenPP[iy], "cBin+100", accCut && yCut, "weight" ) ;
-      recoPP->Draw2( hcentRecoPP[iy], "cBin+100", accCut && yCut,"weight" ) ;
+      genPP->Draw2( hcentGenPP[iy], "cBin", accCut && yCut && ptCut, "weight" ) ;
+      recoPP->Draw2( hcentRecoPP[iy], "cBin", accCut && yCut && ptCut,"weight" ) ;
     }
+  
   }
 
   TCanvas* c1 =  new TCanvas("c1","",600,600);
   c1->Divide(2,2);
   
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
+  for ( int iy=0 ; iy<=nYBins ; iy++) {
     c1->cd(iy);
     handsomeTH1(hptGenAA[iy],1);
     handsomeTH1(hptRecoAA[iy],2);
@@ -105,7 +129,8 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     hptGenAA[iy]->SetYTitle("dN/dp_{T}");
     hptGenAA[iy]->Draw("hist");
     hptRecoAA[iy]->Draw("same");
-    drawText(Form("PbPb, %.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])), 0.3, 0.8, 1, 15);
+    if(iy==0) drawText("PbPb, 0.0 < y < 2.4", 0.3, 0.8, 1, 15);
+    else drawText(Form("PbPb, %.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])), 0.3, 0.8, 1, 15);
     
     c1->cd(iy+2);
     handsomeTH1(hptGenPP[iy],1);
@@ -114,7 +139,8 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     hptGenPP[iy]->SetYTitle("dN/dp_{T}");
     hptGenPP[iy]->Draw("hist");
     hptRecoPP[iy]->Draw("same");
-    drawText(Form("pp, %.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])), 0.3, 0.8, 1, 15);
+    if(iy==0) drawText("pp, 0.0 < y < 2.4", 0.3, 0.8, 1, 15);
+    else drawText(Form("pp, %.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])), 0.3, 0.8, 1, 15);
     
   }
 
@@ -122,7 +148,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   TH1D* hptEffAA[nYBins];
   TH1D* hptEffPP[nYBins];
   c2->Divide(2,1);
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
+  for ( int iy=0 ; iy<=nYBins ; iy++) {
     c2->cd(iy);
     hptEffAA[iy] = (TH1D*)hptRecoAA[iy]->Clone(Form("hptEffAA_iy%d",iy));
     hptEffAA[iy]->Divide(hptGenAA[iy]);
@@ -136,7 +162,8 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     hptEffPP[iy]->SetMarkerStyle(24);
     hptEffPP[iy]->Draw("same");
     TLegend* leg2 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
-    easyLeg(leg2,Form("%.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])) );
+    if(iy==0) easyLeg(leg2,"0.0 < y < 2.4");
+    else  easyLeg(leg2,Form("%.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])) );
     leg2->AddEntry(hptEffAA[iy], "PbPb");
     leg2->AddEntry(hptEffPP[iy], "pp");
     leg2->Draw();
@@ -149,10 +176,18 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   TCanvas* c3;
   TH1D* hcentEffAA[nYBins+1];
   TH1D* hcentEffPP[nYBins+1];
+  TH1D* hcentEffAA_int;
+  TH1D* hcentEffPP_int;
+
+  hcentEffAA_int = (TH1D*) hcentintRecoAA->Clone("hcentEffAA_int");
+  hcentEffAA_int -> Divide(hcentintGenAA);
+  hcentEffPP_int = (TH1D*) hcentintRecoPP->Clone("hcentEffPP_int");
+  hcentEffPP_int -> Divide(hcentintGenPP);
+
   if ( doCent ) { 
     c3 =  new TCanvas("c3","",800,400);
     c3->Divide(2,1);
-    for ( int iy=1 ; iy<=nYBins ; iy++) {
+    for ( int iy=0 ; iy<=nYBins ; iy++) {
       c3->cd(iy);
       hcentEffAA[iy] = (TH1D*)hcentRecoAA[iy]->Clone(Form("hcentEffAA_iy%d",iy));
       hcentEffAA[iy]->Divide(hcentGenAA[iy]);
@@ -180,8 +215,8 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   
   
   
-  TFile *fout = new TFile(Form("efficiency_ups%ds.root",state),"recreate");
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
+  TFile *fout = new TFile(Form("efficiency_ups%ds_MCDATA.root",state),"recreate");
+  for ( int iy=0 ; iy<=nYBins ; iy++) {
     hptGenPP[iy]->Write();
     hptRecoPP[iy]->Write();
     hptEffPP[iy]->Write();
@@ -192,6 +227,8 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     hcentEffPP[iy]->Write();
     hcentEffAA[iy]->Write();
   }
+  hcentEffAA_int->Write();
+  hcentEffPP_int->Write();
   fout->Close();
 
 
