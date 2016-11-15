@@ -9,7 +9,7 @@
 #                        )
 
 
-muPtCut='4'
+muPtCut='4.0'
 fixParam='1'
 
 
@@ -33,15 +33,16 @@ EOF
 
 echo entering to the loop...
 
-for i in ${kAADATA}  # 0=kPPDATA, 2=kAADATA 6=kAADATAPeri 7=kAADATACentL3 8=kPPMCUps1S 9=kPPMCUps2S
+for i in ${kPPDATA} ${kAADATA}  # 0=kPPDATA, 2=kAADATA 6=kAADATAPeri 7=kAADATACentL3 8=kPPMCUps1S 9=kPPMCUps2S
 do
     #for pt in '0,2' '2,4' '4,6' '6,8' '8,12' '12,16' '16,30' 
-    for pt in '0,0.1'
+#    for pt in '0,1.0' '0,1.2' '0,1.4' '0,1.6' 0,1.8' '0,2' '0,2.4' '0,2.8' 0,3' '0,3.5' '0,4'
+    for pt in '15,30'
     do
 	    for rap in '0,2.4'
         do
             echo  $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
-            ./condor_root.sh $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut',0)'
+            ./condor_root.sh $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
             #./condor_root.sh $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
         done
     done

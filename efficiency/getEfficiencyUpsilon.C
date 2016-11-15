@@ -30,9 +30,12 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   double* ptBin;
   int nCentBins=0;
   double* centBin;
+  int nYBins=0;
+  double *yBin;
 
   if ( state == 1 ) { 
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nYBins = nYBins1S;  yBin = yBin1S;
     nCentBins = nCentBins1s;  centBin = centBin1s;
     setupMultiTreeTool(genAA, kAAMCUps1S, true);  // isGen = 1
     setupMultiTreeTool(recoAA, kAAMCUps1S, false);  
@@ -40,8 +43,9 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     setupMultiTreeTool(recoPP, kPPMCUps1S, false);  
   }
   else if ( state == 2 ) { 
-    nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nPtBins = nPtBins2s;    ptBin = ptBin2s;
     nCentBins = nCentBins2s;  centBin = centBin2s;
+    nYBins = nYBins2S;  yBin = yBin2S;
     setupMultiTreeTool(genAA, kAAMCUps2S, true);  // isGen = 1
     setupMultiTreeTool(recoAA, kAAMCUps2S, false);  
     setupMultiTreeTool(genPP, kPPMCUps2S, true);  // isGen = 1
@@ -50,6 +54,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
     nCentBins = nCentBins3s;  centBin = centBin3s;
+    nYBins = nYBins3S;  yBin = yBin3S;
     setupMultiTreeTool(genAA, kAAMCUps3S, true);  // isGen = 1
     setupMultiTreeTool(recoAA, kAAMCUps3S, false);  
     setupMultiTreeTool(genPP, kPPMCUps3S, true);  // isGen = 1
@@ -57,176 +62,295 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   }
 
 
-  TH1D* hptGenAA[nYBins+1];
-  TH1D* hptRecoAA[nYBins+1];
-  TH1D* hptGenPP[nYBins+1];
-  TH1D* hptRecoPP[nYBins+1];
+  TH1D* hptGenAA;
+  TH1D* hptRecoAA;
+  TH1D* hptGenPP;
+  TH1D* hptRecoPP;
   
-  TH1D* hcentGenAA[nYBins+1];
-  TH1D* hcentRecoAA[nYBins+1];
-  TH1D* hcentGenPP[nYBins+1];
-  TH1D* hcentRecoPP[nYBins+1];
+  TH1D* hrapGenAA;
+  TH1D* hrapRecoAA;
+  TH1D* hrapGenPP;
+  TH1D* hrapRecoPP;
+  
+  TH1D* hcentGenAA;
+  TH1D* hcentRecoAA;
+  TH1D* hcentGenPP;
+  TH1D* hcentRecoPP;
 
   TH1D* hcentintGenAA;
   TH1D* hcentintRecoAA;
   TH1D* hcentintGenPP;
   TH1D* hcentintRecoPP;
+  
+  bool doCent = true; 
+  TCut PtCut = " pt >= 0 && pt < 30 ";
+  TCut CbinCut = " cBin >= 0 && cBin <= 200 ";
+  TCut yCut = " abs(y) >=0 && abs(y) < 2.4 ";
 
-  hcentintGenAA = new TH1D("hcentintGenAA","",1,0,2);
+  
+  //*~*~*~* for integrated bins *~*~*~*
+
+  hcentintGenAA = new TH1D("hcentintGenAA","",1,0,200);
   hcentintRecoAA = (TH1D*) hcentintGenAA->Clone("hcentintRecoAA");
   hcentintGenPP = (TH1D*) hcentintGenAA->Clone("hcentintGenPP");
   hcentintRecoPP = (TH1D*) hcentintGenAA->Clone("hcentintRecoPP");
 
-  genAA->Draw2(hcentintGenAA,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
-  recoAA->Draw2(hcentintRecoAA,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
-  genPP->Draw2(hcentintGenPP,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
-  recoPP->Draw2(hcentintRecoPP,"cBin", "pt1>4 && pt2>4 && pt>=0 && pt<30 && y<2.4 && y>0","weight");
+  genAA->Draw2(hcentintGenAA,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
+  recoAA->Draw2(hcentintRecoAA,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
+  genPP->Draw2(hcentintGenPP,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
+  recoPP->Draw2(hcentintRecoPP,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
 
-  bool doCent = true; 
-  TCut yCut;
-  for ( int iy=0 ; iy<=nYBins ; iy++) 
-  {
-    if(iy==0) yCut = "(y>=0.0) && ( y<2.4)";
-    else yCut = Form("(y>=%f) && ( y<%f)", float(yBin[iy-1]), float(yBin[iy]));
+  
+  //*~*~*~* for pt bins *~*~*~*
+  
+  hptGenAA = new TH1D("hptGenAA","; p_{T} (GeV/c) ; ", nPtBins, ptBin);
+  hptRecoAA = (TH1D*)hptGenAA->Clone("hptRecoAA");
+  hptGenPP = (TH1D*)hptGenAA->Clone("hptGenPP");
+  hptRecoPP = (TH1D*)hptGenAA->Clone("hptRecoPP");
+
+  genAA->Draw2( hptGenAA, "pt", accCut && yCut && CbinCut, "weight" ) ;
+  recoAA->Draw2( hptRecoAA, "pt", accCut && yCut && CbinCut,"weight" ) ;
+  genPP->Draw2( hptGenPP, "pt", accCut && yCut && CbinCut,"weight") ;
+  recoPP->Draw2( hptRecoPP, "pt", accCut && yCut && CbinCut,"weight") ;
+
+
+  //*~*~*~* for rapidity bins *~*~*~* 
+
+  hrapGenAA = new TH1D("hrapGenAA","; |y| ; ", nYBins, yBin);
+  hrapRecoAA = (TH1D*)hrapGenAA->Clone("hrapRecoAA");
+  hrapGenPP = (TH1D*)hrapGenAA->Clone("hrapGenPP");
+  hrapRecoPP = (TH1D*)hrapGenAA->Clone("hrapRecoPP");
+
+  genAA->Draw2( hrapGenAA, "y",accCut && PtCut && CbinCut, "weight");
+  recoAA->Draw2( hrapRecoAA, "y",accCut && PtCut && CbinCut, "weight");
+  genPP->Draw2( hrapGenPP, "y",accCut && PtCut && CbinCut, "weight");
+  recoPP->Draw2( hrapRecoPP, "y",accCut && PtCut && CbinCut, "weight");
+
+
+  //*~*~*~* for centrality bins *~*~*~* 
+  if ( doCent ) 
+  { 
+    hcentGenAA = new TH1D("hcentGenAA","; centrality bin ; ", nCentBins, centBin);
+    hcentRecoAA = (TH1D*)hcentGenAA->Clone("hcentRecoAA");
+    hcentGenPP = (TH1D*)hcentintGenAA->Clone("hcentGenPP");
+    hcentRecoPP = (TH1D*)hcentintGenAA->Clone("hcentRecoPP");
+
+    genAA->Draw2( hcentGenAA, "cBin", accCut && yCut && PtCut, "weight" ) ;
+    recoAA->Draw2( hcentRecoAA, "cBin", accCut && yCut && PtCut,"weight" ) ;
+
+    genPP->Draw2( hcentGenPP, "cBin", accCut && yCut && PtCut, "weight" ) ;
+    recoPP->Draw2( hcentRecoPP, "cBin", accCut && yCut && PtCut,"weight" ) ;
+  }
+
+
+  // *************************
+  // ****** Gen vs Reco ******
+  // *************************
+  
+  // Pt Bins
+  TCanvas* c_pt =  new TCanvas("c_pt","",600,600);
+  c_pt->Divide(2,1);
+  
+  c_pt->cd(1);
+  handsomeTH1(hptGenAA,1);
+  handsomeTH1(hptRecoAA,2);
+  cleverRange(hptGenAA, 1.3, 0);
+  hptGenAA->SetYTitle("dN/dp_{T}");
+  hptGenAA->Draw("hist");
+  hptRecoAA->Draw("same");
+  drawText("PbPb", 0.3, 0.8, 1, 15);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+    
+  c_pt->cd(2);
+  handsomeTH1(hptGenPP,1);
+  handsomeTH1(hptRecoPP,2);
+  cleverRange(hptGenPP, 1.3, 0);
+  hptGenPP->SetYTitle("dN/dp_{T}");
+  hptGenPP->Draw("hist");
+  hptRecoPP->Draw("same");
+  drawText("pp", 0.3, 0.8, 1, 15);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+    
+  // Rap Bins
+  TCanvas* c_rap =  new TCanvas("c_rap","",600,600);
+  c_rap->Divide(2,1);
+  
+  c_rap->cd(1);
+  handsomeTH1(hrapGenAA,1);
+  handsomeTH1(hrapRecoAA,2);
+  cleverRange(hrapGenAA, 1.3, 0);
+  hrapGenAA->SetYTitle("dN/dp_{T}");
+  hrapGenAA->Draw("hist");
+  hrapRecoAA->Draw("same");
+  drawText("PbPb", 0.3, 0.8, 1, 15);
+  drawText("0 < p_{T} < 30 GeV/c", 0.3, 0.4, 1, 0.7);
+    
+  c_rap->cd(2);
+  handsomeTH1(hrapGenPP,1);
+  handsomeTH1(hrapRecoPP,2);
+  cleverRange(hrapGenPP, 1.3, 0);
+  hrapGenPP->SetYTitle("dN/dp_{T}");
+  hrapGenPP->Draw("hist");
+  hrapRecoPP->Draw("same");
+  drawText("pp", 0.3, 0.8, 1, 15);
+  drawText("0 < p_{T} < 30 GeV/c", 0.3, 0.4, 1, 0.7);
     
 
-    hptGenAA[iy] = new TH1D( Form("hptGenAA_iy%d",iy),"; p_{T} (GeV/c) ; ", nPtBins, ptBin);
-    hptRecoAA[iy] = (TH1D*)hptGenAA[iy]->Clone(Form("hptRecoAA_iy%d",iy));
-    hptGenPP[iy] = (TH1D*)hptGenAA[iy]->Clone(Form("hptGenPP_iy%d",iy));
-    hptRecoPP[iy] = (TH1D*)hptGenAA[iy]->Clone(Form("hptRecoPP_iy%d",iy));
+  // Centrality Bins
+  TCanvas* c_cent =  new TCanvas("c_cent","",600,600);
+  c_cent->Divide(2,1);
+  
+  c_cent->cd(1);
+  handsomeTH1(hcentGenAA,1);
+  handsomeTH1(hcentRecoAA,2);
+  handsomeTH1(hcentintGenAA,1);
+  handsomeTH1(hcentintRecoAA,2);
+  cleverRange(hcentGenAA, 1.3, 0);
+  cleverRange(hcentintGenAA, 1.3, 0);
+  hcentGenAA->SetYTitle("dN/dN_{part}");
+  hcentintGenAA->SetYTitle("dN/dN_{part}");
+  hcentGenAA->Draw("hist");
+  hcentRecoAA->Draw("same");
+  drawText("PbPb", 0.3, 0.8, 1, 15);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
     
-    genAA->Draw2( hptGenAA[iy], "pt", accCut && yCut, "weight" ) ;
-    recoAA->Draw2( hptRecoAA[iy], "pt", accCut && yCut,"weight" ) ;
-    genPP->Draw2( hptGenPP[iy], "pt", accCut && yCut ,"weight") ;
-    recoPP->Draw2( hptRecoPP[iy], "pt", accCut && yCut,"weight") ;
+  c_cent->cd(2);
+  handsomeTH1(hcentGenPP,1);
+  handsomeTH1(hcentRecoPP,2);
+  handsomeTH1(hcentintGenPP,1);
+  handsomeTH1(hcentintRecoPP,2);
+  cleverRange(hcentGenPP, 1.3, 0);
+  cleverRange(hcentintGenPP, 1.3, 0);
+  hcentGenPP->SetYTitle("dN/dN_{part}");
+  hcentintGenPP->SetYTitle("dN/dN_{part}");
+  hcentGenPP->Draw("hist");
+  hcentRecoPP->Draw("same");
+  drawText("pp", 0.3, 0.8, 1, 15);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+    
+  
+  // *************************
+  // ****** Efficiency *******
+  // *************************
 
-    if ( doCent ) 
-    { 
-      yCut = "(y>=0) && (y<2.4)";
-      TCut ptCut = "(pt<=30) && (pt>=0)";
-      hcentGenAA[iy] = new TH1D( Form("hcentGenAA_iy%d",iy),"; centrality bin ; ", nCentBins, centBin);
-      hcentRecoAA[iy] = (TH1D*)hcentGenAA[iy]->Clone(Form("hcentRecoAA_iy%d",iy));
-      hcentGenPP[iy] = (TH1D*)hcentGenAA[iy]->Clone(Form("hcentGenPP_iy%d",iy));
-      hcentRecoPP[iy] = (TH1D*)hcentGenAA[iy]->Clone(Form("hcentRecoPP_iy%d",iy));
+  // Efficiency Pt
+  TCanvas* c_eff_pt =  new TCanvas("c_eff_pt","",800,400);
+  TH1D* hptEffAA;
+  TH1D* hptEffPP;
+  c_eff_pt->cd();
+  hptEffAA = (TH1D*)hptRecoAA->Clone("hptEffAA");
+  hptEffAA ->Divide(hptGenAA);
+  hptEffAA ->SetAxisRange(0,1.2,"Y");
+  hptEffAA->SetYTitle("efficiency");
+  hptEffAA->Draw();
+  hptEffPP = (TH1D*)hptRecoPP->Clone("hptEffPP");
+  hptEffPP->Divide(hptGenPP);
+  hptEffPP->SetAxisRange(0,1.2,"Y");
+  hptEffPP->SetYTitle("efficiency");
+  hptEffPP->SetMarkerStyle(24);
+  hptEffPP->Draw("same");
+  TLegend* leg2 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
+  easyLeg(leg2,"");
+  leg2->AddEntry(hptEffAA, "PbPb");
+  leg2->AddEntry(hptEffPP, "pp");
+  leg2->Draw();
+  drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.3,1,15); 
+  drawText("|y|<2.4",0.25,0.5,1,15); 
+  jumSun(0,1,30,1);
+
+
+  // Efficiency Rap
+  TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",800,400);
+  TH1D* hrapEffAA;
+  TH1D* hrapEffPP;
+  c_eff_rap->cd();
+  hrapEffAA = (TH1D*)hrapRecoAA->Clone("hrapEffAA");
+  hrapEffAA ->Divide(hrapGenAA);
+  hrapEffAA ->SetAxisRange(0,1.2,"Y");
+  hrapEffAA->SetYTitle("efficiency");
+  hrapEffAA->Draw();
+  hrapEffPP = (TH1D*)hrapRecoPP->Clone("hrapEffPP");
+  hrapEffPP->Divide(hrapGenPP);
+  hrapEffPP->SetAxisRange(0,1.2,"Y");
+  hrapEffPP->SetYTitle("efficiency");
+  hrapEffPP->SetMarkerStyle(24);
+  hrapEffPP->Draw("same");
+  TLegend* leg3 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
+  easyLeg(leg3,"|y| < 2.4");
+  leg3->AddEntry(hrapEffAA, "PbPb");
+  leg3->AddEntry(hrapEffPP, "pp");
+  leg3->Draw();
+  drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
+  jumSun(0,1,30,1);
+
  
-      genAA->Draw2( hcentGenAA[iy], "cBin", accCut && yCut && ptCut, "weight" ) ;
-      recoAA->Draw2( hcentRecoAA[iy], "cBin", accCut && yCut && ptCut,"weight" ) ;
-      
-      genPP->Draw2( hcentGenPP[iy], "cBin", accCut && yCut && ptCut, "weight" ) ;
-      recoPP->Draw2( hcentRecoPP[iy], "cBin", accCut && yCut && ptCut,"weight" ) ;
-    }
-  
-  }
-
-  TCanvas* c1 =  new TCanvas("c1","",600,600);
-  c1->Divide(2,2);
-  
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-    c1->cd(iy);
-    handsomeTH1(hptGenAA[iy],1);
-    handsomeTH1(hptRecoAA[iy],2);
-    cleverRange(hptGenAA[iy], 1.3, 0);
-    hptGenAA[iy]->SetYTitle("dN/dp_{T}");
-    hptGenAA[iy]->Draw("hist");
-    hptRecoAA[iy]->Draw("same");
-    if(iy==0) drawText("PbPb, 0.0 < y < 2.4", 0.3, 0.8, 1, 15);
-    else drawText(Form("PbPb, %.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])), 0.3, 0.8, 1, 15);
-    
-    c1->cd(iy+2);
-    handsomeTH1(hptGenPP[iy],1);
-    handsomeTH1(hptRecoPP[iy],2);
-    cleverRange(hptGenPP[iy], 1.3, 0);
-    hptGenPP[iy]->SetYTitle("dN/dp_{T}");
-    hptGenPP[iy]->Draw("hist");
-    hptRecoPP[iy]->Draw("same");
-    if(iy==0) drawText("pp, 0.0 < y < 2.4", 0.3, 0.8, 1, 15);
-    else drawText(Form("pp, %.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])), 0.3, 0.8, 1, 15);
-    
-  }
-
-  TCanvas* c2 =  new TCanvas("c2","",800,400);
-  TH1D* hptEffAA[nYBins];
-  TH1D* hptEffPP[nYBins];
-  c2->Divide(2,1);
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-    c2->cd(iy);
-    hptEffAA[iy] = (TH1D*)hptRecoAA[iy]->Clone(Form("hptEffAA_iy%d",iy));
-    hptEffAA[iy]->Divide(hptGenAA[iy]);
-    hptEffAA[iy]->SetAxisRange(0,1.2,"Y");
-    hptEffAA[iy]->SetYTitle("efficiency");
-    hptEffAA[iy]->Draw();
-    hptEffPP[iy] = (TH1D*)hptRecoPP[iy]->Clone(Form("hptEffPP_iy%d",iy));
-    hptEffPP[iy]->Divide(hptGenPP[iy]);
-    hptEffPP[iy]->SetAxisRange(0,1.2,"Y");
-    hptEffPP[iy]->SetYTitle("efficiency");
-    hptEffPP[iy]->SetMarkerStyle(24);
-    hptEffPP[iy]->Draw("same");
-    TLegend* leg2 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
-    if(iy==0) easyLeg(leg2,"0.0 < y < 2.4");
-    else  easyLeg(leg2,Form("%.1f < y < %.1f",float(yBin[iy-1]), float(yBin[iy])) );
-    leg2->AddEntry(hptEffAA[iy], "PbPb");
-    leg2->AddEntry(hptEffPP[iy], "pp");
-    leg2->Draw();
-    drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
-    jumSun(0,1,30,1);
-  }
-  
-  
-  
-  TCanvas* c3;
-  TH1D* hcentEffAA[nYBins+1];
-  TH1D* hcentEffPP[nYBins+1];
+  // Centrality Efficiency 
+  TCanvas* c_eff_cent =  new TCanvas("c_eff_cent","",800,400);
+  TH1D* hcentEffAA;
+  TH1D* hcentEffPP;
   TH1D* hcentEffAA_int;
   TH1D* hcentEffPP_int;
 
+  c_eff_cent->Divide(2,1);
+  c_eff_cent->cd(1);
   hcentEffAA_int = (TH1D*) hcentintRecoAA->Clone("hcentEffAA_int");
   hcentEffAA_int -> Divide(hcentintGenAA);
   hcentEffPP_int = (TH1D*) hcentintRecoPP->Clone("hcentEffPP_int");
   hcentEffPP_int -> Divide(hcentintGenPP);
+  hcentEffAA_int -> SetAxisRange(0,1.2,"Y");
+  hcentEffAA_int -> SetYTitle("efficiency");
+  hcentEffAA_int -> Draw();
+  hcentEffPP_int -> SetAxisRange(0,1.2,"Y");
+  hcentEffPP_int -> SetYTitle("efficiency");
+  hcentEffPP_int -> SetMarkerStyle(24);
+  hcentEffPP_int -> Draw("same");
+  TLegend* leg4 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
+  easyLeg(leg4,"|y| < 2.4");
+  leg4->AddEntry(hcentEffAA_int, "PbPb");
+  leg4->AddEntry(hcentEffPP_int, "pp");
+  leg4->Draw();
+  drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
+  jumSun(0,1,200,1);
 
   if ( doCent ) { 
-    c3 =  new TCanvas("c3","",800,400);
-    c3->Divide(2,1);
-    for ( int iy=0 ; iy<=nYBins ; iy++) {
-      c3->cd(iy);
-      hcentEffAA[iy] = (TH1D*)hcentRecoAA[iy]->Clone(Form("hcentEffAA_iy%d",iy));
-      hcentEffAA[iy]->Divide(hcentGenAA[iy]);
-      hcentEffPP[iy] = (TH1D*)hcentRecoPP[iy]->Clone(Form("hcentEffPP_iy%d",iy));
-      hcentEffPP[iy]->Divide(hcentGenPP[iy]);
-      hcentEffAA[iy]->SetAxisRange(0,1.2,"Y");
-      hcentEffAA[iy]->SetYTitle("efficiency");
-      hcentEffAA[iy]->Draw();
-      hcentEffPP[iy]->SetLineColor(2);
-      hcentEffPP[iy]->Draw("same hist");
-      drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
-      jumSun(0,1,200,1);
-      
-      if ( iy == 1)   {
-	TLegend* leg2 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
-	easyLeg(leg2,"Efficiency");
-	leg2->AddEntry(hcentEffAA[iy], "PbPb");
-	leg2->AddEntry(hcentEffPP[iy], "pp","l");
-	leg2->Draw();
-      }
-    }    
-  }
-  
-  
+    c_eff_cent->cd(2);
+    hcentEffAA = (TH1D*)hcentRecoAA->Clone("hcentEffAA");
+    hcentEffAA ->Divide(hcentGenAA);
+    hcentEffPP = (TH1D*)hcentRecoPP->Clone("hcentEffPP");
+    hcentEffPP ->Divide(hcentGenPP);
+    hcentEffAA ->SetAxisRange(0,1.2,"Y");
+    hcentEffAA ->SetYTitle("efficiency");
+    hcentEffAA ->Draw();
+    hcentEffPP ->SetMarkerStyle(24);
+    hcentEffPP ->Draw("same");
+    drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
+    TLegend* leg5 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
+    easyLeg(leg5,"Efficiency");
+    leg5->AddEntry(hcentEffAA, "PbPb");
+    leg5->AddEntry(hcentEffPP, "pp","l");
+    leg5->Draw();
+    jumSun(0,1,200,1);
+  } 
   
   
   
   TFile *fout = new TFile(Form("efficiency_ups%ds_MCDATA.root",state),"recreate");
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-    hptGenPP[iy]->Write();
-    hptRecoPP[iy]->Write();
-    hptEffPP[iy]->Write();
-    hptGenAA[iy]->Write();
-    hptRecoAA[iy]->Write();
-    hptEffAA[iy]->Write();
-    
-    hcentEffPP[iy]->Write();
-    hcentEffAA[iy]->Write();
-  }
+  hptGenPP->Write();
+  hptRecoPP->Write();
+  hptEffPP->Write();
+  hptGenAA->Write();
+  hptRecoAA->Write();
+  hptEffAA->Write();
+  
+  hrapGenPP->Write();
+  hrapRecoPP->Write();
+  hrapEffPP->Write();
+  hrapGenAA->Write();
+  hrapRecoAA->Write();
+  hrapEffAA->Write();
+
+  hcentEffPP->Write();
+  hcentEffAA->Write();
   hcentEffAA_int->Write();
   hcentEffPP_int->Write();
   fout->Close();

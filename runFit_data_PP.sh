@@ -10,7 +10,7 @@
 
 
 muPtCut='4'
-fixParam='1'
+fixParam='0'
 
 
 kPPDATA='0'
@@ -24,24 +24,24 @@ outputDir='TEST'
 
 #outputDir='Test/fixParam'${fixParam}'MuPt'${muPtCut}'_fullRap_mar01_bkgtest'${fbkg_ch}''
 mkdir -p $outputDir
-cp onia2ySkim.C doFitUpsilon_MC.C doFitUpsilon_Data.C PsetCollection.h cutsAndBin.h $outputDir
+cp rootFitHeaders.h commonUtility.h onia2ySkim.C doFitUpsilon_MC.C doFitUpsilon_Data_PP.C PsetCollection.h cutsAndBin.h $outputDir
 
 root -l -b <<EOF
-.L doFitUpsilon_Data.C++
+.L doFitUpsilon_Data_PP.C++
 .q
 EOF
 
 echo entering to the loop...
 
-for i in ${kAADATA}  # 0=kPPDATA, 2=kAADATA 6=kAADATAPeri 7=kAADATACentL3 8=kPPMCUps1S 9=kPPMCUps2S
+for i in ${kPPDATA}  # 0=kPPDATA, 2=kAADATA 6=kAADATAPeri 7=kAADATACentL3 8=kPPMCUps1S 9=kPPMCUps2S
 do
     #for pt in '0,2' '2,4' '4,6' '6,8' '8,12' '12,16' '16,30' 
-    for pt in '0,0.1'
+    for pt in '0,3'
     do
 	    for rap in '0,2.4'
         do
-            echo  $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
-            ./condor_root.sh $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut',0)'
+            echo  $outputDir 'doFitUpsilon_Data_PP.C('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
+            root -l -b -q $outputDir 'doFitUpsilon_Data_PP.C++('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
             #./condor_root.sh $outputDir 'doFitUpsilon_Data.C('$i','$pt','$rap',0,200,'$muPtCut','$fixParam')'
         done
     done

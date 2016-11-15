@@ -41,11 +41,11 @@ void doFitUpsilon_Data(
 
   int   nMassBin  = (massHigh-massLow)*10;
   TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
-  else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
+  if      ( collId == kPPDATA) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kPPMCUps1S) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
+  else if ( collId == kAAMCUps1S) f1 = new TFile("/home/deathold/work/CMS/analysis/quarkonia/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
   if(collId == kAADATAPeri) collId =2; 
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, muPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
@@ -57,8 +57,7 @@ void doFitUpsilon_Data(
   
   TTree* tree = (TTree*) f1->Get("mm");
   RooDataSet *dataset = (RooDataSet*)f1->Get("dataset");
-  RooWorkspace *ws = new RooWorkspace("workspace");
-  //RooWorkspace *ws = new RooWorkspace(Form("workspace_%s",kineLabel.Data()));
+  RooWorkspace *ws = new RooWorkspace(Form("workspace_%s",kineLabel.Data()));
   ws->import(*dataset);
   ws->data("dataset")->Print();
   cout << "####################################" << endl;
@@ -331,8 +330,7 @@ void doFitUpsilon_Data(
   cout << "1S signal    =  " << outh->GetBinContent(1) << " +/- " << outh->GetBinError(1) << endl;
   cout << "2S signal    =  " << outh->GetBinContent(2) << " +/- " << outh->GetBinError(2) << endl;
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
-
-
+    
   TFile* outf = new TFile(Form("fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()),"recreate");
   outh->Write();
   c1->Write();

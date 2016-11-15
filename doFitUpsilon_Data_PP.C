@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "rootFitHeaders.h"
 #include "commonUtility.h"
 #include <RooGaussian.h>
@@ -15,7 +15,7 @@
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data( 
+void doFitUpsilon_Data_PP( 
        int collId = kAADATA,  
        float ptLow=4, float ptHigh=6, 
        float yLow=0, float yHigh=1.2,
@@ -41,11 +41,11 @@ void doFitUpsilon_Data(
 
   int   nMassBin  = (massHigh-massLow)*10;
   TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
-  else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
+  if      ( collId == kPPDATA) f1 = new TFile("/Users/jaebeom/Desktop/work/CMS/Upsilon_PbPb5TeV_RAA/upsilonRAA5TeV_copy/skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("/Users/jaebeom/Desktop/work/CMS/Upsilon_PbPb5TeV_RAA/upsilonRAA5TeV_copy/skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("/Users/jaebeom/Desktop/work/CMS/Upsilon_PbPb5TeV_RAA/upsilonRAA5TeV_copy/skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kPPMCUps1S) f1 = new TFile("/Users/jaebeom/Desktop/work/CMS/Upsilon_PbPb5TeV_RAA/upsilonRAA5TeV_copy/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
+  else if ( collId == kAAMCUps1S) f1 = new TFile("/Users/jaebeom/Desktop/work/CMS/Upsilon_PbPb5TeV_RAA/upsilonRAA5TeV_copy/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
   if(collId == kAADATAPeri) collId =2; 
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, muPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
@@ -86,29 +86,18 @@ void doFitUpsilon_Data(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
 
+  RooRealVar x1s("x1s","ratio of two signal PDF",0.5,0,1);
   RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma2s_1("sigma2s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma3s_1("sigma3s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma1s_2("sigma1s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma2s_2("sigma2s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma3s_2("sigma3s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 5. , 1.5, 9.8);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 6. , 1.5, 9.25);
   RooRealVar alpha2s_1("alpha2s_1","tail shift", 5. , 1.5, 9.2);  
   RooRealVar alpha3s_1("alpha3s_1","tail shift", 5. , 1.5, 9.8);
   RooRealVar alpha1s_2("alpha1s_2","tail shift", 5. , 1.5, 9.8);
   RooRealVar alpha2s_2("alpha2s_2","tail shift", 5. , 1.5, 9.2);  
   RooRealVar alpha3s_2("alpha3s_2","tail shift", 5. , 1.5, 9.8);
   
-  RooRealVar n1s_1("n1s_1","power order", 5. , 1.5, 9.8);
-  RooRealVar n2s_1("n2s_1","power order", 5. , 1.5, 10.);
-  RooRealVar n3s_1("n3s_1","power order", 4. , 1.5, 9.8);
-  RooRealVar n1s_2("n1s_2","power order", 5. , 1.5, 9.8);
-  RooRealVar n2s_2("n2s_2","power order", 5. , 1.5, 10.);
-  RooRealVar n3s_2("n3s_2","power order", 4. , 1.5, 9.8);
-  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f2s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f3s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  RooRealVar n1s_1("n1s_1","power order", 6. , 1.5, 9.2);
+  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.4, 0.01, 1);
 
   // Fix the parameters 
   if (fixParameters) 
@@ -126,36 +115,27 @@ void doFitUpsilon_Data(
       cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
       cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
       n1s_1.setVal(initPset.n1s_1);  n1s_1.setConstant(); 
-      n2s_1.setVal(initPset.n2s_1);  n2s_1.setConstant();  
-      n3s_1.setVal(initPset.n3s_1);  n3s_1.setConstant();  
-      n1s_2.setVal(initPset.n1s_2);  n1s_2.setConstant(); 
-      n2s_2.setVal(initPset.n2s_2);  n2s_2.setConstant();  
-      n3s_2.setVal(initPset.n3s_2);  n3s_2.setConstant();  
       alpha1s_1.setVal(initPset.alpha1s_1);  alpha1s_1.setConstant();  
-      alpha2s_1.setVal(initPset.alpha2s_1);  alpha2s_1.setConstant();  
-      alpha3s_1.setVal(initPset.alpha3s_1);  alpha3s_1.setConstant();  
-      alpha1s_2.setVal(initPset.alpha1s_2);  alpha1s_2.setConstant();  
-      alpha2s_2.setVal(initPset.alpha2s_2);  alpha2s_2.setConstant();  
-      alpha3s_2.setVal(initPset.alpha3s_2);  alpha3s_2.setConstant();  
       sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
-      sigma2s_1.setVal(initPset.sigma2s_1);  sigma2s_1.setConstant();  
-      sigma3s_1.setVal(initPset.sigma3s_1);  sigma3s_1.setConstant();  
-      sigma1s_2.setVal(initPset.sigma1s_2);  sigma1s_2.setConstant();  
-      sigma2s_2.setVal(initPset.sigma2s_2);  sigma2s_2.setConstant();  
-      sigma3s_2.setVal(initPset.sigma3s_2);  sigma3s_2.setConstant();  
       f1s->setVal(initPset.f1s);  f1s->setConstant();  
-      f2s->setVal(initPset.f2s);  f2s->setConstant();  
-      f3s->setVal(initPset.f3s);  f3s->setConstant();  
+      x1s.setVal(initPset.x1s);  x1s.setConstant();
     } 
   }
   
+  RooFormulaVar sigma2s_1("sigma2s_1","sigma1s_1*mRatio21",RooArgSet(sigma1s_1,mRatio21) );
+  RooFormulaVar sigma3s_1("sigma3s_1","sigma1s_1*mRatio31",RooArgSet(sigma1s_1,mRatio31) );
+
+  RooFormulaVar sigma1s_2("sigma1s_2","sigma1s_1*x1s",RooArgSet(sigma1s_1,x1s) );
+  RooFormulaVar sigma2s_2("sigma2s_2","sigma2s_1*x1s",RooArgSet(sigma2s_1,x1s) );
+  RooFormulaVar sigma3s_2("sigma3s_2","sigma3s_1*x1s",RooArgSet(sigma3s_1,x1s) );
+  
+  
   RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
-  cout << " n1s_1.getVal() = " << n1s_1.getVal() << endl;
-  RooCBShape* cb2s_1 = new RooCBShape("cball2s_1", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_1, alpha2s_1, n2s_1);
-  RooCBShape* cb3s_1 = new RooCBShape("cball3s_1", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_1, alpha3s_1, n3s_1);
-  RooCBShape* cb1s_2 = new RooCBShape("cball1s_2", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_2, alpha1s_2, n1s_2);
-  RooCBShape* cb2s_2 = new RooCBShape("cball2s_2", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_2, alpha2s_2, n2s_2);
-  RooCBShape* cb3s_2 = new RooCBShape("cball3s_2", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_2, alpha3s_2, n3s_2);
+  RooCBShape* cb2s_1 = new RooCBShape("cball2s_1", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_1, alpha1s_1, n1s_1);
+  RooCBShape* cb3s_1 = new RooCBShape("cball3s_1", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_1, alpha1s_1, n1s_1);
+  RooCBShape* cb1s_2 = new RooCBShape("cball1s_2", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_2, alpha1s_1, n1s_1);
+  RooCBShape* cb2s_2 = new RooCBShape("cball2s_2", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_2, alpha1s_1, n1s_1);
+  RooCBShape* cb3s_2 = new RooCBShape("cball3s_2", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_2, alpha1s_1, n1s_1);
 
   RooAddPdf*  cb1s = new RooAddPdf("cb1s","Signal 1S",RooArgList(*cb1s_1,*cb1s_2), RooArgList(*f1s) );
   RooAddPdf*  cb2s = new RooAddPdf("cb2s","Signal 2S",RooArgList(*cb2s_1,*cb2s_2), RooArgList(*f1s) );
@@ -181,9 +161,9 @@ void doFitUpsilon_Data(
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
  
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
+  RooRealVar err_mu("#mu","err_mu", 5,  0, 25) ;
+  RooRealVar err_sigma("#sigma","err_sigma", 5, 0,25);
+  RooRealVar m_lambda("#lambda","m_lambda",  5, 0,25);
   /* 2-4pT PbPb
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
@@ -332,6 +312,10 @@ void doFitUpsilon_Data(
   cout << "2S signal    =  " << outh->GetBinContent(2) << " +/- " << outh->GetBinError(2) << endl;
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
 
+	cout << "if ( binMatched( "<<muPtCut<<", " << ptLow <<", "<< ptHigh<<", "<< yLow<<", "<< yHigh << ", " << cLow << ", " << cHigh << ") ) " ; 
+  cout << "  { setSignalParMC( " ;
+  cout <<  ws->var("n1s_1")->getVal() << ", " <<  ws->var("alpha1s_1")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " ;
+  cout <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
 
   TFile* outf = new TFile(Form("fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()),"recreate");
   outh->Write();
