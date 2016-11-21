@@ -276,8 +276,10 @@ RooSimultaneous* buildSimPdf(RooWorkspace &ws, RooCategory& dataCat) {
 		return dynamic_cast<RooSimultaneous *>(ws.pdf("simPdf"));
 
 	RooSimultaneous simPdf("simPdf", "simPdf", dataCat);
-	RooAbsPdf * pdf_hi = ws.pdf("pdf_hi");
-	RooAbsPdf * pdf_pp = ws.pdf("pdf_pp");
+	//RooAbsPdf * pdf_hi = ws.pdf("pdf_hi");
+	//RooAbsPdf * pdf_pp = ws.pdf("pdf_pp");
+	RooAbsPdf * pdf_hi = ws.pdf("model_hi");
+	RooAbsPdf * pdf_pp = ws.pdf("model_pp");
 	assert(pdf_hi);
 	assert(pdf_pp);
 	simPdf.addPdf(*pdf_hi, "hi");
