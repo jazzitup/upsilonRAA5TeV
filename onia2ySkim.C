@@ -618,13 +618,13 @@ void onia2ySkim( int nevt = -1,
 	}
 	// MC pT weight :  
 	if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) ||  (fileID == kAAMCUps1S) || (fileID == kAAMCUps2S) || (fileID == kAAMCUps3S))  {
-	  if ( fabs(dmGen.y) < 1.2){ 
-	    dmGen.weight = dmGen.weight * wFunc[1]->Eval(dmGen.pt);}
-	  else {
+	  if ( fabs(dmGen.y) < 1.2) 
+	    dmGen.weight = dmGen.weight * wFunc[1]->Eval(dmGen.pt); 
+	  else 
 	    dmGen.weight = dmGen.weight * wFunc[2]->Eval(dmGen.pt); 
 	}		 
 	
-	      
+	
 	
         dmGen.oniaIndex = irqq;
         mmGenTree->Fill();
