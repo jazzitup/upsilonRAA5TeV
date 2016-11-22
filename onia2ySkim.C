@@ -13,8 +13,8 @@ static const long MAXTREESIZE = 10000000000;
 TString getDayAndTime();
 bool isTrackMatched(float pt1, float eta1, float phi1, float pt2, float eta2, float phi2) ;
 void onia2ySkim( int nevt = -1,
-		 int fileID = kAAMCUps1S,
-		 int trigId=kL1DoubleMu0, 
+		 int fileID = kPADATA,
+		 int trigId=kL1DoubleMuOpen2016, 
 		 int epSelection = kEPOppositeHF, 
 		 bool saveTracks=false, 
 		 TString skimVersion="unIdentified", 
@@ -64,6 +64,11 @@ void onia2ySkim( int nevt = -1,
   
   if (fileID == kPPDATA) {
     fname = "/home/storage/OniaTree/Onia5TeV/ppData/OniaTree_DoubleMu_Run2015E-PromptReco-v1_Run_262157_262328.root";
+    mytree->Add(fname.Data());
+  }
+  if (fileID == kPADATA) {
+    fname = "/afs/cern.ch/user/k/kimy/workDir/oniaTree/OniaTree_HIOnia_HIRun2016_ExpressStream_Run_285480-285539.root"; // in lxplus
+    mytree->Add(fname.Data());
   }
   else if  (fileID == kAADATA) { 
     fname = "/home/storage/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaL1DoubleMu0ABCD_HIRun2015-PromptReco-v1_Run_262620_263757.root";
@@ -161,6 +166,9 @@ void onia2ySkim( int nevt = -1,
   TFile* newfile;
   if (fileID == kPPDATA) {
     newfile = new TFile(Form("skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-%s_%s_%s_%s.root",trigName.Data(), fdimusign.Data(), getDayAndTime().Data(), skimVersion.Data() ),"recreate");   
+  }
+  if (fileID == kPADATA) {
+    newfile = new TFile(Form("skimmedFiles/yskimPA_Trig-%s_%s_%s_%s.root",trigName.Data(), fdimusign.Data(), getDayAndTime().Data(), skimVersion.Data() ),"recreate");   
   }
   else if (fileID == kAADATA) { 
     newfile = new TFile(Form("skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-%s_%s_EP-%s_%s_%s.root",trigName.Data(),fdimusign.Data(),epName.Data(), getDayAndTime().Data(), skimVersion.Data()),"recreate"); 
