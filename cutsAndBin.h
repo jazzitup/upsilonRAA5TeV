@@ -31,6 +31,7 @@ const int nYBins1S  = 6;   double yBin1S[nYBins1S+1] ={0, 0.4, 0.8, 1.2, 1.6, 2.
 const int nYBins2S  = 2;   double yBin2S[nYBins2S+1] ={0, 1.2, 2.4};
 const int nYBins3S  = 2;   double yBin3S[nYBins3S+1] ={0, 1.2, 2.4};
 
+const int nYBins  = 2;   double yBin[nYBins+1] ={0, 1.2, 2.4}; // for event reweighting
 
 const int nCentBins1s  = 9;   double centBin1s[nCentBins1s+1] = {0,10,20,40,60,80,100,120,140,200};
 const int nCentBins2s  = 9;   double centBin2s[nCentBins2s+1] = {0,10,20,40,60,80,100,120,140,200};

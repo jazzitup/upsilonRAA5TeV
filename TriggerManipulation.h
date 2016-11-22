@@ -10,6 +10,7 @@ int kL3UpsilonCentral =3;
 int kL1DoubleMu0Peripheral=4;
 int kL1DoubleMu10     =5;
 int kL1DoubleMu0NoHFBit     =11;
+int kL1DoubleMuOpen2016     =12;
 
 
 
@@ -23,6 +24,7 @@ TString getTrig( int trigId ) {
   else if ( trigId == kL1DoubleMu0Peripheral ) return "L1DoubleMu0Peripheral" ;
   else if ( trigId == kL1DoubleMu10 ) return "L1DoubleMu10" ;
   else if ( trigId == kL1DoubleMu0NoHFBit ) return "L1DoubleMu0NoHFRequired" ;
+  else if ( trigId == kL1DoubleMuOpen2016 ) return "L1DoubleMuOpen2016" ;
   else return "none" ;
 }
 
@@ -58,6 +60,11 @@ hltIndex getTrigIndex( int trigId, TString fname ) {
 	  cout << "HLT_HIL1DoubleMu0_2HF0_v1 : ind3 = 2^" << ret.ind3 << endl;     }
 	if ( theName == "HLT_HIL1DoubleMu0ForPPRef_v1" )   { 	ret.ind4 = ii-2;
 	  cout << "HLT_HIL1DoubleMu0ForPPRef_v1 (pp Reference) : ind4 = 2^" << ret.ind4 << endl;     }
+      }
+
+      if ( trigId == kL1DoubleMuOpen2016 ) { 
+	if ( theName == "HLT_PAL1DoubleMuOpen_v1" )  {               ret.ind1 = ii-2;
+          cout << "kL1DoubleMuOpen2016 : ind1 = 2^" << ret.ind1 << endl;     }
       }
 
       if ( trigId == kL1DoubleMu0NoHFBit ) { 
