@@ -36,7 +36,7 @@ void onia2ySkim( int nevt = -1,
   trkTree = new TChain("anaTrack/trackTree"); */
 
   TString fname;  TString fname1;  TString fname2;  TString fname3;  TString fname4;   TString fname5;
-  
+
   const int nFiles = 6;
   double fileBin[nFiles+1] = {0,3,6,9,12,15,9999};
   const int nFiles3S = 4;
