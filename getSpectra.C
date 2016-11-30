@@ -21,7 +21,9 @@ void getSpectra(int state = 1 ) {
   gStyle->SetEndErrorSize(0);
   gStyle->SetOptStat(0);
   int nPtBins=0;
+  int nRapBins=0;
   double* ptBin;
+  double* RapBin;
   int nCentBins=0;
   double* centBin;
 
@@ -30,64 +32,81 @@ void getSpectra(int state = 1 ) {
 
   if ( state == 1 ) { 
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nRapBins = nYBins1S;    RapBin = yBin1S; 
     nCentBins = nCentBins1s;  centBin = centBin1s;
   }
   else if ( state == 2 ) { 
     nPtBins = nPtBins2s;    ptBin = ptBin2s;
+    nRapBins = nYBins2S;    RapBin = yBin2S; 
     nCentBins = nCentBins2s;  centBin = centBin2s;
   }
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
+    nRapBins = nYBins3S;    RapBin = yBin3S; 
     nCentBins = nCentBins3s;  centBin = centBin3s;
   }
   
+  TH1D* hrapEffAA;
+  TH1D* hrapEffPP;
+  TH1D* hrapSigAA;
+  TH1D* hrapSigPP;
 
-  TH1D* hptEffAA[nYBins+1];
-  TH1D* hptEffPP[nYBins+1];
-  TH1D* hptSigAA[nYBins+1];
-  TH1D* hptSigPP[nYBins+1];
+  TH1D* hptEffAA;
+  TH1D* hptEffPP;
+  TH1D* hptSigAA;
+  TH1D* hptSigPP;
 
-  TH1D* hcentEffAA[nCentBins+1];
-  TH1D* hcentEffPP[nCentBins+1];
-  TH1D* hcentSigAA[nCentBins+1];
-  TH1D* hcentSigPP[nCentBins+1];
+  TH1D* hcentEffAA;
+  TH1D* hcentEffPP;
+  TH1D* hcentSigAA;
+  TH1D* hcentSigPP;
 
 
+  // ##################################
+  // ~*~*~*~*~* Rapidity ~*~*~*~*~*~*~*
+  // ##################################
   TFile* inf = new TFile(Form("efficiency/efficiency_ups%ds.root",state));
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    hptEffAA[iy]  = (TH1D*)inf->Get(Form("hptEffAA_iy%d",iy));
-    hptEffPP[iy]  = (TH1D*)inf->Get(Form("hptEffPP_iy%d",iy));
-  }
- 
+  hrapEffAA  = (TH1D*)inf->Get("hrapEffAA");
+  hrapEffPP  = (TH1D*)inf->Get("hrapEffPP");
+  
+  TCanvas* c_rap_eff =  new TCanvas("c_rap_eff","",800,400);
+  c_rap_eff->cd();
+  cleverRange(hrapEffAA, 1.3, 0);
+  handsomeTH1(hrapEffAA,2);
+  handsomeTH1(hrapEffPP,2);
+  hrapEffAA->Draw();
+  hrapEffPP->SetMarkerStyle(24);
+  hrapEffPP->Draw("same");
+  
+  // ############################
+  // ~*~*~*~*~* Pt ~*~*~*~*~*~*~*
+  // ############################
+  hptEffAA  = (TH1D*)inf->Get("hptEffAA");
+  hptEffPP  = (TH1D*)inf->Get("hptEffPP");
   
   TCanvas* c1 =  new TCanvas("c1","",800,400);
-  c1->Divide(2,1);
+  c1->cd();
+  cleverRange(hptEffAA, 1.3, 0);
+  handsomeTH1(hptEffAA,2);
+  handsomeTH1(hptEffPP,2);
+  hptEffAA->Draw();
+  hptEffPP->SetMarkerStyle(24);
+  hptEffPP->Draw("same");
   
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    c1->cd(iy);
-    cleverRange(hptEffAA[iy], 1.3, 0);
-    handsomeTH1(hptEffAA[iy],2);
-    handsomeTH1(hptEffPP[iy],2);
-    hptEffAA[iy]->Draw();
-    hptEffPP[iy]->SetMarkerStyle(24);
-    hptEffPP[iy]->Draw("same");
-  }
   
-  hcentEffAA[0] = (TH1D*) inf -> Get("hcentEffAA_iy1");
-  hcentEffPP[0] = (TH1D*) inf -> Get("hcentEffPP_iy1");
+  // ############################
+  // ~*~*~*~*~* Cent ~*~*~*~*~*~*
+  // ############################
+  hcentEffAA = (TH1D*) inf -> Get("hcentEffAA");
+  hcentEffPP = (TH1D*) inf -> Get("hcentEffPP");
 
-  for(int ibin=1;ibin<10;ibin++)
-  {
-   hcentEffPP[0]->SetBinContent(ibin,hcentEffPP[0]->GetBinContent(1)); 
-   hcentEffPP[0]->SetBinError(ibin,hcentEffPP[0]->GetBinError(1)); 
-  }
-  hcentSigAA[0] = (TH1D*) hcentEffAA[0]->Clone("hcentSigAA_cent");
-  hcentSigPP[0] = (TH1D*) hcentEffPP[0]->Clone("hcentSigPP_cent");
-  hcentSigAA[0] -> Reset(); 
-  hcentSigPP[0] -> Reset(); 
+  hcentSigAA = (TH1D*) hcentEffAA -> Clone("hcentSigAA_cent");
+  hcentSigPP = (TH1D*) hcentEffPP -> Clone("hcentSigPP_cent");
+  hcentSigAA -> Reset(); 
+  hcentSigPP -> Reset(); 
   
   TH1D *hSetBin;
-  hSetBin = (TH1D*) hcentSigAA[0] ->Clone("hSetBin");
+  hSetBin = (TH1D*) hcentSigAA ->Clone("hSetBin");
   TH1D *hcentEffAA_int = (TH1D*) inf -> Get("hcentEffAA_int");
   TH1D *hcentEffPP_int = (TH1D*) inf -> Get("hcentEffPP_int");
   TH1D *hcentSigAA_int = (TH1D*) hcentEffAA_int -> Clone("hcentSigAA_int");
@@ -95,8 +114,115 @@ void getSpectra(int state = 1 ) {
   hcentSigAA_int->Reset();
   hcentSigPP_int->Reset();
 
-  // signals :
 
+
+  // signals :
+  TH1D* hRAA_rap;   // raw RAA w/o efficiency correction
+  TH1D* hRAA_rap_effcor;   // raw RAA w/ efficiency correction
+  TH1D* hRAA1;   // raw RAA w/o efficiency correction
+  TH1D* hRAA2;   // raw RAA w/o efficiency correction
+  TH1D* hRAA3;   // final cent RAA w/ efficiency correction
+  TH1D* hRAA;   // final RAA w/ efficiency correctdion
+
+  //***Rapidity***
+  hrapSigAA = (TH1D*)  hrapEffAA->Clone("hrapSigAA");
+  hrapSigPP = (TH1D*)  hrapEffPP->Clone("hrapSigPP");
+  hrapSigAA->Reset();
+  hrapSigPP->Reset();
+    for ( int irap = 1 ; irap<= nRapBins ; irap++) {
+      valErr yieldPP = getYield(state, kPPDATA, RapBin[ipt-1], RapBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
+      valErr yieldAA = getYield(state, kAADATA, RapBin[ipt-1], RapBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
+      hrapSigAA->SetBinContent( irap, yieldAA.val ) ;
+      hrapSigAA->SetBinError( irap, yieldAA.err ) ;
+      hrapSigPP->SetBinContent( irap, yieldPP.val ) ;
+      hrapSigPP->SetBinError( irap, yieldPP.err ) ;
+    }
+    
+  
+  //*****RAA Rap ******
+  TCanvas* cRAA_rap =  new TCanvas("cRAA_rap","",800,400);
+  cRAA_rap->Divide(2,1);
+  cRAA_rap->cd();
+  hRAA_rap = (TH1D*)hrapSigAA->Clone("hRAA_rap");
+  hRAA_rap->Divide( hrapSigPP );
+  hRAA_rap->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+  hRAA_rap->Scale( 1./ (208.*208) );
+  hRAA_rap->SetAxisRange(0,1.2,"Y");
+  hRAA_rap->SetYTitle("R_{AA} (efficiency UNcorrected)");
+  hRAA_rap->Draw();
+  jumSun(0,1,30,1);
+  
+  TCanvas* cRAA_rap_effcor =  new TCanvas("cRAA_rap_effcor","",800,400);
+  cRAA_rap_effcor->cd();
+  hRAA_rap_effcor = (TH1D*)hRAA_rap->Clone("hRAA_rap_effcor");
+
+  TH1D* relativeEff_rap = (TH1D*)hrapEffAA->Clone("relEffAA_rap");
+  relativeEff_rap->Divide(hrapEffPP);
+  hRAA_rap_effcor->Divide( relativeEff_rap ) ;
+  hRAA_rap_effcor->SetAxisRange(0,1.2,"Y");
+  hRAA_rap_effcor->SetYTitle("R_{AA} (efficiency corrected)");
+  hRAA_rap_effcor->Draw();
+  jumSun(0,1,30,1);
+
+  
+
+
+  //***Pt***
+  hptSigAA = (TH1D*)  hptEffAA->Clone("hptSigAA");
+  hptSigPP = (TH1D*)  hptEffPP->Clone("hptSigPP");
+  hptSigAA->Reset();
+  hptSigPP->Reset();
+    for ( int ipt = 1 ; ipt<= nPtBins ; ipt++) {
+      valErr yieldPP = getYield(state, kPPDATA, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
+      valErr yieldAA = getYield(state, kAADATA, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
+      hptSigAA->SetBinContent( ipt, yieldAA.val ) ;
+      hptSigAA->SetBinError( ipt, yieldAA.err ) ;
+      hptSigPP->SetBinContent( ipt, yieldPP.val ) ;
+      hptSigPP->SetBinError( ipt, yieldPP.err ) ;
+    }
+    
+  //*****Pt Yield***** 
+  TCanvas* c2 =  new TCanvas("c2","",800,400);
+  c2->cd();
+  hptSigPP->SetAxisRange(10,1e5,"Y");
+  hptSigAA->SetAxisRange(10,1e5,"Y");
+  //    cleverRange(hptSigPP[iy], 1.3, 1);
+  handsomeTH1(hptSigPP,2);
+  handsomeTH1(hptSigAA,2);
+  hptSigPP->SetMarkerStyle(24);
+  hptSigPP->Draw();
+  gPad->SetLogy();
+  hptSigAA->Draw("same");
+  
+  //*****RAA Pt ******
+  TCanvas* cRAA1 =  new TCanvas("cRAA1","",800,400);
+  cRAA1->Divide(2,1);
+  cRAA1->cd();
+  hRAA1 = (TH1D*)hptSigAA->Clone("hRAA1");
+  hRAA1->Divide( hptSigPP );
+  hRAA1->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+  hRAA1->Scale( 1./ (208.*208) );
+  hRAA1->SetAxisRange(0,1.2,"Y");
+  hRAA1->SetYTitle("R_{AA} (efficiency UNcorrected)");
+  hRAA1->Draw();
+  jumSun(0,1,30,1);
+  
+  TCanvas* cRAA =  new TCanvas("cRAA","",800,400);
+  cRAA->cd();
+  hRAA = (TH1D*)hRAA1->Clone("hRAA");
+
+  TH1D* relativeEff = (TH1D*)hptEffAA->Clone("relEffAA");
+  relativeEff->Divide(hptEffPP);
+  hRAA->Divide( relativeEff ) ;
+  hRAA->SetAxisRange(0,1.2,"Y");
+  hRAA->SetYTitle("R_{AA} (efficiency corrected)");
+  hRAA->Draw();
+  jumSun(0,1,30,1);
+
+  
+ 
+
+  //****CENTRALITY****
   double nColl1[9] = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
   double nSetBin[9]={0.};
   for(int icent=1; icent<=nCentBins;icent++)
@@ -104,10 +230,10 @@ void getSpectra(int state = 1 ) {
     valErr yCentAA = getYield(state,kAADATA,0,30,0,2.4,centBin[icent-1],centBin[icent],0,100); 
     valErr yCentPP = getYield(state,kPPDATA,0,30,0,2.4,centBin[icent-1],centBin[icent],0,100);
     hSetBin -> SetBinContent(icent,(double)((centBin[icent]-centBin[icent-1])*nColl1[icent-1]));
-    hcentSigAA[0] -> SetBinContent(icent,yCentAA.val);
-    hcentSigAA[0] -> SetBinError(icent,yCentAA.err);
-    hcentSigPP[0] -> SetBinContent(icent,yCentPP.val);
-    hcentSigPP[0] -> SetBinError(icent,yCentPP.err);
+    hcentSigAA -> SetBinContent(icent,yCentAA.val);
+    hcentSigAA -> SetBinError(icent,yCentAA.err);
+    hcentSigPP -> SetBinContent(icent,yCentPP.val);
+    hcentSigPP -> SetBinError(icent,yCentPP.err);
   }
   valErr yCentAA_int = getYield(state,kAADATA,0,30,0,2.4,0,200,0,100);
   valErr yCentPP_int = getYield(state,kPPDATA,0,30,0,2.4,0,200,0,100);
@@ -115,7 +241,8 @@ void getSpectra(int state = 1 ) {
   hcentSigAA_int -> SetBinError(1,yCentAA_int.err);
   hcentSigPP_int -> SetBinContent(1,yCentPP_int.val);
   hcentSigPP_int -> SetBinError(1,yCentPP_int.err);
-  
+
+  //****RAA CENTRALITY 0-100%****
   TH1D *hRAA_int;
   hRAA_int = (TH1D*) hcentSigAA_int->Clone("hRAA_centint");
   hRAA_int ->Divide(hcentSigPP_int);
@@ -133,68 +260,19 @@ void getSpectra(int state = 1 ) {
   gre_int->SetPointError(0,0,hRAA_int->GetBinError(1));
 
 
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    hptSigAA[iy] = (TH1D*)  hptEffAA[iy]->Clone(Form("hptSigAA_iy%d",iy));
-    hptSigPP[iy] = (TH1D*)  hptEffPP[iy]->Clone(Form("hptSigPP_iy%d",iy));
-    hptSigAA[iy]->Reset();
-    hptSigPP[iy]->Reset();
-    for ( int ipt = 1 ; ipt<= nPtBins ; ipt++) {
-      valErr yieldPP = getYield(state, kPPDATA, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
-      valErr yieldAA = getYield(state, kAADATA, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
-      hptSigAA[iy]->SetBinContent( ipt, yieldAA.val ) ;
-      hptSigAA[iy]->SetBinError( ipt, yieldAA.err ) ;
-      hptSigPP[iy]->SetBinContent( ipt, yieldPP.val ) ;
-      hptSigPP[iy]->SetBinError( ipt, yieldPP.err ) ;
-    }
-    
-  }
 
-  
-  TCanvas* c2 =  new TCanvas("c2","",800,400);
-  c2->Divide(2,1);
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    c2->cd(iy);
-    hptSigPP[iy]->SetAxisRange(10,1e5,"Y");
-    hptSigAA[iy]->SetAxisRange(10,1e5,"Y");
-    //    cleverRange(hptSigPP[iy], 1.3, 1);
-    handsomeTH1(hptSigPP[iy],2);
-    handsomeTH1(hptSigPP[iy],2);
-    hptSigPP[iy]->SetMarkerStyle(24);
-    hptSigPP[iy]->Draw();
-    gPad->SetLogy();
-    hptSigAA[iy]->Draw("same");
-  }
-  
-  TH1D* hRAA1[nYBins+1];   // raw RAA w/o efficiency correction
-  TH1D* hRAA2;   // raw RAA w/o efficiency correction
-  TH1D* hRAA3;   // final cent RAA w/ efficiency correction
-  TH1D* hRAA[nYBins+1];   // final RAA w/ efficiency correctdion
-
-  TCanvas* cRAA1 =  new TCanvas("cRAA1","",800,400);
-  cRAA1->Divide(2,1);
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    cRAA1->cd(iy);
-    hRAA1[iy] = (TH1D*)hptSigAA[iy]->Clone(Form("hRAA1_iy%d",iy));
-    hRAA1[iy]->Divide( hptSigPP[iy] );
-    hRAA1[iy]->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-    hRAA1[iy]->Scale( 1./ (208.*208) );
-    hRAA1[iy]->SetAxisRange(0,1.2,"Y");
-    hRAA1[iy]->SetYTitle("R_{AA} (efficiency UNcorrected)");
-    hRAA1[iy]->Draw();
-    jumSun(0,1,30,1);
-  }
-
+  //******RAA Centrality *****
   TCanvas* cRAA2 =  new TCanvas("cRAA2","",800,400);
   cRAA2->cd();
-  hRAA2 = (TH1D*) hcentSigAA[0]->Clone("hRAA_cent");
-  hRAA2 ->Divide(hcentSigPP[0]);
+  hRAA2 = (TH1D*) hcentSigAA->Clone("hRAA_cent");
+  hRAA2 ->Divide(hcentSigPP);
   hRAA2 ->Divide(hSetBin);
   hRAA2 ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
   hRAA2 ->Scale( 1./(208*208));
   hRAA2 ->Scale(200.*392.);
   hRAA2 ->SetAxisRange(0,1.2,"Y");
   hRAA2 ->SetYTitle("R_{AA} (efficiency UNcorrected)");
-//  hRAA2 ->Draw();
+  hRAA2 ->Draw();
   jumSun(0,1,30,1);
   
   TGraphErrors *gre1 = new TGraphErrors(9);
@@ -217,26 +295,12 @@ void getSpectra(int state = 1 ) {
     cout << "dsad : " << hRAA2->GetBinContent(ibin) << endl;
   }
 
-  TCanvas* cRAA =  new TCanvas("cRAA","",800,400);
-  cRAA->Divide(2,1);
-  for ( int iy=1 ; iy<=nYBins ; iy++) {
-    cRAA->cd(iy);
-    hRAA[iy] = (TH1D*)hRAA1[iy]->Clone(Form("hRAA_iy%d",iy));
-    
-    TH1D* relativeEff = (TH1D*)hptEffAA[iy]->Clone(Form("relEffAA_iy%d",iy));
-    relativeEff->Divide(hptEffPP[iy]);
-    hRAA[iy]->Divide( relativeEff ) ;
-    hRAA[iy]->SetAxisRange(0,1.2,"Y");
-    hRAA[iy]->SetYTitle("R_{AA} (efficiency corrected)");
-    hRAA[iy]->Draw();
-    jumSun(0,1,30,1);
-  }
 
   TCanvas* cRAA3 =  new TCanvas("cRAA3","",800,400);
   cRAA3->cd();
   hRAA3 = (TH1D*) hRAA2 ->Clone("hRAA_cent_final");
-  TH1D* relativeEff_cent = (TH1D*) hcentEffAA[0] -> Clone("relativeEff_cent");
-  relativeEff_cent -> Divide(hcentEffPP[0]);
+  TH1D* relativeEff_cent = (TH1D*) hcentEffAA -> Clone("relativeEff_cent");
+  relativeEff_cent -> Divide(hcentEffPP);
   hRAA3 -> Divide(relativeEff_cent);
   hRAA3 -> SetAxisRange(0,1.2,"Y");
   hRAA3 -> SetTitle("R_{AA} (efficiency corrected)");
@@ -301,8 +365,7 @@ void getSpectra(int state = 1 ) {
   wf->cd();
   gre->Write();
   gre_int->Write();
-  hRAA[1]->Write();
-  hRAA[2]->Write();
+  hRAA->Write();
 
   
 }
