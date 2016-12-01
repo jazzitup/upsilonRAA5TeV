@@ -1,6 +1,10 @@
 Directory name: nominalResult_MuPt4_v1.0
 Created on Nov 30th.
 
+Files exist in KU server /home/samba/UpsilonAnalysis/fitResultFiles/nominalResult_MuPt4_v1.0 
+Excute this command : 
+ln -s /home/samba/UpsilonAnalysis/fitResultFiles/nominalResult_MuPt4_v1.0 
+
 Signal PDF : 
 - parameters are fixed by MC samples.  https://github.com/jazzitup/upsilonRAA5TeV/commit/2bf06dfa491af16dec97008b873f140185f4c7b9
 - Free parameters : Yields of 1S, 2S, 3S and the mass of 1S 
