@@ -159,7 +159,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hptGenAA->Draw("hist");
   hptRecoAA->Draw("same");
   drawText("PbPb", 0.3, 0.8, 1, 15);
-  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 17);
     
   c_pt->cd(2);
   handsomeTH1(hptGenPP,1);
@@ -169,7 +169,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hptGenPP->Draw("hist");
   hptRecoPP->Draw("same");
   drawText("pp", 0.3, 0.8, 1, 15);
-  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 17);
     
   // Rap Bins
   TCanvas* c_rap =  new TCanvas("c_rap","",600,600);
@@ -183,7 +183,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hrapGenAA->Draw("hist");
   hrapRecoAA->Draw("same");
   drawText("PbPb", 0.3, 0.8, 1, 15);
-  drawText("0 < p_{T} < 30 GeV/c", 0.3, 0.4, 1, 0.7);
+  drawText("0 < p_{T} < 30 GeV/c", 0.3, 0.4, 1, 17);
     
   c_rap->cd(2);
   handsomeTH1(hrapGenPP,1);
@@ -193,7 +193,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hrapGenPP->Draw("hist");
   hrapRecoPP->Draw("same");
   drawText("pp", 0.3, 0.8, 1, 15);
-  drawText("0 < p_{T} < 30 GeV/c", 0.3, 0.4, 1, 0.7);
+  drawText("0 < p_{T} < 30 GeV/c", 0.3, 0.4, 1, 17);
     
 
   // Centrality Bins
@@ -212,7 +212,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hcentGenAA->Draw("hist");
   hcentRecoAA->Draw("same");
   drawText("PbPb", 0.3, 0.8, 1, 15);
-  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 17);
     
   c_cent->cd(2);
   handsomeTH1(hcentGenPP,1);
@@ -226,7 +226,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hcentGenPP->Draw("hist");
   hcentRecoPP->Draw("same");
   drawText("pp", 0.3, 0.8, 1, 15);
-  drawText("|y| < 2.4", 0.3, 0.4, 1, 0.7);
+  drawText("|y| < 2.4", 0.3, 0.4, 1, 17);
     
   
   // *************************
@@ -234,7 +234,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   // *************************
 
   // Efficiency Pt
-  TCanvas* c_eff_pt =  new TCanvas("c_eff_pt","",800,400);
+  TCanvas* c_eff_pt =  new TCanvas("c_eff_pt","",400,400);
   TH1D* hptEffAA;
   TH1D* hptEffPP;
   c_eff_pt->cd();
@@ -251,7 +251,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hptEffPP->Draw("same");
   TLegend* leg2 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
   easyLeg(leg2,"");
-  leg2->AddEntry(hptEffAA, "PbPb");
+  leg2->AddEntry(hptEffAA, "PbPb (0-100%)");
   leg2->AddEntry(hptEffPP, "pp");
   leg2->Draw();
   drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.3,1,15); 
@@ -260,7 +260,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
 
 
   // Efficiency Rap
-  TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",800,400);
+  TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",400,400);
   TH1D* hrapEffAA;
   TH1D* hrapEffPP;
   c_eff_rap->cd();
@@ -277,7 +277,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hrapEffPP->Draw("same");
   TLegend* leg3 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
   easyLeg(leg3,"|y| < 2.4");
-  leg3->AddEntry(hrapEffAA, "PbPb");
+  leg3->AddEntry(hrapEffAA, "PbPb (0-100%)");
   leg3->AddEntry(hrapEffPP, "pp");
   leg3->Draw();
   drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
@@ -285,54 +285,35 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
 
  
   // Centrality Efficiency 
-  TCanvas* c_eff_cent =  new TCanvas("c_eff_cent","",800,400);
+  TCanvas* c_eff_cent =  new TCanvas("c_eff_cent","",400,400);
   TH1D* hcentEffAA;
   TH1D* hcentEffPP;
   TH1D* hcentEffAA_int;
-  TH1D* hcentEffPP_int;
-
-  c_eff_cent->Divide(2,1);
-  c_eff_cent->cd(1);
   hcentEffAA_int = (TH1D*) hcentintRecoAA->Clone("hcentEffAA_int");
   hcentEffAA_int -> Divide(hcentintGenAA);
-  hcentEffPP_int = (TH1D*) hcentintRecoPP->Clone("hcentEffPP_int");
-  hcentEffPP_int -> Divide(hcentintGenPP);
   hcentEffAA_int -> SetAxisRange(0,1.2,"Y");
   hcentEffAA_int -> SetYTitle("efficiency");
-  hcentEffAA_int -> Draw();
-  hcentEffPP_int -> SetAxisRange(0,1.2,"Y");
-  hcentEffPP_int -> SetYTitle("efficiency");
-  hcentEffPP_int -> SetMarkerStyle(24);
-  hcentEffPP_int -> Draw("same");
+  hcentEffPP = (TH1D*)hcentRecoPP->Clone("hcentEffPP");
+  hcentEffPP ->Divide(hcentGenPP);
+  hcentEffPP ->SetMarkerStyle(24);
+  hcentEffPP ->SetLineStyle(2);
+  hcentEffAA = (TH1D*)hcentRecoAA->Clone("hcentEffAA");
+  hcentEffAA ->Divide(hcentGenAA);
+  hcentEffAA ->SetAxisRange(0,1.2,"Y");
+  hcentEffAA ->SetYTitle("efficiency");
+  hcentEffAA ->Draw();
+  hcentEffAA_int -> Draw("same hist");
+  hcentEffPP ->Draw("same hist");
+
   TLegend* leg4 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
   easyLeg(leg4,"|y| < 2.4");
-  leg4->AddEntry(hcentEffAA_int, "PbPb");
-  leg4->AddEntry(hcentEffPP_int, "pp");
+  leg4->AddEntry(hcentEffPP, "pp","l");
+  leg4->AddEntry(hcentEffAA_int, "PbPb (0-100%)","l");
+  leg4->AddEntry(hcentEffAA, "PbPb","pl");
   leg4->Draw();
   drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
   jumSun(0,1,200,1);
 
-  if ( doCent ) { 
-    c_eff_cent->cd(2);
-    hcentEffAA = (TH1D*)hcentRecoAA->Clone("hcentEffAA");
-    hcentEffAA ->Divide(hcentGenAA);
-    hcentEffPP = (TH1D*)hcentRecoPP->Clone("hcentEffPP");
-    hcentEffPP ->Divide(hcentGenPP);
-    hcentEffAA ->SetAxisRange(0,1.2,"Y");
-    hcentEffAA ->SetYTitle("efficiency");
-    hcentEffAA ->Draw();
-    hcentEffPP ->SetMarkerStyle(24);
-    hcentEffPP ->Draw("same");
-    drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
-    TLegend* leg5 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
-    easyLeg(leg5,"Efficiency");
-    leg5->AddEntry(hcentEffAA, "PbPb");
-    leg5->AddEntry(hcentEffPP, "pp","l");
-    leg5->Draw();
-    jumSun(0,1,200,1);
-  } 
-  
-  
   
   TFile *fout = new TFile(Form("efficiency_ups%ds_MCDATA.root",state),"recreate");
   hptGenPP->Write();
@@ -352,7 +333,6 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hcentEffPP->Write();
   hcentEffAA->Write();
   hcentEffAA_int->Write();
-  hcentEffPP_int->Write();
   fout->Close();
 
 
@@ -363,22 +343,30 @@ void setupMultiTreeTool( multiTreeUtil* mt, int UpsState, bool isGen) {
   if ( isGen) treeName = "mmGen";
 
   if ( UpsState == kPPMCUps1S) {    
-    //    mt->addFile("../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168121653_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root",treeName,""); } // No pT weight
-    mt->addFile("../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142115_3c54df0419c4813e2d7256dc8952ac699405d027.root",treeName,""); }// pT weighted 
+    //    mt->addFile("../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142115_3c54df0419c4813e2d7256dc8952ac699405d027.root",treeName,""); }// pT weighted 
+    mt->addFile(
+"../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142115_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+,treeName,""); } 
   else if ( UpsState == kPPMCUps2S) { 
-    mt->addFile("../skimmedFiles/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168121655_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root",treeName,"");  }
+    mt->addFile(
+		"../skimmedFiles/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142117_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		,treeName,"");  }
   else if ( UpsState == kPPMCUps3S) { 
-    mt->addFile("../skimmedFiles/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168121658_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root",treeName,"");  }
+    mt->addFile(
+		"../skimmedFiles/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142119_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		,treeName,"");  }
   
   else if ( UpsState == kAAMCUps1S) { 
-    //    mt->addFile("../skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_2016812170_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root",treeName,""); // No pT weight
-    mt->addFile("../skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142122_3c54df0419c4813e2d7256dc8952ac699405d027.root",treeName,"");  } // Weighted
-    
+    mt->addFile(
+		"../skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142122_3c54df0419c4813e2d7256dc8952ac699405d027.root",
+		treeName,"");  } // Weighted
   else if ( UpsState == kAAMCUps2S) { 
-    mt->addFile("../skimmedFiles/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_2016812171_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root",treeName,"");
+    mt->addFile("../skimmedFiles/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142123_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		,treeName,"");
   }
   else if ( UpsState == kAAMCUps3S) {
-    mt->addFile("../skimmedFiles/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_2016812172_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root",treeName,"");
+    mt->addFile("../skimmedFiles/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142124_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		,treeName,"");
   }
   
 }
