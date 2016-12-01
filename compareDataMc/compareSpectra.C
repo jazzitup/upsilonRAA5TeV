@@ -71,124 +71,124 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
   }
   
-  TH1D* hptMc[nYBins+1];
-  TH1D* hptSig[nYBins+1];
-  TH1D* hRatio[nYBins+1];   // final Ratio w/ efficiency correctdion
+  TH1D* hptMc;
+  TH1D* hptSig;
+  TH1D* hRatio;   // final Ratio w/ efficiency correctdion
 
 
   TFile* inf = new TFile(Form("../efficiency/efficiency_ups%ds_MCDATA.root",state));
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-    if (collId == kPPDATA ){ 
-      hptMc[iy]  = (TH1D*)inf->Get(Form("hptRecoPP_iy%d",iy)); } 
-    if (collId == kAADATA ){ 
-      hptMc[iy]  = (TH1D*)inf->Get(Form("hptRecoAA_iy%d",iy)); } 
-  }
+  if (collId == kPPDATA ){ 
+      hptMc  = (TH1D*)inf->Get("hptRecoPP"); } 
+  if (collId == kAADATA ){ 
+      hptMc  = (TH1D*)inf->Get("hptRecoAA"); } 
+  
   
 
   TCanvas* c1 =  new TCanvas("c1","",800,800);
-  c1->Divide(nYBins+1,2);
+  c1->Divide(1,2);
   
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-//    c1->cd(iy);
-  cout << "ASDas" << endl;
-    handsomeTH1(hptMc[iy],1);
-    // signals :
-    hptSig[iy] = (TH1D*)  hptMc[iy]->Clone(Form("hptSig_iy%d",iy));
-    hptSig[iy]->Reset();
-    for ( int ipt = 1 ; ipt<= nPtBins ; ipt++) {
-      valErr yieldPP;
-      if(iy==0) yieldPP = getYield(state, collId, ptBin[ipt-1], ptBin[ipt], 0.0,2.4, 0, 200, 0, 100);
-      else yieldPP = getYield(state, collId, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
-      hptSig[iy]->SetBinContent( ipt, yieldPP.val ) ;
-      hptSig[iy]->SetBinError( ipt, yieldPP.err ) ;
-    }
+  handsomeTH1(hptMc,1);
+  // signals :
+  hptSig = (TH1D*)  hptMc->Clone("hptSig");
+  hptSig->Reset();
+  for ( int ipt = 1 ; ipt<= nPtBins ; ipt++) {
+    valErr yieldPP;
+    yieldPP = getYield(state, collId, ptBin[ipt-1], ptBin[ipt], 0.0,2.4, 0, 200, 0, 100);
+    hptSig->SetBinContent( ipt, yieldPP.val ) ;
+    hptSig->SetBinError( ipt, yieldPP.err ) ;
   }
   
-  TF1* funct[nYBins+1];
-
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-    c1->cd(iy+1) ;
-    TH1ScaleByWidth(hptMc[iy]);
-    TH1ScaleByWidth(hptSig[iy]);
-    scaleInt(hptMc[iy]);
-    scaleInt(hptSig[iy]);
-
-    handsomeTH1(hptSig[iy],1);
-    hptMc[iy]->SetAxisRange(0,0.35,"Y");
-    hptMc[iy]->Draw("hist");
-    hptSig[iy]->Draw("same");
-
-    c1->cd(iy+2+nYBins);
-    hRatio[iy] = (TH1D*)hptSig[iy]->Clone(Form("hRatio_iy%d",iy));
-    hRatio[iy]->Divide(hptMc[iy]);
-    hRatio[iy]->SetAxisRange(0,5,"Y");
-    handsomeTH1(hRatio[iy],1);
   
-    // Fit :
-    // TF1 *fVar1pp = new TF1("f1srpp",fTsallis1SR,0,30,4);
+  TF1* funct;
 
-  
-    if(state==1) funct[iy] = new TF1(Form("dataMcRatio_iy%d",iy),fTsallis1SR, 0,30,4);
-    else if(state==2) funct[iy] = new TF1(Form("dataMcRatio_iy%d",iy),fTsallis2SR, 0,30,4);
-    
-    funct[iy]->SetParameters(5,5,5,5);
-    funct[iy]->SetParLimits(0,0.,120);
-    funct[iy]->SetParLimits(1,0.,100);
-    funct[iy]->SetParLimits(2,0.,150);
-    funct[iy]->SetParLimits(3,0.,100);
+  c1->cd(1) ;
+  TH1ScaleByWidth(hptMc);
+  TH1ScaleByWidth(hptSig);
+  scaleInt(hptMc);
+  scaleInt(hptSig);
 
-    hRatio[iy]->Fit ( funct[iy], "R");
+  handsomeTH1(hptSig,1);
+  hptMc->SetAxisRange(0,0.35,"Y");
+  hptMc->Draw("hist");
+  hptSig->Draw("same");
 
-    hRatio[iy]->Draw();
-    jumSun(0,1,30,1);
-    
-    cout << "TF1* weightFunction = new TF1(@weightCurve@,@([0] + [1]*x + [2]*x*x + [3]*x*x*x) * ( 1 - TMath::Erf((x-7.5)/2)) + [4] + [5]*x@,0,30);" << endl;   cout << " weightFunction->SetParameters( " ;
-    for ( int i=0 ; i<4 ; i++) { 
+  c1->cd(2);
+  hRatio = (TH1D*)hptSig->Clone("hRatio");
+  hRatio ->Divide(hptMc);
+  hRatio ->SetAxisRange(0,5,"Y");
+  handsomeTH1(hRatio,1);
+
+  // Fit :
+  // TF1 *fVar1pp = new TF1("f1srpp",fTsallis1SR,0,30,4);
+
+
+  if(state==1) funct = new TF1("dataMcRatio",fTsallis1SR, 0,30,4);
+  else if(state==2) funct = new TF1("dataMcRatio",fTsallis2SR, 0,30,4);
+
+  funct->SetParameters(5,5,5,5);
+  funct->SetParLimits(0,0.,120);
+  funct->SetParLimits(1,0.,100);
+  funct->SetParLimits(2,0.,150);
+  funct->SetParLimits(3,0.,100);
+
+  hRatio->Fit ( funct, "R");
+
+  hRatio->Draw();
+  jumSun(0,1,30,1);
+
+  if(state==1)
+  { 
+    cout << "TF1* weightFunction = new TF1(@weightCurve@,@(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))));" << endl;   cout << " weightFunction->SetParameters( " ;
+    for ( int i=0 ; i<4 ; i++) 
+    { 
       if ( i!=3 ) 
-        cout << funct[iy]->GetParameter(i) << ", " ;
-      else   cout << funct[iy]->GetParameter(i) << "); "<< endl ;
+        cout << funct->GetParameter(i) << ", " ;
+      else   cout << funct->GetParameter(i) << "); "<< endl ;
     }
-    
   }
+  else if(state==2)
+  {
+    cout << "TF1* weightFunction = new TF1(@weightCurve@,@(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))));" << endl;   cout << " weightFunction->SetParameters( " ;
+    for ( int i=0 ; i<4 ; i++) 
+    { 
+      if ( i!=3 ) 
+        cout << funct->GetParameter(i) << ", " ;
+      else   cout << funct->GetParameter(i) << "); "<< endl ;
+    }
+  }
+
   //  cout << " This macro MUST be ran on ROOT5!!!! " << endl;
- 
+
   TString fcollId;
   if(collId == kPPDATA) fcollId = "PP";
   else if(collId == kAADATA) fcollId = "AA";
-  
-  TF1 *funct_write[nYBins+1];
 
-  for(int iff=0;iff<=nYBins;iff++)
-  {
-    if(state==1) funct_write[iff] = new TF1(Form("f_%s_1sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))",0,30);
-    else if(state==2) funct_write[iff] = new TF1(Form("f_%s_2sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))",0,30);
+  TF1 *funct_write;
 
-    funct_write[iff] -> FixParameter(0,funct[iff]->GetParameter(0));
-    funct_write[iff] -> FixParameter(1,funct[iff]->GetParameter(1));
-    funct_write[iff] -> FixParameter(2,funct[iff]->GetParameter(2));
-    funct_write[iff] -> FixParameter(3,funct[iff]->GetParameter(3));
-  }
+  if(state==1) funct_write = new TF1(Form("f_%s_1sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))",0,30);
+  else if(state==2) funct_write = new TF1(Form("f_%s_2sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))",0,30);
 
-  
+  funct_write -> FixParameter(0,funct->GetParameter(0));
+  funct_write -> FixParameter(1,funct->GetParameter(1));
+  funct_write -> FixParameter(2,funct->GetParameter(2));
+  funct_write -> FixParameter(3,funct->GetParameter(3));
 
   c1->SaveAs(Form("dNdpT_dataMC_%s_DATA_%dsState.png",fcollId.Data(),state));
   TFile* outf = new TFile(Form("ratioDataMC_%s_%dsState.root",getCollID(collId).Data(), state),"recreate");
-  for ( int iy=0 ; iy<=nYBins ; iy++) {
-    hRatio[iy]->Write();
-    hptSig[iy]->SetName(Form("hData_iy%d",iy));
-    hptMc[iy]->SetName(Form("hMC_iy%d",iy));
-    hptSig[iy]->Write();
-    hptMc[iy]->Write();
-    funct[iy]->Write();
-  }
-  
+  hRatio->Write();
+  hptSig->SetName("hData");
+  hptMc->SetName("hMC");
+  hptSig->Write();
+  hptMc->Write();
+  funct->Write();
+
   outf->Write();
-  
+
 }
 
 
 valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, float yHigh, int cLow, int cHigh,
-		float dphiEp2Low,  float dphiEp2High) {
+    float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
   TFile* inf = new TFile(Form("../fitResults/dataFit_fixParam1MuPt4_2016_08_30/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
