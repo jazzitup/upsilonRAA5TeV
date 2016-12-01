@@ -76,7 +76,7 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
   TH1D* hRatio;   // final Ratio w/ efficiency correctdion
 
 
-  TFile* inf = new TFile(Form("../efficiency/efficiency_ups%ds_MCDATA.root",state));
+  TFile* inf = new TFile(Form("../efficiency/efficiency_ups%ds_MC_noWeight.root",state));
   if (collId == kPPDATA ){ 
       hptMc  = (TH1D*)inf->Get("hptRecoPP"); } 
   if (collId == kAADATA ){ 
@@ -191,7 +191,8 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
     float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  TFile* inf = new TFile(Form("../fitResults/dataFit_fixParam1MuPt4_2016_08_30/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("../TEST/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+//TFile* inf = new TFile(Form("../fitResults/dataFit_fixParam1MuPt4_2016_08_30/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
   ret.val = fitResults->GetBinContent(state);
