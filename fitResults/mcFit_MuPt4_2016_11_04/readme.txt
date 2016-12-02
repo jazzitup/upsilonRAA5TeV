@@ -4,7 +4,7 @@
 //  Created on Nov 30th by Jaebom Park          //
 //////////////////////////////////////////////////
 
-Files exist in KU server /home/samba/UpsilonAnalysis/fitResultFiles/nominalResult_MuPt4_v1.0 
+Files exist in KU server /home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04
 Excute this command : mcFit_MuPt4_2016_11_04
 cp /home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04/*.root .
 
