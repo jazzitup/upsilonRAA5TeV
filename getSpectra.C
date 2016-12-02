@@ -8,6 +8,8 @@
 #include "multiTreeUtil.h"
 using namespace std;
 
+TString ResultDir  = "mcFit_MuPt4_2016_11_04";
+
 
 //// do NOT use "hadded" ttrees!! (e.g.6-100 GeV) 
 valErr getYield(int state=0, int collId=0, float ptLow=0, float ptHigh=0, float yLow=0, float yHigh=0, int cLow=0, int cHigh=0, 	float dphiEp2Low=0,  float dphiEp2High=0) ;
@@ -21,9 +23,9 @@ void getSpectra(int state = 1 ) {
   gStyle->SetEndErrorSize(0);
   gStyle->SetOptStat(0);
   int nPtBins=0;
-  int nRapBins=0;
+  int nYBins=0;
   double* ptBin;
-  double* RapBin;
+  double* yBin;
   int nCentBins=0;
   double* centBin;
 
@@ -32,19 +34,25 @@ void getSpectra(int state = 1 ) {
 
   if ( state == 1 ) { 
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
-    nRapBins = nYBins1S;    RapBin = yBin1S; 
+    nYBins = nYBins1S;    yBin = yBin1S; 
     nCentBins = nCentBins1s;  centBin = centBin1s;
   }
   else if ( state == 2 ) { 
     nPtBins = nPtBins2s;    ptBin = ptBin2s;
-    nRapBins = nYBins2S;    RapBin = yBin2S; 
+    nYBins = nYBins2S;    yBin = yBin2S; 
     nCentBins = nCentBins2s;  centBin = centBin2s;
   }
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
-    nRapBins = nYBins3S;    RapBin = yBin3S; 
+    nYBins = nYBins3S;    yBin = yBin3S; 
     nCentBins = nCentBins3s;  centBin = centBin3s;
   }
+  
+  double ptMin = ptBin[0];    double ptMax = ptBin[nPtBins];  
+  double yMin = yBin[0];    double yMax = yBin[nYBins];  
+  double centMin = centBin[0];    double centMax = centBin[nCentBins];  
+ 
+  
   
   TH1D* hrapEffAA;
   TH1D* hrapEffPP;
@@ -65,7 +73,7 @@ void getSpectra(int state = 1 ) {
   // ##################################
   // ~*~*~*~*~* Rapidity ~*~*~*~*~*~*~*
   // ##################################
-  TFile* inf = new TFile(Form("efficiency/efficiency_ups%ds.root",state));
+  TFile* inf = new TFile(Form("efficiency/efficiency_ups%ds_MCDATA.root",state));
   hrapEffAA  = (TH1D*)inf->Get("hrapEffAA");
   hrapEffPP  = (TH1D*)inf->Get("hrapEffPP");
   
@@ -129,13 +137,13 @@ void getSpectra(int state = 1 ) {
   hrapSigPP = (TH1D*)  hrapEffPP->Clone("hrapSigPP");
   hrapSigAA->Reset();
   hrapSigPP->Reset();
-    for ( int irap = 1 ; irap<= nRapBins ; irap++) {
-      valErr yieldPP = getYield(state, kPPDATA, RapBin[ipt-1], RapBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
-      valErr yieldAA = getYield(state, kAADATA, RapBin[ipt-1], RapBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
-      hrapSigAA->SetBinContent( irap, yieldAA.val ) ;
-      hrapSigAA->SetBinError( irap, yieldAA.err ) ;
-      hrapSigPP->SetBinContent( irap, yieldPP.val ) ;
-      hrapSigPP->SetBinError( irap, yieldPP.err ) ;
+    for ( int iy = 1 ; iy<= nYBins ; iy++) {
+      valErr yieldPP = getYield(state, kPPDATA, ptMin, ptMax, yBin[iy-1], yBin[iy], centMin, centMax, 0, 100);
+      valErr yieldAA = getYield(state, kAADATA, ptMin, ptMax, yBin[iy-1], yBin[iy], centMin, centMax, 0, 100);
+      hrapSigAA->SetBinContent( iy, yieldAA.val ) ;
+      hrapSigAA->SetBinError( iy, yieldAA.err ) ;
+      hrapSigPP->SetBinContent( iy, yieldPP.val ) ;
+      hrapSigPP->SetBinError( iy, yieldPP.err ) ;
     }
     
   
@@ -173,8 +181,8 @@ void getSpectra(int state = 1 ) {
   hptSigAA->Reset();
   hptSigPP->Reset();
     for ( int ipt = 1 ; ipt<= nPtBins ; ipt++) {
-      valErr yieldPP = getYield(state, kPPDATA, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
-      valErr yieldAA = getYield(state, kAADATA, ptBin[ipt-1], ptBin[ipt], yBin[iy-1], yBin[iy], 0, 200, 0, 100);
+      valErr yieldPP = getYield(state, kPPDATA, ptBin[ipt-1], ptBin[ipt], yMin, yMax , centMin, centMax , 0, 100);
+      valErr yieldAA = getYield(state, kAADATA, ptBin[ipt-1], ptBin[ipt], yMin, yMax , centMin, centMax , 0, 100);
       hptSigAA->SetBinContent( ipt, yieldAA.val ) ;
       hptSigAA->SetBinError( ipt, yieldAA.err ) ;
       hptSigPP->SetBinContent( ipt, yieldPP.val ) ;
@@ -227,8 +235,8 @@ void getSpectra(int state = 1 ) {
   double nSetBin[9]={0.};
   for(int icent=1; icent<=nCentBins;icent++)
   {
-    valErr yCentAA = getYield(state,kAADATA,0,30,0,2.4,centBin[icent-1],centBin[icent],0,100); 
-    valErr yCentPP = getYield(state,kPPDATA,0,30,0,2.4,centBin[icent-1],centBin[icent],0,100);
+    valErr yCentAA = getYield(state,kAADATA,0,30,0,2.4, (int) centBin[icent-1],(int) centBin[icent],0,100); 
+    valErr yCentPP = getYield(state,kPPDATA,0,30,0,2.4,(int) centBin[icent-1],(int) centBin[icent],0,100);
     hSetBin -> SetBinContent(icent,(double)((centBin[icent]-centBin[icent-1])*nColl1[icent-1]));
     hcentSigAA -> SetBinContent(icent,yCentAA.val);
     hcentSigAA -> SetBinError(icent,yCentAA.err);
@@ -374,7 +382,7 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
 		float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  TFile* inf = new TFile(Form("TEST/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("fitResults/%s/fitresults_upsilon_%sCB_%s.root",ResultDir.Data(), SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
   ret.val = fitResults->GetBinContent(state);
