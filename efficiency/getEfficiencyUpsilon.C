@@ -254,8 +254,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   leg2->AddEntry(hptEffAA, "PbPb (0-100%)");
   leg2->AddEntry(hptEffPP, "pp");
   leg2->Draw();
-  drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.3,1,15); 
-  drawText("|y|<2.4",0.25,0.5,1,15); 
+  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15); 
   jumSun(0,1,30,1);
 
 
@@ -276,12 +275,12 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hrapEffPP->SetMarkerStyle(24);
   hrapEffPP->Draw("same");
   TLegend* leg3 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
-  easyLeg(leg3,"|y| < 2.4");
+  easyLeg(leg3,"p_{T} < 30 GEV/c");
   leg3->AddEntry(hrapEffAA, "PbPb (0-100%)");
   leg3->AddEntry(hrapEffPP, "pp");
   leg3->Draw();
-  drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
   jumSun(0,1,30,1);
+  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15); 
 
  
   // Centrality Efficiency 
@@ -311,7 +310,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   leg4->AddEntry(hcentEffAA_int, "PbPb (0-100%)","l");
   leg4->AddEntry(hcentEffAA, "PbPb","pl");
   leg4->Draw();
-  drawText("Accepted muon p_{T} > 4GeV/c",0.25,0.2,1,15); 
+  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15); 
   jumSun(0,1,200,1);
 
   
