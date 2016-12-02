@@ -12,22 +12,25 @@ double PtReweight(TLorentzVector* DiMuon, double coefficient, double constant);
 
 
 
-const int  nPtBin = 3;     
-const int  nRapBin = 2;     
-const int nCenBin = 9;
+int  nPtBin;     
+int  nRapBin;     
+int nCenBin;
 const double muonPtCut = 4.0;
 
 double m1S_low = 8.0;
 double m1S_high = 10.0;
 double m2S_low = 8.563;
 double m2S_high = 10.563;
+double m3S_low = 8.895;
+double m3S_high = 10.895;
+
 
 int iPeriod = 5;
 int iPos = 33;
 
 void dimuEff(
-	int oniaMode = 1, //1 = 1S and 2 = 2S
-	bool isPbPb = false //true = PbPb and false = pp
+	int oniaMode = 3, //1 = 1S, 2 = 2S, 3 = 3S
+	bool isPbPb = true //true = PbPb and false = pp
 	){   
 
 	setTDRStyle();
@@ -42,6 +45,10 @@ void dimuEff(
 	if (oniaMode == 1 && !isPbPb){
 		myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/pp_MC_Official/OniaTree_Ups1SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root");
 	}
+
+        if (oniaMode == 3 && !isPbPb){
+                myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/pp_MC_Official/OniaTree_Ups3SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root");
+        }
 
 
 	if (oniaMode == 2 && isPbPb){
@@ -62,6 +69,12 @@ void dimuEff(
 		myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/PbPb_MC_Official/OniaTree_Pythia8_Ups1SMM_ptUps_15_30_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root");
 	}
 
+        if (oniaMode == 3 && isPbPb){
+                myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/PbPb_MC_Official/OniaTree_Pythia8_Ups3SMM_ptUps3S_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root");
+                myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/PbPb_MC_Official/OniaTree_Pythia8_Ups3SMM_ptUps3S_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root");
+                myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/PbPb_MC_Official/OniaTree_Pythia8_Ups3SMM_ptUps3S_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root");
+                myTree.Add("/scratch_menkar/CMS_Trees/OniaTrees_2015_5TeV/PbPb_MC_Official/OniaTree_Pythia8_Ups3SMM_ptUps3S_09_inf_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root");
+        }
 
 
 
@@ -77,15 +90,61 @@ void dimuEff(
 	Bool_t          muPlGoodMu;
 	Float_t         vProb;
 
+const int nPtBins1s  = 5;  // double ptBin1s[nPtBins1s+1] = {0,2.5,5,8,15,30};
+const int nPtBins2s  = 3;  // double ptBin2s[nPtBins2s+1] = {0,5,15,30};
+const int nPtBins3s  = 3;  //double ptBin3s[nPtBins3s+1] = {0,5,15,30};
+
+const int nYBins1S  = 6;   //double yBin1S[nYBins1S+1] ={0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4};
+const int nYBins2S  = 2;   //double yBin2S[nYBins2S+1] ={0, 1.2, 2.4};
+const int nYBins3S  = 2;   //double yBin3S[nYBins3S+1] ={0, 1.2, 2.4};
+
+const int nCenBins1s2s = 9;
+const int nCenBins3s = 4;
+
+if (oniaMode == 1){
+nPtBin = nPtBins1s;
+cout << "This is fine" << endl;
+float ptBin[nPtBins1s] = {1.25,3.75,6.5,11.5,22.5};
+        float          ptBinEdges[nPtBins1s + 1] ={0,2.5,5,8,15,30};
+nRapBin = nYBins1S;
+float          rapBin[nYBins1S] = {0.2,0.6,1.0,1.4,1.8,2.2};
+float          rapBinEdges[nYBins1S + 1] = {0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4};
+nCenBin = nCenBins1s2s;
+        float           CenBin[nCenBins1s2s] = { 2.5, 7.5, 15, 25, 35, 45, 55, 65, 85 };
+        float           CenBinEdges[nCenBins1s2s + 1] = { 0, 5, 10, 20, 30, 40, 50, 60, 70, 100 };
+}
+if (oniaMode == 2){
+nPtBin = nPtBins2s;
+float ptBin[nPtBins2s] = {2.5,10,22.5};
+        float          ptBinEdges[nPtBins2s + 1] ={0,5,15,30};
+nRapBin = nYBins2S;
+float          rapBin[nYBins2S] = { 0.6, 1.8 };
+float          rapBinEdges[nYBins2S + 1] = { 0, 1.2, 2.4 };
+nCenBin = nCenBins1s2s;
+        float           CenBin[nCenBins1s2s] = { 2.5, 7.5, 15, 25, 35, 45, 55, 65, 85 };
+        float           CenBinEdges[nCenBins1s2s + 1] = { 0, 5, 10, 20, 30, 40, 50, 60, 70, 100 };
+}
+if (oniaMode == 3){
+nPtBin = nPtBins3s;
+float ptBin[nPtBins3s] = {2.5,10,22.5};
+        float          ptBinEdges[nPtBins3s + 1] ={0,5,15,30};
+nRapBin = nYBins3S;
+float          rapBin[nYBins3S] = { 0.6, 1.8 };
+float          rapBinEdges[nYBins3S + 1] = { 0, 1.2, 2.4 };
+nCenBin  = nCenBins3s;
+        float           CenBin[nCenBins3s] = { 5, 20, 40, 75};
+   float CenBinEdges[nCenBins3s+1] = {0,10,30,50,100};
+}
+
 	float          ptWeight;
 	float          centWeight;
-	float          ptBin[nPtBin] = { 2.5, 8.5, 21 };
-	float          ptBinEdges[nPtBin + 1] = { 0, 5, 12, 30 };
-	float          rapBin[nRapBin] = { 0.6, 1.8 };
-	float          rapBinEdges[nRapBin + 1] = { 0, 1.2, 2.4 };
+//	float          ptBin[nPtBin] = { 2.5, 8.5, 21 };
+//	float          ptBinEdges[nPtBin + 1] = { 0, 5, 12, 30 };
+//	float          rapBin[nRapBin] = { 0.6, 1.8 };
+//	float          rapBinEdges[nRapBin + 1] = { 0, 1.2, 2.4 };
 
-	float           CenBin[nCenBin] = { 2.5, 7.5, 15, 25, 35, 45, 55, 65, 85 };
-	float    	CenBinEdges[nCenBin + 1] = { 0, 5, 10, 20, 30, 40, 50, 60, 70, 100 };
+//	float           CenBin[nCenBin] = { 2.5, 7.5, 15, 25, 35, 45, 55, 65, 85 };
+//	float    	CenBinEdges[nCenBin + 1] = { 0, 5, 10, 20, 30, 40, 50, 60, 70, 100 };
 
 	float           IntBin[1] = { 100 };
 	float		IntBinEdges[2] = { 0, 100 };
@@ -239,6 +298,8 @@ void dimuEff(
 	TH1D  *RecoEventsInt = new TH1D("RecoEventsInt", "Reconstructed", 1, IntBinEdges);
 	TH1D  *GenEventsInt = new TH1D("GenEventsInt", "Generated", 1, IntBinEdges);
 
+cout << ptBinEdges << endl;
+
 	TH1D  *RecoEventsPt = new TH1D("RecoEventsPt", "Reconstructed", nPtBin, ptBinEdges);
 	TH1D  *GenEventsPt = new TH1D("GenEventsPt", "Generated", nPtBin, ptBinEdges);
 
@@ -276,6 +337,10 @@ void dimuEff(
 		massLow = m1S_low;
 		massHigh = m1S_high;
 	}
+	else if (oniaMode == 3){
+                massLow = m3S_low;
+                massHigh = m3S_high;
+        }
 	else{
 		massLow = m2S_low;
 		massHigh = m2S_high;
@@ -349,6 +414,7 @@ void dimuEff(
 			if (isPbPb){
 				if (oniaMode == 1){ ptReweight = (f1SAA->Eval(ptReco)); }
 				if (oniaMode == 2){ ptReweight = (f2SAA->Eval(ptReco)); }
+				if (oniaMode == 3){ ptReweight = 1;}
 				tNum = myTree.GetTreeNumber();
 				//ptReweight = 1;
 				ptWeight = GetWeight(tNum, oniaMode);
@@ -357,6 +423,7 @@ void dimuEff(
 			else {
 				if (oniaMode == 1){ ptReweight = (f1Spp->Eval(ptReco)); }
 				if (oniaMode == 2){ ptReweight = (f2Spp->Eval(ptReco)); }
+				if (oniaMode == 3){ ptReweight = 1;}
 				//ptReweight = 1;
 				weight = ptReweight;
 			}
@@ -421,6 +488,7 @@ void dimuEff(
 			if (isPbPb){
 				if (oniaMode == 1){ ptReweight = (f1SAA->Eval(ptGen)); }
 				if (oniaMode == 2){ ptReweight = (f2SAA->Eval(ptGen)); }
+                                if (oniaMode == 3){ ptReweight = 1;}
 				tNum = myTree.GetTreeNumber();
 				//ptReweight = 1;
 				ptWeight = GetWeight(tNum, oniaMode);
@@ -429,6 +497,7 @@ void dimuEff(
 			else{
 				if (oniaMode == 1){ ptReweight = (f1Spp->Eval(ptGen)); }
 				if (oniaMode == 2){ ptReweight = (f2Spp->Eval(ptGen)); }
+                                if (oniaMode == 3){ ptReweight = 1;}
 				//ptReweight = 1;
 				weight = ptReweight;
 			}
@@ -664,8 +733,10 @@ double PtReweight(TLorentzVector* DiMuon, double coefficient, double constant){
 double GetWeight(int numTree,int oniaMode){
   double weight1[6] = {3.10497,4.11498,2.2579,1.2591,0.567094,0.783399};
   double weight2[6] = {5.89168,9.08207,3.106,1.10018,0.534916,0.776183};
+  double weight3[4] = {6.86815,8.29618,6.75153,5.48684};
   if(oniaMode ==1)return weight1[numTree];
-  else return weight2[numTree];
+  if(oniaMode ==2) return weight2[numTree];
+  else return weight3[numTree];
 }
 
 //this re weights centrality dist. 
