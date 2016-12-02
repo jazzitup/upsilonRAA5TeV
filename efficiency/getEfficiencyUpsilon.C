@@ -256,7 +256,8 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   leg2->Draw();
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15); 
   jumSun(0,1,30,1);
-
+  
+  c_eff_pt->SaveAs(Form("eff_vs_pt_%ds.pdf",state));
 
   // Efficiency Rap
   TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",400,400);
@@ -281,7 +282,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   leg3->Draw();
   jumSun(0,1,30,1);
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15); 
-
+  c_eff_rap->SaveAs(Form("eff_vs_rap_%ds.pdf",state));
  
   // Centrality Efficiency 
   TCanvas* c_eff_cent =  new TCanvas("c_eff_cent","",400,400);
@@ -312,6 +313,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   leg4->Draw();
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15); 
   jumSun(0,1,200,1);
+  c_eff_cent->SaveAs(Form("eff_vs_cent_%ds.pdf",state));
 
   
   TFile *fout = new TFile(Form("efficiency_ups%ds_MCDATA.root",state),"recreate");
