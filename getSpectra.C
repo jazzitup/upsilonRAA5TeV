@@ -8,7 +8,7 @@
 #include "multiTreeUtil.h"
 using namespace std;
 
-TString ResultDir  = "mcFit_MuPt4_2016_11_04";
+TString ResultDir  = "nominalFits";
 
 
 //// do NOT use "hadded" ttrees!! (e.g.6-100 GeV) 
@@ -298,7 +298,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   for(int ibin=0;ibin<9;ibin++){
   gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(9-ibin));
   gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(9-ibin));}
-  gre1->Draw();
+//  gre1->Draw();
 
   for(int ibin = 1; ibin<10; ibin++)
   {
@@ -329,14 +329,14 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   for(int ibin=0;ibin<9;ibin++){
   gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(9-ibin));
   gre->SetPointError(ibin,0,hRAA3->GetBinError(9-ibin));}
-  jumSun(0,1,420,1);
 
   
   TPad *padl = new TPad("padl","padl", 0, 0., 0.9, 1);
   TPad *padr = new TPad("padr","padr", 0.9, 0., 1, 1);
 //  padl->SetBottomMargin(0);
 //  padr->SetBottomMargin(0);
-  
+
+  cRAACentEffCor->cd();  
   padl->Draw();
   padl->cd();
   TH1D *htemp = new TH1D("htemp",";N_{Part};RAA",420,0,420);
@@ -351,6 +351,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   drawText(Form("#Upsilon(%dS),  |y| < 2.4",state),0.45,0.87,1,16);
   drawText("p_{T}^{#mu} > 4 GeV", 0.45,0.80,1,16);
+  jumSun(0,1,420,1);
   
   padr->SetFrameBorderMode(0);
   padr->SetBorderMode(0);
@@ -358,22 +359,22 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   padr->SetTicks(0,0);
   padr->Draw();
   padr->cd();
-  handsomeTG1(gre_int,1);
-  htempFull->SetAxisRange(0,2.0,"Y");
+  handsomeTG1(gre_int,2);
+  htempFull->SetAxisRange(0,1.6,"Y");
   htempFull->GetXaxis()->SetLabelOffset(999);
   htempFull->GetXaxis()->SetLabelSize(0);
   htempFull->GetYaxis()->SetTickLength(0.);
   htempFull->GetXaxis()->SetTickLength(0.);
-  htempFull->Draw();
+  handsomeTH1(htempFull);
+  htempFull->DrawCopy();
   gre_int->GetHistogram()->GetXaxis()->SetLabelOffset(999);
   gre_int->GetHistogram()->GetXaxis()->SetLabelSize(0);
   gre_int->GetHistogram()->GetYaxis()->SetLimits(0,1.6);
   gre_int->GetHistogram()->GetYaxis()->SetRangeUser(0,1.6);
   gre_int->GetHistogram()->GetXaxis()->SetLimits(0,2);
   gre_int->GetHistogram()->GetXaxis()->SetRangeUser(0,2);
-  gre_int->SetMarkerColor(1);
-  gre_int->SetMarkerSize(1);
-  gre_int->SetMarkerStyle(10);
+  gre_int->SetFillColor(ci);
+  gre_int->SetMarkerStyle(20);
   gre_int->Draw("P same");
 
   cRAACentEffCor->SaveAs(Form("raa_vs_cent_%ds.pdf",state));
