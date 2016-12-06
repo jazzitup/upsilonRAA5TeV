@@ -168,7 +168,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hRAA_rap->SetAxisRange(0,1.2,"Y");
   hRAA_rap->SetYTitle("R_{AA}");
   hRAA_rap->Draw();
-  jumSun(0,1,30,1);
+  jumSun(0,1,2.4,1);
 
   
   cRAA_rap->SaveAs(Form("raa_vs_rap_%ds.pdf",state));
@@ -199,7 +199,72 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hptSigPP->Draw();
   gPad->SetLogy();
   hptSigAA->Draw("same");
+
+  TCanvas* ccsPt = new TCanvas("crossSectionPt","",400,400);
+  TH1D* hcsAA_pt = (TH1D*)hptSigAA->Clone("hcsAA_pt");
+  TH1D* hcsPP_pt = (TH1D*)hptSigPP->Clone("hcsPP_pt");
+  TH1D* hcsAA_rap = (TH1D*)hrapSigAA->Clone("hcsAA_rap");
+  TH1D* hcsPP_rap = (TH1D*)hrapSigPP->Clone("hcsPP_rap");
   
+  hcsAA_pt->Divide(hptEffAA); // efficiency 
+  hcsPP_pt->Divide(hptEffPP);
+  hcsAA_rap->Divide(hrapEffAA); 
+  hcsPP_rap->Divide(hrapEffPP);
+  //  hcsAA_pt->Divide(hptAccAA);  // acceptance
+  //  hcsPP_pt->Divide(hptAccPP);
+  //  hcsAA_rap->Divide(hrapAccAA);
+  //  hcsPP_rap->Divide(hrapAccPP);
+  
+  // d_sigma 
+  hcsAA_pt->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
+  hcsPP_pt->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
+  hcsAA_pt->Scale( 1./(208. * 208) );
+  hcsAA_rap->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
+  hcsPP_rap->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
+  hcsAA_rap->Scale( 1./(208. * 208) );
+  // d_sigma/dpT and d_sigma/dy
+  TH1ScaleByWidth(hcsAA_pt);
+  TH1ScaleByWidth(hcsPP_pt);
+  TH1ScaleByWidth(hcsAA_rap);
+  TH1ScaleByWidth(hcsPP_rap);
+
+  // pT cross-section is normalized by delta y 
+  hcsAA_pt->Scale( 0.5 / yMax );   // 1 / 4.8
+  hcsPP_pt->Scale( 0.5 / yMax );   // 1 / 4.8
+  
+  handsomeTH1(hcsAA_pt,2);
+  handsomeTH1(hcsPP_pt,1);
+  hcsAA_pt->SetYTitle("B #times #frac{d#sigma}{dp_{T}} #frac{1}{#Deltay} [nb/(GeV/c)]");
+  hcsAA_pt->SetAxisRange(  hcsAA_pt->GetBinContent(nPtBins) * 0.1,  hcsPP_pt->GetBinContent(1) * 10, "Y");
+  hcsAA_pt->Draw();
+  hcsPP_pt->Draw("same");
+  gPad->SetLogy();
+  
+  TLegend* legCS = new TLegend(0.5046176,0.65,0.9,0.9,NULL,"brNDC");
+  easyLeg(legCS,(Form("#Upsilon(%dS),  |y| < 2.4",state)) );
+  legCS->AddEntry(hcsAA_pt, "PbPb #times A^{2}");
+  legCS->AddEntry(hcsPP_pt, "pp");
+  legCS->Draw();
+
+  TCanvas* ccsRap = new TCanvas("crossSectionRap","",400,400);
+  handsomeTH1(hcsAA_rap,2);
+  handsomeTH1(hcsPP_rap,1);
+  hcsAA_rap->SetYTitle("B #times d#sigma/dy [nb]");
+  //  hcsAA_rap->SetAxisRange(  hcsAA_rap->GetBinContent(nYBins) * 0.5,  hcsPP_rap->GetBinContent(1) * 1.5, "Y");
+  hcsAA_rap->SetAxisRange(  0,  hcsPP_rap->GetBinContent(1) * 2.0, "Y");
+  hcsAA_rap->Draw();
+  hcsPP_rap->Draw("same");
+
+  
+  TLegend* legCSrap = new TLegend(0.5046176,0.65,0.9,0.9,NULL,"brNDC");
+  easyLeg(legCSrap,(Form("#Upsilon(%dS)",state)) );
+  legCSrap->AddEntry(hcsAA_pt, "PbPb #times A^{2}");
+  legCSrap->AddEntry(hcsPP_pt, "pp");
+  legCSrap->Draw();
+
+  //  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
+
+
   TCanvas* cptRAA1 =  new TCanvas("cRAA_ptUnCorr","",400,400);
   cptRAA1->cd();
   hRAAraw_pt = (TH1D*)hptSigAA->Clone("hRAAraw_pt");
@@ -282,30 +347,30 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hRAAraw_cent ->SetAxisRange(0,1.2,"Y");
   hRAAraw_cent ->SetYTitle("R_{AA} (efficiency UNcorrected)");
   hRAAraw_cent ->Draw();
-  jumSun(0,1,30,1);
+  jumSun(0,1,200,1);
   
    
   TCanvas* cRAACentEffCor =  new TCanvas("cRAACentEffCor","",400,400);
-//  TGraphErrors *gre1 = new TGraphErrors(nCentBins);
-//  gre1->SetName("raa_vs_npart");
-//  gre1->SetTitle("Graph");
-
-//  Int_t cii;      // for color index setting
-//  TColor *color; // for color definition with alpha
-//  cii = TColor::GetColor("#6699ff");
-//  gre1->SetFillColor(cii);
-//  gre1->SetMarkerStyle(20);
-//  for(int ibin=0;ibin<nCentBins;ibin++){
-//  gre1->SetPoint(ibin,nPart[ibin],hRAAraw_cent->GetBinContent(nCentBins-ibin));
-//  gre1->SetPointError(ibin,10,hRAAraw_cent->GetBinError(nCentBins-ibin));}
-//  gre1->Draw();
-
+  //  TGraphErrors *gre1 = new TGraphErrors(nCentBins);
+  //  gre1->SetName("raa_vs_npart");
+  //  gre1->SetTitle("Graph");
+  
+  //  Int_t cii;      // for color index setting
+  //  TColor *color; // for color definition with alpha
+  //  cii = TColor::GetColor("#6699ff");
+  //  gre1->SetFillColor(cii);
+  //  gre1->SetMarkerStyle(20);
+  //  for(int ibin=0;ibin<nCentBins;ibin++){
+  //  gre1->SetPoint(ibin,nPart[ibin],hRAAraw_cent->GetBinContent(nCentBins-ibin));
+  //  gre1->SetPointError(ibin,10,hRAAraw_cent->GetBinError(nCentBins-ibin));}
+  //  gre1->Draw();
+  
   for(int ibin = 1; ibin<nCentBins+1; ibin++)
-  {
-    cout << "yield at " << ibin<<"th bin: "<< hRAAraw_cent->GetBinContent(ibin) << endl;
-  }
-
-
+    {
+      cout << "yield at " << ibin<<"th bin: "<< hRAAraw_cent->GetBinContent(ibin) << endl;
+    }
+  
+  
   hRAA_cent = (TH1D*) hRAAraw_cent ->Clone("hRAAraw_cent_final");
   TH1D* relativeEff_cent = (TH1D*) hcentEffAA -> Clone("relativeEff_cent");
   // Efficiency ratio : 
@@ -388,11 +453,31 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   gRAA_rap->SetName("gRAA_rap");
   gRAA_rap->SetTitle("raa_vs_rap");
 
+
+  TGraphErrors *gCSPP_pt = new TGraphErrors(hcsPP_pt);
+  gCSPP_pt->SetName("gCrossSection_pt_PP");
+  gCSPP_pt->SetTitle("cs_vs_pt_PP");
+  TGraphErrors *gCSAA_pt = new TGraphErrors(hcsAA_pt);
+  gCSAA_pt->SetName("gCrossSection_pt_AA");
+  gCSAA_pt->SetTitle("cs_vs_pt_AA");
+  TGraphErrors *gCSAA_rap = new TGraphErrors(hcsAA_rap);
+  gCSAA_rap->SetName("gCrossSection_rap_AA");
+  gCSAA_rap->SetTitle("cs_vs_rap_AA");
+  TGraphErrors *gCSPP_rap = new TGraphErrors(hcsPP_rap);
+  gCSPP_rap->SetName("gCrossSection_rap_PP");
+  gCSPP_rap->SetTitle("cs_vs_rap_PP");
+
+  
   TFile *wf = new TFile(Form("finalResults/Ups_%d_RAA.root",state),"recreate");
   gRAA_int->Write(); // integrated
   gRAA_cent->Write(); // vs npart
   gRAA_pt->Write(); // vs pt
   gRAA_rap->Write(); //vs rap
+  gCSPP_pt->Write();
+  gCSAA_pt->Write();
+  gCSPP_rap->Write();
+  gCSAA_rap->Write();
+
   wf->Close();
   
 }
