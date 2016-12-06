@@ -297,17 +297,6 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   gre1->SetFillColor(cii);
   gre1->SetMarkerStyle(20);
   for(int ibin=0;ibin<nCentBins;ibin++){
-<<<<<<< HEAD
-    gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
-    gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
-  gre1->Draw();
-  
-  for(int ibin = 1; ibin<nCentBins+1; ibin++)
-    {
-      cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
-    }
-  
-=======
   gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
   gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
 //  gre1->Draw();
@@ -318,7 +307,6 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   }
 
 
->>>>>>> origin
   hRAA3 = (TH1D*) hRAA_cent ->Clone("hRAA_cent_final");
   TH1D* relativeEff_cent = (TH1D*) hcentEffAA -> Clone("relativeEff_cent");
   // Efficiency ratio : 
@@ -342,11 +330,6 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   for(int ibin=0;ibin<nCentBins;ibin++){
   gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(nCentBins-ibin));
   gre->SetPointError(ibin,0,hRAA3->GetBinError(nCentBins-ibin));}
-<<<<<<< HEAD
-  jumSun(0,1,420,1);
-
-=======
->>>>>>> origin
 
   
   TPad *padl = new TPad("padl","padl", 0, 0., 0.9, 1);
