@@ -29,23 +29,27 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   double* yBin;
   int nCentBins=0;
   double* centBin;
+  double* nPart;  // In order from peripheral to central 
+  double* nColl;  // In order from central to peripheral 
+  //  double nColl1s[nCentBins] = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
+  //  double nPart1s[nCentBins] = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4};
 
 
 
   if ( state == 1 ) { 
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
     nYBins = nYBins1S;    yBin = yBin1S; 
-    nCentBins = nCentBins1s;  centBin = centBin1s;
+    nCentBins = nCentBins1s;  centBin = centBin1s; nPart = nPart1s; nColl = nColl1s;
   }
   else if ( state == 2 ) { 
     nPtBins = nPtBins2s;    ptBin = ptBin2s;
     nYBins = nYBins2S;    yBin = yBin2S; 
-    nCentBins = nCentBins2s;  centBin = centBin2s;
+    nCentBins = nCentBins2s;  centBin = centBin2s; nPart = nPart2s; nColl = nColl2s;
   }
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
     nYBins = nYBins3S;    yBin = yBin3S; 
-    nCentBins = nCentBins3s;  centBin = centBin3s;
+    nCentBins = nCentBins3s;  centBin = centBin3s; nPart = nPart3s; nColl = nColl3s;
   }
   
   double ptMin = ptBin[0];    double ptMax = ptBin[nPtBins];  
@@ -225,13 +229,11 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   //******RAA vs Centrality *****
   TCanvas* cRAACent =  new TCanvas("cRAACent","",400,400);
-  double nColl1[9] = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
-  double nSetBin[9]={0.};
   for(int icent=1; icent<=nCentBins;icent++)
   {
     valErr yCentAA = getYield(state,kAADATA,ptMin,ptMax,yMin,yMax, (int) centBin[icent-1],(int) centBin[icent],0,100); 
     valErr yCentPP = getYield(state,kPPDATA,ptMin,ptMax,yMin,yMax, 0, 200, 0,100);
-    hSetBin -> SetBinContent(icent,(double)((centBin[icent]-centBin[icent-1])*nColl1[icent-1]));
+    hSetBin -> SetBinContent(icent,(double)((centBin[icent]-centBin[icent-1])*nColl[icent-1]));
     hcentSigAA -> SetBinContent(icent,yCentAA.val);
     hcentSigAA -> SetBinError(icent,yCentAA.err);
   }
@@ -285,26 +287,25 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   
    
   TCanvas* cRAACentEffCor =  new TCanvas("cRAACentEffCor","",400,400);
-  TGraphErrors *gre1 = new TGraphErrors(9);
+  TGraphErrors *gre1 = new TGraphErrors(nCentBins);
   gre1->SetName("Graph0");
   gre1->SetTitle("Graph");
 
   Int_t cii;      // for color index setting
   TColor *color; // for color definition with alpha
   cii = TColor::GetColor("#6699ff");
-  double nPart[9] = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4};
   gre1->SetFillColor(cii);
   gre1->SetMarkerStyle(20);
-  for(int ibin=0;ibin<9;ibin++){
-  gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(9-ibin));
-  gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(9-ibin));}
+  for(int ibin=0;ibin<nCentBins;ibin++){
+    gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
+    gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
   gre1->Draw();
-
-  for(int ibin = 1; ibin<10; ibin++)
-  {
-    cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
-  }
-
+  
+  for(int ibin = 1; ibin<nCentBins+1; ibin++)
+    {
+      cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
+    }
+  
 
   hRAA3 = (TH1D*) hRAA_cent ->Clone("hRAA_cent_final");
   TH1D* relativeEff_cent = (TH1D*) hcentEffAA -> Clone("relativeEff_cent");
@@ -318,7 +319,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hRAA3 -> SetAxisRange(0,1.2,"Y");
   hRAA3 -> SetTitle("R_{AA}");
   
-  TGraphErrors *gre = new TGraphErrors(9);
+  TGraphErrors *gre = new TGraphErrors(nCentBins);
   gre->SetName("Graph0");
   gre->SetTitle("Graph");
 
@@ -326,9 +327,9 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   ci = TColor::GetColor("#6699ff");
   gre->SetFillColor(ci);
   gre->SetMarkerStyle(10);
-  for(int ibin=0;ibin<9;ibin++){
-  gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(9-ibin));
-  gre->SetPointError(ibin,0,hRAA3->GetBinError(9-ibin));}
+  for(int ibin=0;ibin<nCentBins;ibin++){
+  gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(nCentBins-ibin));
+  gre->SetPointError(ibin,0,hRAA3->GetBinError(nCentBins-ibin));}
   jumSun(0,1,420,1);
 
   

@@ -33,10 +33,19 @@ const int nYBins3S  = 2;   double yBin3S[nYBins3S+1] ={0, 1.2, 2.4};
 
 const int nYBins  = 2;   double yBin[nYBins+1] ={0, 1.2, 2.4}; // for event reweighting
 
-const int nCentBins1s  = 9;   double centBin1s[nCentBins1s+1] = {0,10,20,40,60,80,100,120,140,200};
+const int nCentBins1s  = 9;   double centBin1s[nCentBins1s+1] = {0,10,20,40,60,80,100,120,140,200}; 
 const int nCentBins2s  = 9;   double centBin2s[nCentBins2s+1] = {0,10,20,40,60,80,100,120,140,200};
-//const int nCentBins2s  = 4;   double centBin2s[nCentBins2s+1] = {0,20,60,100,200};
 const int nCentBins3s  = 4;   double centBin3s[nCentBins3s+1] = {0,20,60,100,200};
+double nPart1s[nCentBins1s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4}; // HIN-16-008 paper
+double nPart2s[nCentBins2s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4};
+double nPart3s[nCentBins3s]   = {21.9, 109.2, 226.7, 358.8}; 
+double nColl1s[nCentBins1s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67}; 
+double nColl2s[nCentBins2s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67}; 
+double nColl3s[nCentBins3s]   = {1626, 805, 267, 30.8};
+
+
+//const int nCentBins2s  = 4;   double centBin2s[nCentBins2s+1] = {0,20,60,100,200};
+
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };
