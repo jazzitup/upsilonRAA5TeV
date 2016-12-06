@@ -319,7 +319,7 @@ void doSys_SignalVar(
   hh->Draw();
   //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
-  c1->SaveAs(Form("Sys_SignalVar_fitresults_upsilon_%sCB_%s.png",SignalCB.Data(),kineLabel.Data()));
+  c1->SaveAs(Form("Sys_SignalVar_fitresults_upsilon_%sCB_%s_%d.png",SignalCB.Data(),kineLabel.Data(),sysVar));
   
   TH1D* outh = new TH1D("fitResults","fit result",20,0,20);
 
@@ -348,7 +348,7 @@ void doSys_SignalVar(
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
 
 
-  TFile* outf = new TFile(Form("Sys_SignalVar_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()),"recreate");
+  TFile* outf = new TFile(Form("Sys_SignalVar_fitresults_upsilon_%sCB_%s_%d.root",SignalCB.Data(),kineLabel.Data(),sysVar),"recreate");
   outh->Write();
   c1->Write();
   ws->Write();
