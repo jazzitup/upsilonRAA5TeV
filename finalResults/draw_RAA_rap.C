@@ -1,89 +1,108 @@
 #include "SONGKYO.h"
+#include "tdrstyle.C"
+#include "CMS_lumi.C"
 
 void draw_RAA_rap()
 {
-  const int nState = 3;
+  setTDRStyle();
+  writeExtraText = true;       // if extra text
+  int iPeriod = 101;    // 100 for cent, 101 for pt & rap
+  int iPos = 33;
+  
+  const int nState = 3; // Y(1S), Y(2S), and Y(3S)
+  double xmax = 2.4;
+  double relsys = 0.1;
 
+  //// read the inut file and TGraph
   TFile* fIn[nState];
 	TGraphErrors* gRAA[nState];
   for (int is=0; is<nState; is++){
   	fIn[is] = new TFile(Form("Ups_%d_RAA.root",is+1),"READ");
     gRAA[is]=(TGraphErrors*)fIn[is]->Get("gRAA_rap");
-    cout << "gRAA["<<is<<"] = " <<gRAA[is] << endl;
+    //cout << "gRAA["<<is<<"] = " <<gRAA[is] << endl;
   }
   
-  SetGraphStyleFinal(gRAA[0], 1, 0); 
-	SetGraphStyleFinal(gRAA[1], 2, 3); 
-	SetGraphStyleFinal(gRAA[2], 0, 5); 
-	gRAA[0]->SetMarkerSize(1.4);
-	gRAA[1]->SetMarkerSize(1.4);
-	gRAA[2]->SetMarkerSize(2.6);
+  //// systematic uncertainties (temp)
+	TGraphErrors* gRAA_sys[nState];
+  int npoint[nState];
+  double pxtmp, pytmp, extmp, eytmp;
+  for (int is=0; is<nState; is++){
+    gRAA_sys[is]=(TGraphErrors*)fIn[is]->Get("gRAA_rap");
+    npoint[is] = gRAA_sys[is]->GetN();
+    //cout << "*** Y("<<is+1<<") : # of point = " << npoint[is] << endl;
+    for (int ipt=0; ipt< npoint[is] ; ipt++) {
+      pxtmp=0; pytmp=0; extmp=0; eytmp=0;
+      gRAA_sys[is]->GetPoint(ipt, pxtmp, pytmp);
+      extmp=gRAA_sys[is]->GetErrorX(ipt);
+      eytmp=gRAA_sys[is]->GetErrorY(ipt);
+      // 1) remove ex from gRAA
+      gRAA[is]->SetPointError(ipt, 0, eytmp);
+      // 2) set ey for gRAA_sys (assign 10% temporarily)
+      gRAA_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
+    }
+  }
   
-  gRAA[0]->GetXaxis()->SetTitle("|y|");
-  gRAA[0]->GetXaxis()->CenterTitle();
-  gRAA[0]->GetYaxis()->SetTitle("R_{AA}");
-  gRAA[0]->GetYaxis()->CenterTitle();
-  gRAA[0]->GetXaxis()->SetLimits(0.0,2.5);
-  gRAA[0]->SetMinimum(0.0);
-  gRAA[0]->SetMaximum(1.2);
+  //// graph style 
+  for (int is=0; is<nState; is++){
+    SetGraphStyle(gRAA[is], is, is); 
+    SetGraphStyleSys(gRAA_sys[is], is); 
+	}
+  
+  //// latex for text
+  TLatex* globtex = new TLatex();
+  globtex->SetNDC();
+  globtex->SetTextAlign(12); //left-center
+  globtex->SetTextFont(42);
+  globtex->SetTextSize(0.038);
+  
+  // legend
+  TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
+  SetLegendStyle(leg);
+  for (int is=0; is<nState; is++){
+    leg -> AddEntry(gRAA[is],Form("#Upsilon(%dS)",is+1),"lp");
+  }
+
+  //// draw  
+  gRAA_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
+  gRAA_sys[0]->GetXaxis()->CenterTitle();
+  gRAA_sys[0]->GetYaxis()->SetTitle("R_{AA}");
+  gRAA_sys[0]->GetYaxis()->CenterTitle();
+  gRAA_sys[0]->GetXaxis()->SetLimits(0.,xmax);
+  gRAA_sys[0]->SetMinimum(0.0);
+  gRAA_sys[0]->SetMaximum(1.3);
+  /// for rap
+  gRAA_sys[0]->GetXaxis()->SetNdivisions(505);
   
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
-  gRAA[0]->Draw("AP");
-  gRAA[1]->Draw("P");
-  gRAA[2]->Draw("P");
-	dashedLine(0.,1.,2.5,1.,1,1);
+  for (int is=0; is<nState; is++){
+    if ( is==0) gRAA_sys[is]->Draw("A5");
+    else gRAA_sys[is]->Draw("5");
+    gRAA[is]->Draw("P");
+	}
+  dashedLine(0.,1.,xmax,1.,1,1);
+  leg->Draw("same");
 
-/*	
-  TLegendEntry *le1=legBR->AddEntry("le1",Form("  %s", rapAbsArr[2].Data()),"lpf");
-	le1->SetFillColorAlpha(kBlue-10,0.5);
-	le1->SetFillStyle(1001);
-	le1->SetLineColor(kBlue-3);
-	le1->SetMarkerStyle(kFullCircle);
-	le1->SetMarkerColor(kBlue-3);
-	le1->SetMarkerSize(2.1);
-	TLegendEntry *le2=legBR->AddEntry("le2",Form("  %s", rapAbsArr[1].Data()),"lpf");
-	le2->SetFillColorAlpha(kRed-10,0.5);
-	le2->SetFillStyle(1001);
-	le2->SetLineColor(kPink-6);
-	le2->SetMarkerStyle(kFullSquare);
-	le2->SetMarkerColor(kPink-6);
-	le2->SetMarkerSize(2.1);
-	TLegendEntry *le3=legBR->AddEntry("le3",Form("  %s", rapAbsArr[0].Data()),"lpf");
-	le3->SetFillColorAlpha(kGreen-10,0.5);
-	le3->SetFillStyle(1001);
-	le3->SetLineColor(kGreen+3);
-	le3->SetMarkerStyle(kFullDiamond);
-	le3->SetMarkerColor(kGreen+3);
-	le3->SetMarkerSize(3.3);
-
-	//legBR->Draw();
-*/
-  //globtex->SetTextAlign(22);
-	//globtex->SetTextFont(42);
-  //globtex->SetTextSize(0.05);
- // globtex->DrawLatex(0.57, 0.30, rapAbsArr[0].Data());
-	
-	//globtex->SetTextAlign(32); 
-	//globtex->SetTextSize(0.048);
-	//globtex->SetTextFont(42);
-	//if (isPrompt) globtex->DrawLatex(0.92, 0.77, "Prompt J/#psi");
-	//else globtex->DrawLatex(0.92, 0.77, "Nonprompt J/#psi");
-
-	//CMS_lumi( c1, isPA, iPos );
-	//c1->Update();
+  //// Text
+  double sz_init = 0.895; double sz_step = 0.0525;
+  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
   
-    //c1->SaveAs(Form("plot_RFB/RFB_pt_isPrompt%d_rap1.pdf",(int)isPrompt));
-    //c1->SaveAs(Form("plot_RFB/RFB_pt_isPrompt%d_rap1.png",(int)isPrompt));
+  CMS_lumi( c1, iPeriod, iPos );
+
+	c1->Update();
+  c1->SaveAs("RAA_vs_rap.pdf");
+  c1->SaveAs("RAA_vs_rap.png");
+
 /*
 	///////////////////////////////////////////////////////////////////
 	//// save as a root file
-	TFile *outFile;
-  if (noPtWeight) outFile = new TFile(Form("plot_RFB/RFB_pt_isPrompt%d_noPtWeight.root",(int)isPrompt),"RECREATE");
-  else outFile = new TFile(Form("plot_RFB/RFB_pt_isPrompt%d.root",(int)isPrompt),"RECREATE");
+	TFile *outFile = new TFile("RAA_vs_rap.root", "RECREATE");
 	outFile->cd();
-	for (int iy=0; iy<nRapRFB; iy++){
-		gRFB_sys[iy]->Write();	
-		gRFB[iy]->Write();	
+	for (int is=0; is<nState; is++){
+		gRAA_sys[is]->Write();	
+		gRAA[is]->Write();	
 	}
 	outFile->Close();
 */	
