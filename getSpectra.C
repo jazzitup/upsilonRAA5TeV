@@ -213,7 +213,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   jumSun(0,1,30,1);
   
   TCanvas* cPtRAA =  new TCanvas("cRAA_pt","",400,400);
-  hptRAA = (TH1D*)hptRAAeffUnCorr->Clone("hptRAA");
+  hptRAA = (TH1D*)hptRAAeffUnCorr->Clone("raa_vs_pt");
 
   TH1D* relativeEff = (TH1D*)hptEffAA->Clone("relEffAA");
   relativeEff->Divide(hptEffPP);
@@ -259,7 +259,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hRAA_int ->SetYTitle("R_{AA}");
   
   TGraphErrors *gre_int = new TGraphErrors();
-  gre_int->SetName("gre_int");
+  gre_int->SetName("raa_integratedBin");
   gre_int->SetTitle("gre_int");
   gre_int->SetPoint(0,1,hRAA_int->GetBinContent(1));
   gre_int->SetPointError(0,0,hRAA_int->GetBinError(1));
@@ -288,7 +288,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
    
   TCanvas* cRAACentEffCor =  new TCanvas("cRAACentEffCor","",400,400);
   TGraphErrors *gre1 = new TGraphErrors(nCentBins);
-  gre1->SetName("Graph0");
+  gre1->SetName("raa_vs_npart");
   gre1->SetTitle("Graph");
 
   Int_t cii;      // for color index setting
@@ -381,9 +381,10 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   cRAACentEffCor->SaveAs(Form("raa_vs_cent_%ds.pdf",state));
 
   TFile *wf = new TFile(Form("Ups_%d_RAA.root",state),"recreate");
-  //gre->Write();
-  //  gre_int->Write();
-  //  hRAA->Write();
+  gre->Write();
+  gre_int->Write();
+  hptRAA->Write();
+  wf->Close();
 
   
 }
