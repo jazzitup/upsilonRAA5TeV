@@ -126,13 +126,12 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
 
   // signals :
-  TH1D* hRAA_rap;   // raw RAA w/o efficiency correction
-  TH1D* hRAA_rap_effcor;   // raw RAA w/ efficiency correction
-  TH1D* hptRAAeffUnCorr;   // raw RAA w/o efficiency correction
-  TH1D* hptRAA;   // raw RAA w/o efficiency correction
-  TH1D* hRAA_cent; 
-  TH1D* hRAA3;   // final cent RAA w/ efficiency correction
-  TH1D* hRAA;   // final RAA w/ efficiency correctdion
+  TH1D* hRAAraw_rap;   // w/o efficiency correction
+  TH1D* hRAA_rap;   // w/ efficiency correction
+  TH1D* hRAAraw_pt;   // w/o efficiency correction
+  TH1D* hRAA_pt;   // w efficiency correction
+  TH1D* hRAAraw_cent; // w/o efficiency correction
+  TH1D* hRAA_cent;   // w efficiency correction
 
   //***Rapidity***
   hrapSigAA = (TH1D*)  hrapEffAA->Clone("hrapSigAA");
@@ -151,24 +150,24 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   
   //*****RAA Rap ******
   TCanvas* cRAA_rap =  new TCanvas("cRAA_rap","",400,400);
-  hRAA_rap = (TH1D*)hrapSigAA->Clone("hRAA_rap");
-  hRAA_rap->Divide( hrapSigPP );
-  hRAA_rap->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hRAA_rap->Scale( 1./ (208.*208) );
-  hRAA_rap->SetAxisRange(0,1.2,"Y");
-  hRAA_rap->SetYTitle("R_{AA} (efficiency UNcorrected)");
-  hRAA_rap->Draw();
+  hRAAraw_rap = (TH1D*)hrapSigAA->Clone("hRAAraw_rap");
+  hRAAraw_rap->Divide( hrapSigPP );
+  hRAAraw_rap->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+  hRAAraw_rap->Scale( 1./ (208.*208) );
+  hRAAraw_rap->SetAxisRange(0,1.2,"Y");
+  hRAAraw_rap->SetYTitle("R_{AA} (efficiency UNcorrected)");
+  hRAAraw_rap->Draw();
   jumSun(0,1,30,1);
   
   TCanvas* cRAA_rap_effcor =  new TCanvas("cRAA_rap_effcor","",400,400);
-  hRAA_rap_effcor = (TH1D*)hRAA_rap->Clone("hRAA_rap_effcor");
+  hRAA_rap = (TH1D*)hRAAraw_rap->Clone("hRAA_rap");
 
   TH1D* relativeEff_rap = (TH1D*)hrapEffAA->Clone("relEffAA_rap");
   relativeEff_rap->Divide(hrapEffPP);
-  hRAA_rap_effcor->Divide( relativeEff_rap ) ;
-  hRAA_rap_effcor->SetAxisRange(0,1.2,"Y");
-  hRAA_rap_effcor->SetYTitle("R_{AA}");
-  hRAA_rap_effcor->Draw();
+  hRAA_rap->Divide( relativeEff_rap ) ;
+  hRAA_rap->SetAxisRange(0,1.2,"Y");
+  hRAA_rap->SetYTitle("R_{AA}");
+  hRAA_rap->Draw();
   jumSun(0,1,30,1);
 
   
@@ -203,24 +202,24 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   
   TCanvas* cptRAA1 =  new TCanvas("cRAA_ptUnCorr","",400,400);
   cptRAA1->cd();
-  hptRAAeffUnCorr = (TH1D*)hptSigAA->Clone("hptRAAeffUnCorr");
-  hptRAAeffUnCorr->Divide( hptSigPP );
-  hptRAAeffUnCorr->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hptRAAeffUnCorr->Scale( 1./ (208.*208) );
-  hptRAAeffUnCorr->SetAxisRange(0,1.2,"Y");
-  hptRAAeffUnCorr->SetYTitle("R_{AA} (efficiency UNcorrected)");
-  hptRAAeffUnCorr->Draw();
+  hRAAraw_pt = (TH1D*)hptSigAA->Clone("hRAAraw_pt");
+  hRAAraw_pt->Divide( hptSigPP );
+  hRAAraw_pt->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+  hRAAraw_pt->Scale( 1./ (208.*208) );
+  hRAAraw_pt->SetAxisRange(0,1.2,"Y");
+  hRAAraw_pt->SetYTitle("R_{AA} (efficiency UNcorrected)");
+  hRAAraw_pt->Draw();
   jumSun(0,1,30,1);
   
   TCanvas* cPtRAA =  new TCanvas("cRAA_pt","",400,400);
-  hptRAA = (TH1D*)hptRAAeffUnCorr->Clone("raa_vs_pt");
+  hRAA_pt = (TH1D*)hRAAraw_pt->Clone("raa_vs_pt");
 
   TH1D* relativeEff = (TH1D*)hptEffAA->Clone("relEffAA");
   relativeEff->Divide(hptEffPP);
-  hptRAA->Divide( relativeEff ) ;
-  hptRAA->SetAxisRange(0,1.2,"Y");
-  hptRAA->SetYTitle("R_{AA}");
-  hptRAA->Draw();
+  hRAA_pt->Divide( relativeEff ) ;
+  hRAA_pt->SetAxisRange(0,1.2,"Y");
+  hRAA_pt->SetYTitle("R_{AA}");
+  hRAA_pt->Draw();
   jumSun(0,1,30,1);
   
   cPtRAA->SaveAs(Form("raa_vs_pt_%ds.pdf",state));
@@ -246,7 +245,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   //****RAA CENTRALITY 0-100%****
   TH1D *hRAA_int;
-  hRAA_int = (TH1D*) hcentSigAA_int->Clone("hRAA_centint");
+  hRAA_int = (TH1D*) hcentSigAA_int->Clone("hRAAraw_centint");
   hRAA_int ->Divide(hcentSigPP);
   hRAA_int ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
   hRAA_int ->Scale( 1./(208*208));
@@ -258,56 +257,56 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hRAA_int ->SetAxisRange(0,1.6,"Y");
   hRAA_int ->SetYTitle("R_{AA}");
   
-  TGraphErrors *gre_int = new TGraphErrors();
-  gre_int->SetName("raa_integratedBin");
-  gre_int->SetTitle("gre_int");
-  gre_int->SetPoint(0,1,hRAA_int->GetBinContent(1));
-  gre_int->SetPointError(0,0,hRAA_int->GetBinError(1));
+  TGraphErrors *gRAA_int = new TGraphErrors();
+  gRAA_int->SetName("gRAA_int");
+  gRAA_int->SetTitle("raa_integrated");
+  gRAA_int->SetPoint(0,1,hRAA_int->GetBinContent(1));
+  gRAA_int->SetPointError(0,0,hRAA_int->GetBinError(1));
 
 
 
   
-  hRAA_cent = (TH1D*) hcentSigAA->Clone("hRAA_cent");
-  TH1D* htempPP = (TH1D*)hRAA_cent->Clone("htempPP_cent"); 
+  hRAAraw_cent = (TH1D*) hcentSigAA->Clone("hRAAraw_cent");
+  TH1D* htempPP = (TH1D*)hRAAraw_cent->Clone("htempPP_cent"); 
   htempPP->Reset();
   for(int icent=1; icent<=nCentBins;icent++) {
     htempPP->SetBinContent( icent, yCentPP.val );
     htempPP->SetBinError( icent, yCentPP.err );
   }
-  hRAA_cent->Divide(htempPP); 
+  hRAAraw_cent->Divide(htempPP); 
 
-  hRAA_cent ->Divide(hSetBin);
-  hRAA_cent ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hRAA_cent ->Scale( 1./(208*208));
-  hRAA_cent ->Scale(200.*392.);
-  hRAA_cent ->SetAxisRange(0,1.2,"Y");
-  hRAA_cent ->SetYTitle("R_{AA} (efficiency UNcorrected)");
-  hRAA_cent ->Draw();
+  hRAAraw_cent ->Divide(hSetBin);
+  hRAAraw_cent ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+  hRAAraw_cent ->Scale( 1./(208*208));
+  hRAAraw_cent ->Scale(200.*392.);
+  hRAAraw_cent ->SetAxisRange(0,1.2,"Y");
+  hRAAraw_cent ->SetYTitle("R_{AA} (efficiency UNcorrected)");
+  hRAAraw_cent ->Draw();
   jumSun(0,1,30,1);
   
    
   TCanvas* cRAACentEffCor =  new TCanvas("cRAACentEffCor","",400,400);
-  TGraphErrors *gre1 = new TGraphErrors(nCentBins);
-  gre1->SetName("raa_vs_npart");
-  gre1->SetTitle("Graph");
+//  TGraphErrors *gre1 = new TGraphErrors(nCentBins);
+//  gre1->SetName("raa_vs_npart");
+//  gre1->SetTitle("Graph");
 
-  Int_t cii;      // for color index setting
-  TColor *color; // for color definition with alpha
-  cii = TColor::GetColor("#6699ff");
-  gre1->SetFillColor(cii);
-  gre1->SetMarkerStyle(20);
-  for(int ibin=0;ibin<nCentBins;ibin++){
-  gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
-  gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
+//  Int_t cii;      // for color index setting
+//  TColor *color; // for color definition with alpha
+//  cii = TColor::GetColor("#6699ff");
+//  gre1->SetFillColor(cii);
+//  gre1->SetMarkerStyle(20);
+//  for(int ibin=0;ibin<nCentBins;ibin++){
+//  gre1->SetPoint(ibin,nPart[ibin],hRAAraw_cent->GetBinContent(nCentBins-ibin));
+//  gre1->SetPointError(ibin,10,hRAAraw_cent->GetBinError(nCentBins-ibin));}
 //  gre1->Draw();
 
   for(int ibin = 1; ibin<nCentBins+1; ibin++)
   {
-    cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
+    cout << "yield at " << ibin<<"th bin: "<< hRAAraw_cent->GetBinContent(ibin) << endl;
   }
 
 
-  hRAA3 = (TH1D*) hRAA_cent ->Clone("hRAA_cent_final");
+  hRAA_cent = (TH1D*) hRAAraw_cent ->Clone("hRAAraw_cent_final");
   TH1D* relativeEff_cent = (TH1D*) hcentEffAA -> Clone("relativeEff_cent");
   // Efficiency ratio : 
   double ppIntEff = hcentEffPP->GetBinContent ( 1 ) ; 
@@ -315,21 +314,21 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
     relativeEff_cent -> SetBinContent(  icent,   hcentEffAA->GetBinContent( icent ) / ppIntEff ) ;
   }
   
-  hRAA3 -> Divide(relativeEff_cent);
-  hRAA3 -> SetAxisRange(0,1.2,"Y");
-  hRAA3 -> SetTitle("R_{AA}");
+  hRAA_cent -> Divide(relativeEff_cent);
+  hRAA_cent -> SetAxisRange(0,1.2,"Y");
+  hRAA_cent -> SetTitle("R_{AA}");
   
-  TGraphErrors *gre = new TGraphErrors(nCentBins);
-  gre->SetName("Graph0");
-  gre->SetTitle("Graph");
+  TGraphErrors *gRAA_cent = new TGraphErrors(nCentBins);
+  gRAA_cent->SetName("gRAA_cent");
+  gRAA_cent->SetTitle("raa_vs_npart");
 
   Int_t ci;
   ci = TColor::GetColor("#6699ff");
-  gre->SetFillColor(ci);
-  gre->SetMarkerStyle(10);
+  gRAA_cent->SetFillColor(ci);
+  gRAA_cent->SetMarkerStyle(10);
   for(int ibin=0;ibin<nCentBins;ibin++){
-  gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(nCentBins-ibin));
-  gre->SetPointError(ibin,0,hRAA3->GetBinError(nCentBins-ibin));}
+  gRAA_cent->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
+  gRAA_cent->SetPointError(ibin,0,hRAA_cent->GetBinError(nCentBins-ibin));}
 
   
   TPad *padl = new TPad("padl","padl", 0, 0., 0.9, 1);
@@ -342,13 +341,13 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   padl->cd();
   TH1D *htemp = new TH1D("htemp",";N_{Part};RAA",420,0,420);
   TH1D *htempFull = new TH1D("htempfull","",1,0,2);
-  handsomeTG1(gre,2);
+  handsomeTG1(gRAA_cent,2);
   htemp->SetAxisRange(0,1.6,"Y");
   htemp->SetYTitle("R_{AA}");
   handsomeTH1(htemp);
   htemp->DrawCopy();
 
-  gre->Draw("P same");
+  gRAA_cent->Draw("P same");
 
   drawText(Form("#Upsilon(%dS),  |y| < 2.4",state),0.45,0.87,1,16);
   drawText("p_{T}^{#mu} > 4 GeV", 0.45,0.80,1,16);
@@ -360,7 +359,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   padr->SetTicks(0,0);
   padr->Draw();
   padr->cd();
-  handsomeTG1(gre_int,2);
+  handsomeTG1(gRAA_int,2);
   htempFull->SetAxisRange(0,1.6,"Y");
   htempFull->GetXaxis()->SetLabelOffset(999);
   htempFull->GetXaxis()->SetLabelSize(0);
@@ -368,24 +367,33 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   htempFull->GetXaxis()->SetTickLength(0.);
   handsomeTH1(htempFull);
   htempFull->DrawCopy();
-  gre_int->GetHistogram()->GetXaxis()->SetLabelOffset(999);
-  gre_int->GetHistogram()->GetXaxis()->SetLabelSize(0);
-  gre_int->GetHistogram()->GetYaxis()->SetLimits(0,1.6);
-  gre_int->GetHistogram()->GetYaxis()->SetRangeUser(0,1.6);
-  gre_int->GetHistogram()->GetXaxis()->SetLimits(0,2);
-  gre_int->GetHistogram()->GetXaxis()->SetRangeUser(0,2);
-  gre_int->SetFillColor(ci);
-  gre_int->SetMarkerStyle(20);
-  gre_int->Draw("P same");
+  gRAA_int->GetHistogram()->GetXaxis()->SetLabelOffset(999);
+  gRAA_int->GetHistogram()->GetXaxis()->SetLabelSize(0);
+  gRAA_int->GetHistogram()->GetYaxis()->SetLimits(0,1.6);
+  gRAA_int->GetHistogram()->GetYaxis()->SetRangeUser(0,1.6);
+  gRAA_int->GetHistogram()->GetXaxis()->SetLimits(0,2);
+  gRAA_int->GetHistogram()->GetXaxis()->SetRangeUser(0,2);
+  gRAA_int->SetFillColor(ci);
+  gRAA_int->SetMarkerStyle(20);
+  gRAA_int->Draw("P same");
 
   cRAACentEffCor->SaveAs(Form("raa_vs_cent_%ds.pdf",state));
 
-  TFile *wf = new TFile(Form("finalResults/Ups_%d_RAA.root",state),"recreate");
-  gre->Write();
-  gre_int->Write();
-  hptRAA->Write();
-  wf->Close();
+  //// Save TGraphErrors as root files
+  // (convert TH1D to TGraph) 
+  TGraphErrors *gRAA_pt = new TGraphErrors(hRAA_pt);
+  gRAA_pt->SetName("gRAA_pt");
+  gRAA_pt->SetTitle("raa_vs_pt");
+  TGraphErrors *gRAA_rap = new TGraphErrors(hRAA_rap);
+  gRAA_rap->SetName("gRAA_rap");
+  gRAA_rap->SetTitle("raa_vs_rap");
 
+  TFile *wf = new TFile(Form("finalResults/Ups_%d_RAA.root",state),"recreate");
+  gRAA_int->Write(); // integrated
+  gRAA_cent->Write(); // vs npart
+  gRAA_pt->Write(); // vs pt
+  gRAA_rap->Write(); //vs rap
+  wf->Close();
   
 }
 
