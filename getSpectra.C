@@ -213,7 +213,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   jumSun(0,1,30,1);
   
   TCanvas* cPtRAA =  new TCanvas("cRAA_pt","",400,400);
-  hptRAA = (TH1D*)hptRAAeffUnCorr->Clone("hptRAA");
+  hptRAA = (TH1D*)hptRAAeffUnCorr->Clone("raa_vs_pt");
 
   TH1D* relativeEff = (TH1D*)hptEffAA->Clone("relEffAA");
   relativeEff->Divide(hptEffPP);
@@ -259,7 +259,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hRAA_int ->SetYTitle("R_{AA}");
   
   TGraphErrors *gre_int = new TGraphErrors();
-  gre_int->SetName("gre_int");
+  gre_int->SetName("raa_integratedBin");
   gre_int->SetTitle("gre_int");
   gre_int->SetPoint(0,1,hRAA_int->GetBinContent(1));
   gre_int->SetPointError(0,0,hRAA_int->GetBinError(1));
@@ -288,7 +288,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
    
   TCanvas* cRAACentEffCor =  new TCanvas("cRAACentEffCor","",400,400);
   TGraphErrors *gre1 = new TGraphErrors(nCentBins);
-  gre1->SetName("Graph0");
+  gre1->SetName("raa_vs_npart");
   gre1->SetTitle("Graph");
 
   Int_t cii;      // for color index setting
@@ -297,6 +297,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   gre1->SetFillColor(cii);
   gre1->SetMarkerStyle(20);
   for(int ibin=0;ibin<nCentBins;ibin++){
+<<<<<<< HEAD
     gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
     gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
   gre1->Draw();
@@ -306,6 +307,18 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
       cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
     }
   
+=======
+  gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
+  gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
+//  gre1->Draw();
+
+  for(int ibin = 1; ibin<nCentBins+1; ibin++)
+  {
+    cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
+  }
+
+
+>>>>>>> origin
   hRAA3 = (TH1D*) hRAA_cent ->Clone("hRAA_cent_final");
   TH1D* relativeEff_cent = (TH1D*) hcentEffAA -> Clone("relativeEff_cent");
   // Efficiency ratio : 
@@ -329,8 +342,11 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   for(int ibin=0;ibin<nCentBins;ibin++){
   gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(nCentBins-ibin));
   gre->SetPointError(ibin,0,hRAA3->GetBinError(nCentBins-ibin));}
+<<<<<<< HEAD
   jumSun(0,1,420,1);
 
+=======
+>>>>>>> origin
 
   
   TPad *padl = new TPad("padl","padl", 0, 0., 0.9, 1);
@@ -381,10 +397,11 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   cRAACentEffCor->SaveAs(Form("raa_vs_cent_%ds.pdf",state));
 
-  TFile *wf = new TFile(Form("Ups_%d_RAA.root",state),"recreate");
-  //gre->Write();
-  //  gre_int->Write();
-  //  hRAA->Write();
+  TFile *wf = new TFile(Form("finalResults/Ups_%d_RAA.root",state),"recreate");
+  gre->Write();
+  gre_int->Write();
+  hptRAA->Write();
+  wf->Close();
 
   
 }

@@ -65,7 +65,7 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
   }
   else if ( state == 2 ) { 
-    nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nPtBins = nPtBins2s;    ptBin = ptBin2s;
   }
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
@@ -108,7 +108,7 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
   scaleInt(hptSig);
 
   handsomeTH1(hptSig,1);
-  hptMc->SetAxisRange(0,0.35,"Y");
+  hptMc->SetAxisRange(0,0.95,"Y");
   hptMc->Draw("hist");
   hptSig->Draw("same");
 
@@ -123,14 +123,21 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
 
 
   if(state==1) funct = new TF1("dataMcRatio",fTsallis1SR, 0,30,4);
-  else if(state==2) funct = new TF1("dataMcRatio",fTsallis2SR, 0,30,4);
+  else if(state==2) funct = new TF1("dataMcRatio","[0]*x+[1]", 0,30);
+  //else if(state==2) funct = new TF1("dataMcRatio",fTsallis2SR, 0,30,4);
 
+  if(state==1){
   funct->SetParameters(5,5,5,5);
   funct->SetParLimits(0,0.,120);
   funct->SetParLimits(1,0.,100);
   funct->SetParLimits(2,0.,150);
   funct->SetParLimits(3,0.,100);
-
+  }
+  else if(state==2){
+  funct->SetParameters(5,5);
+  funct->SetParLimits(0,-10.,10);
+  funct->SetParLimits(1,-10.,10);
+  }
   hRatio->Fit ( funct, "R");
 
   hRatio->Draw();
@@ -149,9 +156,9 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
   else if(state==2)
   {
     cout << "TF1* weightFunction = new TF1(@weightCurve@,@(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))));" << endl;   cout << " weightFunction->SetParameters( " ;
-    for ( int i=0 ; i<4 ; i++) 
+    for ( int i=0 ; i<2 ; i++) 
     { 
-      if ( i!=3 ) 
+      if ( i!=1 ) 
         cout << funct->GetParameter(i) << ", " ;
       else   cout << funct->GetParameter(i) << "); "<< endl ;
     }
@@ -166,12 +173,20 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
   TF1 *funct_write;
 
   if(state==1) funct_write = new TF1(Form("f_%s_1sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))",0,30);
-  else if(state==2) funct_write = new TF1(Form("f_%s_2sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))",0,30);
+  else if(state==2) funct_write = new TF1(Form("f_%s_2sstate",fcollId.Data()),"[0]*x+[1]",0,30);
+  //else if(state==2) funct_write = new TF1(Form("f_%s_2sstate",fcollId.Data()),"([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))",0,30);
 
+  if(state ==1){
   funct_write -> FixParameter(0,funct->GetParameter(0));
   funct_write -> FixParameter(1,funct->GetParameter(1));
   funct_write -> FixParameter(2,funct->GetParameter(2));
   funct_write -> FixParameter(3,funct->GetParameter(3));
+  }
+
+  if(state==2){
+  funct_write -> FixParameter(0,funct->GetParameter(0));
+  funct_write -> FixParameter(1,funct->GetParameter(1));
+  }
 
   c1->SaveAs(Form("dNdpT_dataMC_%s_DATA_%dsState.png",fcollId.Data(),state));
   TFile* outf = new TFile(Form("ratioDataMC_%s_%dsState.root",getCollID(collId).Data(), state),"recreate");
@@ -191,7 +206,7 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
     float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  TFile* inf = new TFile(Form("../TEST/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("../../TESTPLOT_FORNOMINAL/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
 //TFile* inf = new TFile(Form("../fitResults/dataFit_fixParam1MuPt4_2016_08_30/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
