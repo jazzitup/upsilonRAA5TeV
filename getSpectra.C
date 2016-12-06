@@ -296,12 +296,12 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   cii = TColor::GetColor("#6699ff");
   gre1->SetFillColor(cii);
   gre1->SetMarkerStyle(20);
-  for(int ibin=0;ibin<9;ibin++){
-  gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(9-ibin));
-  gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(9-ibin));}
+  for(int ibin=0;ibin<nCentBins;ibin++){
+  gre1->SetPoint(ibin,nPart[ibin],hRAA_cent->GetBinContent(nCentBins-ibin));
+  gre1->SetPointError(ibin,10,hRAA_cent->GetBinError(nCentBins-ibin));}
 //  gre1->Draw();
 
-  for(int ibin = 1; ibin<10; ibin++)
+  for(int ibin = 1; ibin<nCentBins+1; ibin++)
   {
     cout << "yield at " << ibin<<"th bin: "<< hRAA_cent->GetBinContent(ibin) << endl;
   }
@@ -327,9 +327,9 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   ci = TColor::GetColor("#6699ff");
   gre->SetFillColor(ci);
   gre->SetMarkerStyle(10);
-  for(int ibin=0;ibin<9;ibin++){
-  gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(9-ibin));
-  gre->SetPointError(ibin,0,hRAA3->GetBinError(9-ibin));}
+  for(int ibin=0;ibin<nCentBins;ibin++){
+  gre->SetPoint(ibin,nPart[ibin],hRAA3->GetBinContent(nCentBins-ibin));
+  gre->SetPointError(ibin,0,hRAA3->GetBinError(nCentBins-ibin));}
 
   
   TPad *padl = new TPad("padl","padl", 0, 0., 0.9, 1);
@@ -380,7 +380,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   cRAACentEffCor->SaveAs(Form("raa_vs_cent_%ds.pdf",state));
 
-  TFile *wf = new TFile(Form("Ups_%d_RAA.root",state),"recreate");
+  TFile *wf = new TFile(Form("finalResults/Ups_%d_RAA.root",state),"recreate");
   gre->Write();
   gre_int->Write();
   hptRAA->Write();
