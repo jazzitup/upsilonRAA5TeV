@@ -15,14 +15,13 @@
 
 using namespace std;
 using namespace RooFit;
-void doSys_SignalVar( 
+void doSys_BkgVar( 
        int collId = kAADATA,  
        float ptLow=4, float ptHigh=6, 
        float yLow=0, float yHigh=1.2,
        int cLow=0, int cHigh=200,
        float muPtCut=4.0,
-       bool fixParameters=1,
-       int sysVar = 1
+       bool fixParameters=1
 			) 
 {
   float dphiEp2Low = 0 ;
@@ -86,150 +85,106 @@ void doSys_SignalVar(
           
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
-  
-  RooRealVar sigma1s_1("#sigma_{CB}","width/sigma of the signal gaussian mass PDF", initPset.sigma1s_1, initPset.sigma1s_1*0.8, initPset.sigma1s_1*1.2);
-  RooRealVar X("x","ratio of sigma values",initPset.x1s,initPset.x1s*0.5,initPset.x1s*1.5);
-  
-  RooFormulaVar sigma2s_1("sigma2s_1","#sigma_{CB}*mRatio21", RooArgSet(sigma1s_1,mRatio21));
-  RooFormulaVar sigma3s_1("sigma3s_1","#sigma_{CB}*mRatio31", RooArgSet(sigma1s_1,mRatio31));
 
-
-  RooRealVar Alpha("#alpha_{CB}","tail shift", initPset.alpha1s_1 , initPset.alpha1s_1*0.8, initPset.alpha1s_1*1.2);
+  RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar sigma2s_1("sigma2s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar sigma3s_1("sigma3s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar sigma1s_2("sigma1s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar sigma2s_2("sigma2s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar sigma3s_2("sigma3s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
   
-  RooRealVar N("n_{CB}","power order", initPset.n1s_1 , initPset.n1s_1*0.8, initPset.n1s_1*1.2);
-  RooRealVar *F = new RooRealVar("f","1S CB fraction", initPset.f1s, 0, 1);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 5. , 1.5, 9.8);
+  RooRealVar alpha2s_1("alpha2s_1","tail shift", 5. , 1.5, 9.2);  
+  RooRealVar alpha3s_1("alpha3s_1","tail shift", 5. , 1.5, 9.8);
+  RooRealVar alpha1s_2("alpha1s_2","tail shift", 5. , 1.5, 9.8);
+  RooRealVar alpha2s_2("alpha2s_2","tail shift", 5. , 1.5, 9.2);  
+  RooRealVar alpha3s_2("alpha3s_2","tail shift", 5. , 1.5, 9.8);
+  
+  RooRealVar n1s_1("n1s_1","power order", 5. , 1.5, 9.8);
+  RooRealVar n2s_1("n2s_1","power order", 5. , 1.5, 10.);
+  RooRealVar n3s_1("n3s_1","power order", 4. , 1.5, 9.8);
+  RooRealVar n1s_2("n1s_2","power order", 5. , 1.5, 9.8);
+  RooRealVar n2s_2("n2s_2","power order", 5. , 1.5, 10.);
+  RooRealVar n3s_2("n3s_2","power order", 4. , 1.5, 9.8);
+  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  RooRealVar *f2s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  RooRealVar *f3s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
 
   // Fix the parameters 
   if (fixParameters) 
   { 
     if ( initPset.n1s_1 == -1 )
-    {
-      cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
-      cout << "No Param. set for " << kineLabel << ","<<endl;
-      cout << "Fitting macro is stopped!" << endl << endl << endl;
-      return;
-    }
-    else 
-    { 
+      {
+	cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
+	cout << "No Param. set for " << kineLabel << ","<<endl;
+	cout << "Fitting macro is stopped!" << endl << endl << endl;
+	return;
+      }
+    else { 
       cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
       cout << endl << "Fixing the parameters..." << endl << endl;
       cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
       cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
-   
-      if(sysVar == 1)
-      {
-        Alpha.setVal(initPset.alpha1s_1);  Alpha.setConstant();  
-        sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
-        F->setVal(initPset.f1s);  F->setConstant();  
-        X.setVal(initPset.x1s);  X.setConstant();
-      }
-      
-      else if(sysVar == 2)
-      {
-        N.setVal(initPset.n1s_1);  N.setConstant(); 
-        sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
-        F->setVal(initPset.f1s);  F->setConstant();  
-        X.setVal(initPset.x1s);  X.setConstant();
-      }
-
-      else if(sysVar == 3)
-      {
-        N.setVal(initPset.n1s_1);  N.setConstant(); 
-        Alpha.setVal(initPset.alpha1s_1);  Alpha.setConstant();  
-        F->setVal(initPset.f1s);  F->setConstant();  
-        X.setVal(initPset.x1s);  X.setConstant();
-      }
-
-      else if(sysVar == 4)
-      {
-        N.setVal(initPset.n1s_1);  N.setConstant(); 
-        Alpha.setVal(initPset.alpha1s_1);  Alpha.setConstant();  
-        sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
-        X.setVal(initPset.x1s);  X.setConstant();
-      }
-
-      else if(sysVar == 5)
-      {
-        N.setVal(initPset.n1s_1);  N.setConstant(); 
-        Alpha.setVal(initPset.alpha1s_1);  Alpha.setConstant();  
-        sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
-        F->setVal(initPset.f1s);  F->setConstant();  
-      }
-
+      n1s_1.setVal(initPset.n1s_1);  n1s_1.setConstant(); 
+      n2s_1.setVal(initPset.n2s_1);  n2s_1.setConstant();  
+      n3s_1.setVal(initPset.n3s_1);  n3s_1.setConstant();  
+      n1s_2.setVal(initPset.n1s_2);  n1s_2.setConstant(); 
+      n2s_2.setVal(initPset.n2s_2);  n2s_2.setConstant();  
+      n3s_2.setVal(initPset.n3s_2);  n3s_2.setConstant();  
+      alpha1s_1.setVal(initPset.alpha1s_1);  alpha1s_1.setConstant();  
+      alpha2s_1.setVal(initPset.alpha2s_1);  alpha2s_1.setConstant();  
+      alpha3s_1.setVal(initPset.alpha3s_1);  alpha3s_1.setConstant();  
+      alpha1s_2.setVal(initPset.alpha1s_2);  alpha1s_2.setConstant();  
+      alpha2s_2.setVal(initPset.alpha2s_2);  alpha2s_2.setConstant();  
+      alpha3s_2.setVal(initPset.alpha3s_2);  alpha3s_2.setConstant();  
+      sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
+      sigma2s_1.setVal(initPset.sigma2s_1);  sigma2s_1.setConstant();  
+      sigma3s_1.setVal(initPset.sigma3s_1);  sigma3s_1.setConstant();  
+      sigma1s_2.setVal(initPset.sigma1s_2);  sigma1s_2.setConstant();  
+      sigma2s_2.setVal(initPset.sigma2s_2);  sigma2s_2.setConstant();  
+      sigma3s_2.setVal(initPset.sigma3s_2);  sigma3s_2.setConstant();  
+      f1s->setVal(initPset.f1s);  f1s->setConstant();  
+      f2s->setVal(initPset.f2s);  f2s->setConstant();  
+      f3s->setVal(initPset.f3s);  f3s->setConstant();  
     } 
   }
   
-  RooFormulaVar sigma1s_2("sigma1s_2","#sigma_{CB}*x", RooArgSet(sigma1s_1,X));
-  RooFormulaVar sigma2s_2("sigma2s_2","sigma2s_1*x", RooArgSet(sigma2s_1,X));
-  RooFormulaVar sigma3s_2("sigma3s_2","sigma3s_1*x", RooArgSet(sigma3s_1,X));
-  
-  RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, Alpha, N);
-  RooCBShape* cb2s_1 = new RooCBShape("cball2s_1", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_1, Alpha, N);
-  RooCBShape* cb3s_1 = new RooCBShape("cball3s_1", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_1, Alpha, N);
-  RooCBShape* cb1s_2 = new RooCBShape("cball1s_2", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_2, Alpha, N);
-  RooCBShape* cb2s_2 = new RooCBShape("cball2s_2", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_2, Alpha, N);
-  RooCBShape* cb3s_2 = new RooCBShape("cball3s_2", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_2, Alpha, N);
+  RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
+  cout << " n1s_1.getVal() = " << n1s_1.getVal() << endl;
+  RooCBShape* cb2s_1 = new RooCBShape("cball2s_1", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_1, alpha2s_1, n2s_1);
+  RooCBShape* cb3s_1 = new RooCBShape("cball3s_1", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_1, alpha3s_1, n3s_1);
+  RooCBShape* cb1s_2 = new RooCBShape("cball1s_2", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_2, alpha1s_2, n1s_2);
+  RooCBShape* cb2s_2 = new RooCBShape("cball2s_2", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_2, alpha2s_2, n2s_2);
+  RooCBShape* cb3s_2 = new RooCBShape("cball3s_2", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_2, alpha3s_2, n3s_2);
 
-  RooAddPdf*  cb1s = new RooAddPdf("cb1s","Signal 1S",RooArgList(*cb1s_1,*cb1s_2), RooArgList(*F) );
-  RooAddPdf*  cb2s = new RooAddPdf("cb2s","Signal 2S",RooArgList(*cb2s_1,*cb2s_2), RooArgList(*F) );
-  RooAddPdf*  cb3s = new RooAddPdf("cb3s","Signal 3S",RooArgList(*cb3s_1,*cb3s_2), RooArgList(*F) );
+  RooAddPdf*  cb1s = new RooAddPdf("cb1s","Signal 1S",RooArgList(*cb1s_1,*cb1s_2), RooArgList(*f1s) );
+  RooAddPdf*  cb2s = new RooAddPdf("cb2s","Signal 2S",RooArgList(*cb2s_1,*cb2s_2), RooArgList(*f1s) );
+  RooAddPdf*  cb3s = new RooAddPdf("cb3s","Signal 3S",RooArgList(*cb3s_1,*cb3s_2), RooArgList(*f1s) );
 
   RooRealVar *nSig1s= new RooRealVar("nSig1s"," 1S signals",4000,0,100000);
   RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",1000,0,100000);
   RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",100, 0,10000);
-  
+  RooRealVar *nBkg = new RooRealVar("nBkg"," Bkg signals",10000,0,300000);
+
   // background : 
   initPset.SetMCBkg();
-  double init_mu = initPset.bkg_mu ;
-  double init_sigma = initPset.bkg_sigma ;
-  double init_lambda = initPset.bkg_lambda ;
-
-  //  double init_mu_min = init_mu - 5; double init_mu_max = init_mu + 5;
-  //  double init_sigma_min = init_sigma - 2.; double init_sigma_max = init_sigma + 2;
-  //  double init_lambda_min = init_lambda - 10; double init_lambda_max = init_lambda + 10;
-  double init_mu_min = init_mu - 10; double init_mu_max = init_mu + 10;
-  double init_sigma_min = init_sigma - 10.; double init_sigma_max = init_sigma + 10;
-  double init_lambda_min = init_lambda - 10; double init_lambda_max = init_lambda + 10;
-  if(init_mu_min <0) init_mu_min = 0;
-  if(init_sigma_min <0) init_sigma_min = 0;
-  if(init_lambda_min <0) init_lambda_min = 0;
- 
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
-
-
- /* 
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  RooRealVar m_lambda("#lambda","m_lambda",  5, 0,23);
-*/  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-   
-  /*
-  RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, init_lambda_min, init_lambda_max);
-  */
-  RooGenericPdf *bkg;
-  RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
-  RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));
   
-  if  (ptLow >= 5)        bkg = bkgHighPt ;
-  else bkg = bkgLowPt;
+  RooRealVar ch4_k1("ch4_k1","ch4_k1",0.1,-1.,1.) ;
+  RooRealVar ch4_k2("ch4_k2","ch4_k2",0.1,-1.,1.) ;
+  RooRealVar ch4_k3("ch4_k3","ch4_k3",0.1,-1.,1.) ;
+  RooRealVar ch4_k4("ch4_k4","ch4_k4",0.1,-1.,1.) ;
 
-  RooRealVar *nBkg = new RooRealVar("nBkg","fraction of component 1 in bkg",10000,0,5000000);  
+  RooChebychev * bkg = new RooChebychev("cPol4Bkg","Background",*(ws->var("mass")),RooArgSet(ch4_k1,ch4_k2,ch4_k3,ch4_k4));
 
+  
   RooAddPdf* model = new RooAddPdf();
   model = new RooAddPdf("model","1S+2S+3S + Bkg",RooArgList(*cb1s, *cb2s, *cb3s, *bkg),RooArgList(*nSig1s,*nSig2s,*nSig3s,*nBkg));
 
   ws->import(*model);
 
-
   RooPlot* myPlot2 = (RooPlot*)myPlot->Clone();
   ws->data("reducedDS")->plotOn(myPlot2);
- 
   
-//  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
   ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb1s)),LineColor(kRed),LineStyle(kDashed));
@@ -319,7 +274,7 @@ void doSys_SignalVar(
   hh->Draw();
   //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
-  c1->SaveAs(Form("Sys_SignalVar_fitresults_upsilon_%sCB_%s_%d.png",SignalCB.Data(),kineLabel.Data(),sysVar));
+  c1->SaveAs(Form("Sys_BkgVar_fitresults_upsilon_%sCB_%s.png",SignalCB.Data(),kineLabel.Data()));
   
   TH1D* outh = new TH1D("fitResults","fit result",20,0,20);
 
@@ -348,20 +303,12 @@ void doSys_SignalVar(
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
 
 
-  TFile* outf = new TFile(Form("Sys_SignalVar_fitresults_upsilon_%sCB_%s_%d.root",SignalCB.Data(),kineLabel.Data(),sysVar),"recreate");
+  TFile* outf = new TFile(Form("Sys_BkgVar_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()),"recreate");
   outh->Write();
   c1->Write();
   ws->Write();
   outf->Close();
 
 
-  ///  cout parameters :
-  /*
-    cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
-    cout << "if ( (muPtCut==(float)"<< muPtCut<<") &&  ( ptLow == (float)"<< ptLow <<" ) && (ptHigh == (float)"<<ptHigh<<" ) && (yLow == (float)"<<yLow<<" ) && (yHigh == (float)"<<yHigh<<" ) )" << endl;
-    cout << " {ret.setParMC( " ;
-    cout <<  ws->var("n1S")->getVal() << ", " <<  ws->var("alpha1S")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " << endl;
-    cout <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
-  */
 } 
  
