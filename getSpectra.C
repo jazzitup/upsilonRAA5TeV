@@ -14,6 +14,7 @@ TString ResultDir  = "nominalFits";
 //// do NOT use "hadded" ttrees!! (e.g.6-100 GeV) 
 valErr getYield(int state=0, int collId=0, float ptLow=0, float ptHigh=0, float yLow=0, float yHigh=0, int cLow=0, int cHigh=0, 	float dphiEp2Low=0,  float dphiEp2High=0) ;
 
+void stripErrorBars( TH1* h =0, double defaultErr = 0 ); 
 
 void getSpectra(int state = 1 ) {  
 
@@ -85,6 +86,14 @@ void getSpectra(int state = 1 ) {
   hrapAccPP  = (TH1D*)infacc->Get(Form("hrapAccPP%dS",state));
   hptAccAA  = (TH1D*) infacc->Get(Form("hptAccAA%dS",state));
   hptAccPP  = (TH1D*) infacc->Get(Form("hptAccPP%dS",state));
+  
+  // temporary fix for acceptance uncertainty bar 
+  stripErrorBars(hrapAccPP); 
+  stripErrorBars(hrapAccAA); 
+  stripErrorBars(hptAccPP); 
+  stripErrorBars(hptAccAA); 
+
+
 
   // ##################################
   // ~*~*~*~*~* Rapidity ~*~*~*~*~*~*~*
@@ -261,6 +270,7 @@ void getSpectra(int state = 1 ) {
   legCS->AddEntry(hcsPP_pt, "pp");
   legCS->Draw();
 
+  ccsPt->SaveAs(Form("crossSection_pt_%ds.pdf",state));
   TCanvas* ccsRap = new TCanvas("crossSectionRap","",400,400);
   handsomeTH1(hcsAA_rap,2);
   handsomeTH1(hcsPP_rap,1);
@@ -276,8 +286,8 @@ void getSpectra(int state = 1 ) {
   legCSrap->AddEntry(hcsAA_pt, "PbPb #times A^{2}");
   legCSrap->AddEntry(hcsPP_pt, "pp");
   legCSrap->Draw();
+  ccsPt->SaveAs(Form("crossSection_rap_%ds.pdf",state));
 
-  //  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
 
 
   TCanvas* cptRAA1 =  new TCanvas("cRAA_ptUnCorr","",400,400);
@@ -511,4 +521,11 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
   ret.err = fitResults->GetBinError(state);
   cout << kineLabel << ": " << ret.val << " +/- " << ret.err << endl; 
   return ret;
+}
+
+void stripErrorBars( TH1* h, double defaultErr  ) {
+  
+  for ( int i=0;  i<= h->GetNbinsX() ; i++) {
+    h->SetBinError( i, defaultErr);
+  }
 }
