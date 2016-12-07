@@ -12,6 +12,10 @@ void draw_RAA_rap()
   const int nState = 3; // Y(1S), Y(2S), and Y(3S)
   double xmax = 2.4;
   double relsys = 0.1;
+  
+  double exsys_1s[6] =  {0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
+  double exsys_2s[2] =  {0.6, 0.6};
+  double exsys_3s[2] =  {0.6, 0.6};
 
   //// read the inut file and TGraph
   TFile* fIn[nState];
@@ -38,7 +42,10 @@ void draw_RAA_rap()
       // 1) remove ex from gRAA
       gRAA[is]->SetPointError(ipt, 0, eytmp);
       // 2) set ey for gRAA_sys (assign 10% temporarily)
-      gRAA_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
+      //gRAA_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
+      if (is==0) gRAA_sys[is]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
+      else if (is==1) gRAA_sys[is]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
+      else gRAA_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
     }
   }
   

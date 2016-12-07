@@ -13,6 +13,10 @@ void draw_RAA_pt()
   double xmax = 30.0;
   double relsys = 0.1;
 
+  double exsys_1s[5] =  {1.25, 1.25, 1.5, 3.5, 7.5};
+  double exsys_2s[3] =  {2.5, 5., 7.5};
+  double exsys_3s[3] =  {2.5, 5., 7.5};
+
   //// read the inut file and TGraph
   TFile* fIn[nState];
 	TGraphErrors* gRAA[nState];
@@ -38,7 +42,10 @@ void draw_RAA_pt()
       // 1) remove ex from gRAA
       gRAA[is]->SetPointError(ipt, 0, eytmp);
       // 2) set ey for gRAA_sys (assign 10% temporarily)
-      gRAA_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
+      //gRAA_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
+      if (is==0) gRAA_sys[is]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
+      else if (is==1) gRAA_sys[is]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
+      else gRAA_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
     }
   }
   
