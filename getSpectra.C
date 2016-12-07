@@ -15,8 +15,7 @@ TString ResultDir  = "nominalFits";
 valErr getYield(int state=0, int collId=0, float ptLow=0, float ptHigh=0, float yLow=0, float yHigh=0, int cLow=0, int cHigh=0, 	float dphiEp2Low=0,  float dphiEp2High=0) ;
 
 
-void getSpectra(int state = 1, bool doAccCorr=false ) {
-  
+void getSpectra(int state = 1 ) {  
 
   TH1::SetDefaultSumw2();
   //// modify by hand according to the pt range of the sample
