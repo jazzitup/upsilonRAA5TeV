@@ -15,8 +15,7 @@ TString ResultDir  = "nominalFits";
 valErr getYield(int state=0, int collId=0, float ptLow=0, float ptHigh=0, float yLow=0, float yHigh=0, int cLow=0, int cHigh=0, 	float dphiEp2Low=0,  float dphiEp2High=0) ;
 
 
-void getSpectra(int state = 1, bool doAccCorr=false ) {
-  
+void getSpectra(int state = 1 ) {  
 
   TH1::SetDefaultSumw2();
   //// modify by hand according to the pt range of the sample
@@ -60,11 +59,15 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   
   TH1D* hrapEffAA;
   TH1D* hrapEffPP;
+  TH1D* hrapAccAA;
+  TH1D* hrapAccPP;
   TH1D* hrapSigAA;
   TH1D* hrapSigPP;
 
   TH1D* hptEffAA;
   TH1D* hptEffPP;
+  TH1D* hptAccAA;
+  TH1D* hptAccPP;
   TH1D* hptSigAA;
   TH1D* hptSigPP;
 
@@ -73,6 +76,15 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   TH1D* hcentSigAA;
   TH1D* hcentSigPP;  // There is only one bin for pp. 
 
+  // ##################################
+  // ~*~*~*~*~* Acceptance ~*~*~*~*~*~*
+  // ##################################
+
+  TFile* infacc = new TFile("acceptance/acceptance.root");
+  hrapAccAA  = (TH1D*)infacc->Get(Form("hrapAccAA%dS",state));
+  hrapAccPP  = (TH1D*)infacc->Get(Form("hrapAccPP%dS",state));
+  hptAccAA  = (TH1D*) infacc->Get(Form("hptAccAA%dS",state));
+  hptAccPP  = (TH1D*) infacc->Get(Form("hptAccPP%dS",state));
 
   // ##################################
   // ~*~*~*~*~* Rapidity ~*~*~*~*~*~*~*
@@ -164,7 +176,10 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   TH1D* relativeEff_rap = (TH1D*)hrapEffAA->Clone("relEffAA_rap");
   relativeEff_rap->Divide(hrapEffPP);
-  hRAA_rap->Divide( relativeEff_rap ) ;
+  TH1D* relativeAcc_rap = (TH1D*)hrapAccAA->Clone("relAccAA_rap");
+  relativeAcc_rap->Divide(hrapAccPP);
+  hRAA_rap->Divide( relativeEff_rap ) ;  // efficiency correction
+  hRAA_rap->Divide( relativeAcc_rap ) ;  // acceptance correction
   hRAA_rap->SetAxisRange(0,1.2,"Y");
   hRAA_rap->SetYTitle("R_{AA}");
   hRAA_rap->Draw();
@@ -210,10 +225,10 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hcsPP_pt->Divide(hptEffPP);
   hcsAA_rap->Divide(hrapEffAA); 
   hcsPP_rap->Divide(hrapEffPP);
-  //  hcsAA_pt->Divide(hptAccAA);  // acceptance
-  //  hcsPP_pt->Divide(hptAccPP);
-  //  hcsAA_rap->Divide(hrapAccAA);
-  //  hcsPP_rap->Divide(hrapAccPP);
+  hcsAA_pt->Divide(hptAccAA);  // acceptance
+  hcsPP_pt->Divide(hptAccPP);
+  hcsAA_rap->Divide(hrapAccAA);
+  hcsPP_rap->Divide(hrapAccPP);
   
   // d_sigma 
   hcsAA_pt->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
@@ -254,7 +269,7 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
   hcsAA_rap->SetAxisRange(  0,  hcsPP_rap->GetBinContent(1) * 2.0, "Y");
   hcsAA_rap->Draw();
   hcsPP_rap->Draw("same");
-
+  
   
   TLegend* legCSrap = new TLegend(0.5046176,0.65,0.9,0.9,NULL,"brNDC");
   easyLeg(legCSrap,(Form("#Upsilon(%dS)",state)) );
@@ -281,7 +296,10 @@ void getSpectra(int state = 1, bool doAccCorr=false ) {
 
   TH1D* relativeEff = (TH1D*)hptEffAA->Clone("relEffAA");
   relativeEff->Divide(hptEffPP);
-  hRAA_pt->Divide( relativeEff ) ;
+  TH1D* relativeAcc = (TH1D*)hptAccAA->Clone("relAccAA");
+  relativeAcc->Divide(hptAccPP);
+  hRAA_pt->Divide( relativeEff ) ; //efficiency correction
+  hRAA_pt->Divide( relativeAcc ) ; // acceptance correction
   hRAA_pt->SetAxisRange(0,1.2,"Y");
   hRAA_pt->SetYTitle("R_{AA}");
   hRAA_pt->Draw();
