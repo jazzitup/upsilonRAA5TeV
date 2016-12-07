@@ -286,7 +286,7 @@ void getSpectra(int state = 1 ) {
   legCSrap->AddEntry(hcsAA_pt, "PbPb #times A^{2}");
   legCSrap->AddEntry(hcsPP_pt, "pp");
   legCSrap->Draw();
-  ccsPt->SaveAs(Form("crossSection_rap_%ds.pdf",state));
+  ccsRap->SaveAs(Form("crossSection_rap_%ds.pdf",state));
 
 
 
