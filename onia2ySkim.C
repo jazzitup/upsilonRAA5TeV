@@ -19,7 +19,8 @@ void onia2ySkim( int nevt = -1,
 		 bool saveTracks=false, 
 		 TString skimVersion="unIdentified", 
 		 bool DiMuSign = false
-		 ) {
+		 ) 
+{
 
   using namespace std;
   
@@ -49,10 +50,17 @@ void onia2ySkim( int nevt = -1,
     hWeight = new TH1D("hWeight","hWeight",nFiles,   fileBin  );
   }
   
+  TFile *inf_func;
+  if(fileID == kPPMCUps1S) inf_func = new TFile("compareDataMc/ratioDataMC_PP_DATA_1sState.root","read");
+  else if(fileID == kPPMCUps2S) inf_func = new TFile("compareDataMc/ratioDataMC_PP_DATA_2sState.root","read");
+  else if(fileID == kAAMCUps1S) inf_func = new TFile("compareDataMc/ratioDataMC_AA_DATA_1sState.root","read");
+  else if(fileID == kAAMCUps2S) inf_func = new TFile("compareDataMc/ratioDataMC_AA_DATA_2sState.root","read");
+
   TF1* wFunc[nYBins+1];
-  wFunc[1]  = new TF1("weightCurve_1s","(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))))",0,30); 
-  wFunc[2]  = new TF1("weightCurve_2s","(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))))",0,30); 
-  if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) )  { 
+  wFunc[1] = (TF1*) inf_func -> Get("dataMcRatio");
+  //wFunc[1]  = new TF1("weightCurve_1s","(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))))",0,30); 
+  //wFunc[2]  = new TF1("weightCurve_2s","(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))))",0,30); 
+/*  if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) )  { 
     wFunc[1]->SetParameters( 0.988141, 3.0971, 1.81891, 10.0239);
     wFunc[2]->SetParameters(11.518, 7.53196, 2.38444, 2.68481);
   }
@@ -60,10 +68,10 @@ void onia2ySkim( int nevt = -1,
     wFunc[1]->SetParameters( 1.0001, 5.1, 2.0024, 12.4243);
     wFunc[2]->SetParameters( 3.46994, 11.8612, 2.10006, 3.25859);
   }
-  
+  */
   
   if (fileID == kPPDATA) {
-    fname = "/home/storage/OniaTree/Onia5TeV/ppData/OniaTree_DoubleMu_Run2015E-PromptReco-v1_Run_262157_262328.root";
+    fname = "/home/samba/OniaTree/Onia5TeV/ppData/OniaTree_DoubleMu_Run2015E-PromptReco-v1_Run_262157_262328.root";
     mytree->Add(fname.Data());
   }
   if (fileID == kPADATA) {
@@ -71,36 +79,36 @@ void onia2ySkim( int nevt = -1,
     mytree->Add(fname.Data());
   }
   else if  (fileID == kAADATA) { 
-    fname = "/home/storage/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaL1DoubleMu0ABCD_HIRun2015-PromptReco-v1_Run_262620_263757.root";
+    fname = "/home/samba/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaL1DoubleMu0ABCD_HIRun2015-PromptReco-v1_Run_262620_263757.root";
     mytree->Add(fname.Data());
   }
   else if  (fileID == kAADATAPeri) { 
-    fname = "/home/storage/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaPeripheral30100_HIRun2015-PromptReco-v1_Run_262620_263757.root";
+    fname = "/home/samba/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaPeripheral30100_HIRun2015-PromptReco-v1_Run_262620_263757.root";
     mytree->Add(fname.Data());
   } 
   else if  (fileID == kAADATACentL3) {
-    fname = "/home/storage/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaCentral30L2L3_HIRun2015-PromptReco-v1_Run_262548_263757.root";  // Jan 29th
+    fname = "/home/samba/OniaTree/Onia5TeV/PbPbData/OniaTree_HIOniaCentral30L2L3_HIRun2015-PromptReco-v1_Run_262548_263757.root";  // Jan 29th
     mytree->Add(fname.Data());
   }
   else if  (fileID == kPPMCUps1S){
-    fname = "/home/storage/OniaTree/Onia5TeV/ppOfficialMC/OniaTree_Ups1SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root";
+    fname = "/home/samba/OniaTree/Onia5TeV/ppOfficialMC/OniaTree_Ups1SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root";
     mytree->Add(fname.Data());
   }
   else if  (fileID == kPPMCUps2S) {
-    fname = "/home/storage/OniaTree/Onia5TeV/ppOfficialMC/OniaTree_Ups2SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root";  
+    fname = "/home/samba/OniaTree/Onia5TeV/ppOfficialMC/OniaTree_Ups2SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root";  
     mytree->Add(fname.Data());
   }
   else if  (fileID == kPPMCUps3S) {
-    fname = "/home/storage/OniaTree/Onia5TeV/ppOfficialMC/OniaTree_Ups3SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root";  
+    fname = "/home/samba/OniaTree/Onia5TeV/ppOfficialMC/OniaTree_Ups3SMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root";  
     mytree->Add(fname.Data());
   }
   else if  (fileID == kAAMCUps1S) {
-    fname  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname1 = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname2 = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname3 = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_09_12_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname4 = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_12_15_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname5 = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_15_30_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname1 = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname2 = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname3 = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_09_12_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname4 = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_12_15_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname5 = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups1SMM_ptUps_15_30_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
     mytree->Add(fname.Data());    mytree->Add(fname1.Data());    mytree->Add(fname2.Data());    mytree->Add(fname3.Data());    mytree->Add(fname4.Data());     mytree->Add(fname5.Data());
     hWeight->SetBinContent(1,  3.10497);
     hWeight->SetBinContent(2,  4.11498);
@@ -110,12 +118,12 @@ void onia2ySkim( int nevt = -1,
     hWeight->SetBinContent(6,  0.783399);
   }
   else if  (fileID == kAAMCUps2S) {
-    fname   = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname1  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname2  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname3  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_09_12_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname4  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_12_15_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname5  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_15_inf_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname   = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname1  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname2  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname3  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_09_12_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname4  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_12_15_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname5  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups2SMM_ptUps2S_15_inf_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
     mytree->Add(fname.Data());    mytree->Add(fname1.Data());    mytree->Add(fname2.Data());    mytree->Add(fname3.Data());    mytree->Add(fname4.Data());     mytree->Add(fname5.Data());
     hWeight->SetBinContent(1,  5.89168);
     hWeight->SetBinContent(2,  9.08207);
@@ -125,10 +133,10 @@ void onia2ySkim( int nevt = -1,
     hWeight->SetBinContent(6,  0.776183);
   }
   else if  (fileID == kAAMCUps3S) {
-    fname   = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname1  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname2  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
-    fname3  = "/home/storage/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_09_inf_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname   = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_00_03_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname1  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname2  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_06_09_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
+    fname3  = "/home/samba/OniaTree/Onia5TeV/PbPbOfficialMC/OniaTree_Pythia8_Ups3SMM_ptUps3S_09_inf_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1.root";
     mytree->Add(fname.Data());    mytree->Add(fname1.Data());    mytree->Add(fname2.Data());    mytree->Add(fname3.Data());    
     hWeight->SetBinContent(1,  6.86815);
     hWeight->SetBinContent(2,  8.29618);
@@ -626,10 +634,10 @@ void onia2ySkim( int nevt = -1,
 	}
 	// MC pT weight :  
 	if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) ||  (fileID == kAAMCUps1S) || (fileID == kAAMCUps2S) || (fileID == kAAMCUps3S))  {
-	  if ( (fileID == kPPMCUps1S) || (fileID == kAAUps1S))  
+//	  if ( (fileID == kPPMCUps1S) || (fileID == kAAMCUps1S))  
 	    dmGen.weight = dmGen.weight0 * wFunc[1]->Eval(dmGen.pt); 
-	  else 
-	    dmGen.weight = dmGen.weight0 * wFunc[2]->Eval(dmGen.pt); 
+//	  else 
+//	    dmGen.weight = dmGen.weight0 * wFunc[2]->Eval(dmGen.pt); 
 	}		 
 	
 	
