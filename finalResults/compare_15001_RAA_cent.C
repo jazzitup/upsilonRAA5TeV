@@ -2,7 +2,7 @@
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
 
-void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
+void compare_15001_RAA_cent(int istate=2) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -109,7 +109,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
     extmp=gRAA_int_sys[1]->GetErrorX(ipt);
     eytmp=gRAA_int_sys[1]->GetErrorY(ipt);
     // 1) remove ex from gRAA
-    gRAA[1]->SetPointError(ipt, 0, eytmp);
+    gRAA_int[1]->SetPointError(ipt, 0, eytmp);
     // 2) set ey for gRAA_int_sys (assign 10% temporarily)
     //if (istate==1) gRAA_int_sys[1]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
     //else gRAA_int_sys[1]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
