@@ -18,13 +18,13 @@ Acceptance : root files are saved in
 ../acceptance/sys_acceptance_ups*.root 
 TFile**					sys_acceptance_ups1.root
  TFile*						sys_acceptance_ups1.root
-  KEY: TH1F					heptSysPP;1
-  KEY: TH1F					heptSysAA;1
-  KEY: TH1F					herapSysPP;1
-  KEY: TH1F					herapSysAA;1
+ KEY: TH1F					hptSysPP;1
+  KEY: TH1F					hptSysAA;1
+  KEY: TH1F					hrapSysPP;1
+  KEY: TH1F					hrapSysAA;1
   KEY: TH1F					hcentSysAA_int;1
-  KEY: TH1D					hecentSysAA;1
-  KEY: TH1F					hecentSysPP;1
+  KEY: TH1D					hcentSysAA;1
+  KEY: TH1F					hcentSysPP;1
 
 *~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 Fit uncertainty due to Signal PDF:    SignalVariation_keep/sys_signalPDFVariaion_*s.root

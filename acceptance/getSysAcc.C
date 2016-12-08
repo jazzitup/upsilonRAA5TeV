@@ -60,13 +60,13 @@ void getSysAcc(int state = 1) {
     hcentAccNoW->SetBinError( icent ,hcentAccNoW_int->GetBinError( 1 ) );
   }
   
-  TH1D* hptSysPP = (TH1D*)hptAccPP->Clone("heptSysPP");
-  TH1D* hrapSysPP = (TH1D*)hrapAccPP->Clone("herapSysPP");
-  TH1D* hcentSysPP = (TH1D*)hcentAccPP->Clone("hecentSysPP");
+  TH1D* hptSysPP = (TH1D*)hptAccPP->Clone("hptSysPP");
+  TH1D* hrapSysPP = (TH1D*)hrapAccPP->Clone("hrapSysPP");
+  TH1D* hcentSysPP = (TH1D*)hcentAccPP->Clone("hcentSysPP");
 
-  TH1D* hptSysAA = (TH1D*)hptAccAA->Clone("heptSysAA");
-  TH1D* hrapSysAA = (TH1D*)hrapAccAA->Clone("herapSysAA");
-  TH1D* hcentSysAA = (TH1D*)hcentAccAA->Clone("hecentSysAA");
+  TH1D* hptSysAA = (TH1D*)hptAccAA->Clone("hptSysAA");
+  TH1D* hrapSysAA = (TH1D*)hrapAccAA->Clone("hrapSysAA");
+  TH1D* hcentSysAA = (TH1D*)hcentAccAA->Clone("hcentSysAA");
   TH1D* hcentSysAA_int = (TH1D*)hcentAccAA_int->Clone("hcentSysAA_int");
 
   hptSysPP->Add(hptAccNoW, -1);
