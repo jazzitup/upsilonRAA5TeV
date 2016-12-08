@@ -50,15 +50,15 @@ void onia2ySkim( int nevt = -1,
   }
   
   TF1* wFunc[nYBins+1];
-  wFunc[1]  = new TF1("weightCurve_iy1","([0] + [1]*x + [2]*x*x + [3]*x*x*x) * ( 1 - TMath::Erf((x-7.5)/2)) + [4] + [5]*x",0,30); // |y|<1.2
-  wFunc[2]  = (TF1*)wFunc[1]->Clone("weightCurve_iy2"); // |y|>1.2
+  wFunc[1]  = new TF1("weightCurve_1s","(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*9.460))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*9.460))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(9.460*9.460+x*x)-9.460)/([2]*[3])),-[2]))))",0,30); 
+  wFunc[2]  = new TF1("weightCurve_2s","(([0]-1)*([0]-2)*([2]*[3]*([2]*[3]+([2]-2)*10.023))*TMath::Power((1+(TMath::Sqrt(10.023*10.023+x*x)-10.023)/([0]*[1])),-[0])/(([0]*[1]*([0]*[1]+([0]-2)*10.023))*(([2]-1)*([2]-2))*TMath::Power((1+(TMath::Sqrt(10.032*10.023+x*x)-10.023)/([2]*[3])),-[2]))))",0,30); 
   if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) )  { 
-    wFunc[1]->SetParameters( 0.372146, -0.221855, 0.0416843, -0.00241032, 1.0408, -0.0207171);
-    wFunc[2]->SetParameters( 0.415676, -0.263301, 0.0461787, -0.00233408, 1.05895, -0.0206731);
+    wFunc[1]->SetParameters( 0.988141, 3.0971, 1.81891, 10.0239);
+    wFunc[2]->SetParameters(11.518, 7.53196, 2.38444, 2.68481);
   }
   else if ( (fileID == kAAMCUps1S) || (fileID == kAAMCUps2S) || (fileID == kAAMCUps3S) )  { 
-    wFunc[1]->SetParameters( 0.182832, -0.186675, 0.047973, -0.00392975, 1.20421, -0.024113);
-    wFunc[2]->SetParameters( -0.213717, 0.0908163, -0.0316685, 0.0032112, 1.42968, -0.0404998);
+    wFunc[1]->SetParameters( 1.0001, 5.1, 2.0024, 12.4243);
+    wFunc[2]->SetParameters( 3.46994, 11.8612, 2.10006, 3.25859);
   }
   
   
@@ -619,17 +619,17 @@ void onia2ySkim( int nevt = -1,
         dmGen.phi2 = mumi_Gen->Phi();
 
 	if ( (fileID == kAAMCUps1S) || (fileID == kAAMCUps2S) || (fileID == kAAMCUps3S) )   {
-	  dmGen.weight = (float) hWeight->GetBinContent( hWeight->FindBin(dmGen.pt) ) ;
+	  dmGen.weight0 = (float) hWeight->GetBinContent( hWeight->FindBin(dmGen.pt) ) ;
 	}
 	else  {
-	  dmGen.weight = 1;  
+	  dmGen.weight0 = 1;  
 	}
 	// MC pT weight :  
 	if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) ||  (fileID == kAAMCUps1S) || (fileID == kAAMCUps2S) || (fileID == kAAMCUps3S))  {
-	  if ( fabs(dmGen.y) < 1.2) 
-	    dmGen.weight = dmGen.weight * wFunc[1]->Eval(dmGen.pt); 
+	  if ( (fileID == kPPMCUps1S) || (fileID == kAAUps1S))  
+	    dmGen.weight = dmGen.weight0 * wFunc[1]->Eval(dmGen.pt); 
 	  else 
-	    dmGen.weight = dmGen.weight * wFunc[2]->Eval(dmGen.pt); 
+	    dmGen.weight = dmGen.weight0 * wFunc[2]->Eval(dmGen.pt); 
 	}		 
 	
 	
@@ -769,9 +769,11 @@ void onia2ySkim( int nevt = -1,
       dm.eta2 = mumi_Reco->Eta();
       dm.phi2 = mumi_Reco->Phi();
       if ( (fileID == kPPMCUps1S) || (fileID == kPPMCUps2S) || (fileID == kPPMCUps3S) ||  (fileID == kAAMCUps1S) || (fileID == kAAMCUps2S) || (fileID == kAAMCUps3S)  )	{
-	dm.weight = dmGen.weight ; //(float) hWeight->GetBinContent( hWeight->FindBin(dm.pt) ) ;
+	dm.weight0 = dmGen.weight0 ; 
+	dm.weight = dmGen.weight ; 
       }
       else { 
+	dm.weight0 = 1.0 ; 
 	dm.weight = 1.0 ; 
       }      
       
