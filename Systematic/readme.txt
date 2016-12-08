@@ -25,3 +25,32 @@ TFile**					sys_acceptance_ups1.root
   KEY: TH1F					hcentSysAA_int;1
   KEY: TH1D					hecentSysAA;1
   KEY: TH1F					hecentSysPP;1
+
+*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+Fit uncertainty due to Signal PDF:    SignalVariation_keep/sys_signalPDFVariaion_*s.root
+
+TFile**		sys_signalPDFVariaion_1s.root
+ TFile*			sys_signalPDFVariaion_1s.root
+  KEY: TH1D		hptAA;1	 uncertainty vs p_{T}
+  KEY: TH1D		hptPP;1	 uncertainty vs p_{T}
+  KEY: TH1D		hrapAA;1 uncertainty vs rap
+  KEY: TH1D		hrapPP;1 uncertainty vs rap
+  KEY: TH1D		hIntPP;1 uncertainty vs integrated bin
+  KEY: TH1D		hIntAA;1 uncertainty vs integrated bin
+  KEY: TH1D		hcentAA;1	     uncertainty vs cent
+
+*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+Fit uncertainty due to Background PDF:    backgroundVariation/sys_bkgPDFVariaion_*s.root
+ KEY: TH1D	hrapPP;1
+  KEY: TH1D	hrapAA;1
+  KEY: TH1D	hrapAAoPP;1
+  KEY: TH1D	hptPP;1
+  KEY: TH1D	hptAA;1
+  KEY: TH1D	hptAAoPP;1
+  KEY: TH1D	hIntAA;1
+  KEY: TH1D	hIntPP;1
+  KEY: TH1D	hIntAAoPP;1
+  KEY: TH1D	hcentAA;1
+  KEY: TH1D	hcentAAoPP;1
+
+
