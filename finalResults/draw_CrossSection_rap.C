@@ -1,0 +1,135 @@
+#include "SONGKYO.h"
+#include "tdrstyle.C"
+#include "CMS_lumi.C"
+
+void draw_CrossSection_rap(int ppAA=2) //1=pp, 2=AA
+{
+  setTDRStyle();
+  writeExtraText = true;       // if extra text
+  //int iPeriod; // 1: pp, 2: pPb, 3: PbPb, 100: RAA vs cent, 101: RAA vs pt or rap
+  int iPos = 33;
+  
+  const int nState = 3; // Y(1S), Y(2S), and Y(3S)
+  double xmax = 2.4;
+  double relsys = 0.1;
+
+  double exsys_1s[6] =  {0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
+  double exsys_2s[2] =  {0.6, 0.6};
+  double exsys_3s[2] =  {0.6, 0.6};
+
+  TString sz_ppAA;
+  if (ppAA==1) { sz_ppAA = "PP";}
+  else if (ppAA==2) { sz_ppAA = "AA";}
+  else { cout << "ERROR!! Select ppAA==1 or 2!!!"<< endl; return; }
+
+  //// read the inut file and TGraph
+  TFile* fIn[nState];
+	TGraphErrors* gCrossSection[nState];
+  for (int is=0; is<nState; is++){
+  	fIn[is] = new TFile(Form("Ups_%d_RAA.root",is+1),"READ");
+    gCrossSection[is]=(TGraphErrors*)fIn[is]->Get(Form("gCrossSection_rap_%s",sz_ppAA.Data()));
+    //cout << "gCrossSection["<<is<<"] = " <<gCrossSection[is] << endl;
+  }
+  
+  //// systematic uncertainties (temp)
+	TGraphErrors* gCrossSection_sys[nState];
+  int npoint[nState];
+  double pxtmp, pytmp, extmp, eytmp;
+  for (int is=0; is<nState; is++){
+    gCrossSection_sys[is]=(TGraphErrors*)fIn[is]->Get(Form("gCrossSection_rap_%s",sz_ppAA.Data()));
+    npoint[is] = gCrossSection_sys[is]->GetN();
+    //cout << "*** Y("<<is+1<<") : # of point = " << npoint[is] << endl;
+    for (int ipt=0; ipt< npoint[is] ; ipt++) {
+      pxtmp=0; pytmp=0; extmp=0; eytmp=0;
+      gCrossSection_sys[is]->GetPoint(ipt, pxtmp, pytmp);
+      extmp=gCrossSection_sys[is]->GetErrorX(ipt);
+      eytmp=gCrossSection_sys[is]->GetErrorY(ipt);
+      // 1) remove ex from gCrossSection
+      gCrossSection[is]->SetPointError(ipt, 0, eytmp);
+      // 2) set ey for gCrossSection_sys (assign 10% temporarily)
+      //gCrossSection_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
+      if (is==0) gCrossSection_sys[is]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
+      else if (is==1) gCrossSection_sys[is]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
+      else gCrossSection_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
+    }
+  }
+  
+  //// graph style 
+  for (int is=0; is<nState; is++){
+    SetGraphStyle(gCrossSection[is], is, is); 
+    SetGraphStyleSys(gCrossSection_sys[is], is); 
+	}
+  
+  //// latex for text
+  TLatex* globtex = new TLatex();
+  globtex->SetNDC();
+  globtex->SetTextAlign(12); //left-center
+  globtex->SetTextFont(42);
+  globtex->SetTextSize(0.038);
+  
+  // legend
+  //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
+  TLegend *leg;
+  if (ppAA==1) leg= new TLegend(0.75, 0.17, 0.95, 0.34);
+  else {
+    leg= new TLegend(0.49, 0.67, 0.95, 0.76);
+    leg-> SetNColumns(3);
+  }
+  //else leg= new TLegend(0.80, 0.42, 1.00, 0.59);
+  SetLegendStyle(leg);
+  for (int is=0; is<nState; is++){
+    leg -> AddEntry(gCrossSection[is],Form("#Upsilon(%dS)",is+1),"lp");
+  }
+
+  //// draw  
+  gCrossSection_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
+  gCrossSection_sys[0]->GetXaxis()->CenterTitle();
+  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B d#sigma/dy (nb)");
+  else gCrossSection_sys[0]->GetYaxis()->SetTitle("(1/A^{2}) B d#sigma/dy (nb)");
+  gCrossSection_sys[0]->GetYaxis()->CenterTitle();
+  gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
+  gCrossSection_sys[0]->SetMinimum(0.001);
+  gCrossSection_sys[0]->SetMaximum(100.);
+  // for rap
+  gCrossSection_sys[0]->GetXaxis()->SetNdivisions(505);
+ 
+  TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  gPad->SetLogy(1); // for cross section
+  for (int is=0; is<nState; is++){
+    if ( is==0) gCrossSection_sys[is]->Draw("A5");
+    else gCrossSection_sys[is]->Draw("5");
+    gCrossSection[is]->Draw("P");
+	}
+  leg->Draw();
+
+  //// Text
+  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_shift;
+  if (ppAA==1) sz_shift=0.6;
+  else sz_shift=0.0;
+  globtex->DrawLatex(0.22, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step*2, "Centrality 0-100%");
+  
+  CMS_lumi( c1, ppAA, iPos );
+
+	c1->Update();
+  c1->SaveAs(Form("CrossSection_vs_rap_%s.pdf",sz_ppAA.Data()));
+  c1->SaveAs(Form("CrossSection_vs_rap_%s.png",sz_ppAA.Data()));
+
+/*
+	///////////////////////////////////////////////////////////////////
+	//// save as a root file
+	TFile *outFile = new TFile("CrossSection_vs_rap.root", "RECREATE");
+	outFile->cd();
+	for (int is=0; is<nState; is++){
+		gCrossSection_sys[is]->Write();	
+		gCrossSection[is]->Write();	
+	}
+	outFile->Close();
+*/	
+	return;
+
+} // end of main func.
+
