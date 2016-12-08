@@ -6,7 +6,7 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
-  int iPeriod = 101;    // 100 for cent, 101 for pt & rap
+  int iPeriod = 101; // 1: pp, 2: pPb, 3: PbPb, 100: RAA vs cent, 101: RAA vs pt or rap
   int iPos = 33;
   
   const int nfile = 2; // 0: 15001, 1: ours
@@ -79,7 +79,7 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   
   // legend
   //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  TLegend *leg= new TLegend(0.55, 0.50, 0.95, 0.70);
+  TLegend *leg= new TLegend(0.55, 0.57, 0.95, 0.74);
   SetLegendStyle(leg);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");

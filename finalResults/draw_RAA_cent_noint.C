@@ -6,7 +6,7 @@ void draw_RAA_cent_noint()
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
-  int iPeriod = 100;    // 100 for cent, 101 for pt & rap
+  int iPeriod = 100; // 1: pp, 2: pPb, 3: PbPb, 100: RAA vs cent, 101: RAA vs pt or rap
   int iPos = 33;
   
   const int nState = 3; // Y(1S), Y(2S), and Y(3S)

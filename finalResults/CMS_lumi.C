@@ -31,7 +31,25 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   pad->cd();
 
   TString lumiText;
-  if( iPeriod==100 )
+  if( iPeriod==1 )
+    {
+      lumiText += "pp ";
+      lumiText += lumi_pp502TeV;
+      lumiText += " (5.02 TeV)";
+    }
+  else if( iPeriod==2 )
+    {
+      lumiText += "PbPb ";
+      lumiText += lumi_PbPb502TeV;
+      lumiText += " (5.02 TeV)";
+    }
+  else if( iPeriod==3 )
+    {
+      lumiText += "pPb ";
+      lumiText += lumi_pPb502TeV;
+      lumiText += " (5.02 TeV)";
+    }
+  else if( iPeriod==100 )
     {
       lumiText += "PbPb ";
       lumiText += lumi_PbPb502TeVCent;
