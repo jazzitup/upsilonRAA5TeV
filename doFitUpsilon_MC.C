@@ -140,6 +140,23 @@ void doFitUpsilon_MC(
   RooRealVar alpha1s("alpha1s","tail shift", 1.18, 1.18, 2.65);
   RooRealVar n1s("n1s","power order", 1.0, 1.0, 1.78);
 
+  //0-5pT pp
+  //RooRealVar alpha1s("alpha1s","tail shift", 5., 1.2, 9.);
+  //RooRealVar n1s("n1s","power order", 3.6, 2.6005, 3.76);
+
+  //5-15pT pp
+  //RooRealVar alpha1s("alpha1s","tail shift", 5., 1.2, 9.);
+  //RooRealVar n1s("n1s","power order", 3.545, 2.995, 3.78201);
+
+  //1.2-2.4 y pp
+  // RooRealVar alpha1s("alpha1s","tail shift", 3.4, 1.21, 4.24);
+  // RooRealVar n1s("n1s","power order", 3.542, 2.495, 7.78301);
+
+  //0-1.2 y pp
+  //RooRealVar alpha1s("alpha1s","tail shift", 3.112, 1.20, 6.011);
+  //RooRealVar n1s("n1s","power order", 3.3143, 2.991, 4.02911);
+
+
   //RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.06, 0.001, 0.5);
   RooRealVar sigma2s_1("sigma2s_1","width/sigma of the signal gaussian mass PDF",0.1, 0.01, 0.3);
   RooRealVar sigma3s_1("sigma3s_1","width/sigma of the signal gaussian mass PDF",0.1, 0.01, 0.3);
