@@ -98,6 +98,24 @@ void getSysEff(int state = 1) {
  
   c->SaveAs(Form("sys_efficiency_ups%d.pdf",state));
 
+  cout << " In order of pp and PbPb in (%)" << endl;
+  cout <<" integrated bin"<< int( hcentEffAA_intsys->GetBinContent(1) * 1000.)/10. << "  " << int( hcentEffPPsys->GetBinContent(1) * 10000.) / 100. << endl << endl;
+
+  cout << "pt bin" << endl;
+  for (int i =1 ; i<= nPtBins ; i++)  {
+    cout << int(hptEffPPsys->GetBinContent(i) * 1000.)/10. << "  " << int(hptEffAAsys->GetBinContent(i) * 10000)/100. << endl;
+  }
+  
+  cout << " rap bin" << endl;
+  for (int i =1 ; i<= nYBins ; i++)  {
+    cout << int( hrapEffPPsys->GetBinContent(i) * 1000.)/10. << "  " << int(hrapEffAAsys->GetBinContent(i)*1000.)/10. << endl;
+   }
+
+  cout << "cent bin" << endl;
+  for (int i =1 ; i<= nCentBins ; i++)  {
+    cout <<  "N/A    " << int(hcentEffAAsys->GetBinContent(i)*1000.)/10. << endl;
+  }
+  
   TFile *fout = new TFile(Form("sys_efficiency_ups%d.root",state),"recreate");
   hptEffPPsys->Write();   
   hptEffAAsys->Write();
