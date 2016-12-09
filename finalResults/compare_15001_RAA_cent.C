@@ -14,7 +14,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   double xmax_int = 2.0;
   double boxw = 6.5; // for syst. box (vs cent only)
   double boxw_int = 0.17;
-  double relsys = 0.1;
+//  double relsys = 0.1;
   
   //// 15001 values
   const int cn_1s =  8;
@@ -58,66 +58,78 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   double cexsys_2s_int[cn_int] = {boxw_int};
   double ceysys_2s_int[cn_int] = {0.008};
 
+  ////////////////////////////////////////////////////////////////
+  //// read input file : value & stat.
 	TGraphErrors* gRAA[nfile]; // vs centrality
+  TGraphErrors* gRAA_sys[nfile];
 	TGraphErrors* gRAA_int[nfile]; // centrality-integrated
-
+  TGraphErrors* gRAA_int_sys[nfile];
   //// 1) 15001
-  if (istate==1) gRAA[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cex_1s, cey_1s); 
-  else gRAA[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cex_2s, cey_2s); 
-  if (istate==1) gRAA_int[0] = new TGraphErrors(cn_int, cpx_1s_int, cpy_1s_int, cex_1s_int, cey_1s_int); 
-  else gRAA_int[0] = new TGraphErrors(cn_int, cpx_2s_int, cpy_2s_int, cex_2s_int, cey_2s_int); 
-  //// 2) read the inut file and TGraph
+  if (istate==1) {
+    gRAA[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cex_1s, cey_1s); 
+    gRAA_sys[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cexsys_1s, ceysys_1s); 
+    gRAA_int[0] = new TGraphErrors(cn_int, cpx_1s_int, cpy_1s_int, cex_1s_int, cey_1s_int); 
+    gRAA_int_sys[0] = new TGraphErrors(cn_int, cpx_1s_int, cpy_1s_int, cexsys_1s_int, ceysys_1s_int); 
+  }   
+  else {
+    gRAA[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cex_2s, cey_2s); 
+    gRAA_sys[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cexsys_2s, ceysys_2s); 
+    gRAA_int[0] = new TGraphErrors(cn_int, cpx_2s_int, cpy_2s_int, cex_2s_int, cey_2s_int); 
+    gRAA_int_sys[0] = new TGraphErrors(cn_int, cpx_2s_int, cpy_2s_int, cexsys_2s_int, ceysys_2s_int); 
+  } 
+  //// 2) ours
   TFile* fIn = new TFile(Form("Ups_%d_RAA.root",istate),"READ");
   gRAA[1]=(TGraphErrors*)fIn->Get("gRAA_cent");
-  gRAA_int[1]=(TGraphErrors*)fIn->Get("gRAA_int");
- 
-  //// systematic uncertainties (temp)
-	//// differential
-  TGraphErrors* gRAA_sys[nfile];
-  //// 1) 15001
-  if (istate==1) gRAA_sys[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cexsys_1s, ceysys_1s); 
-  else gRAA_sys[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cexsys_2s, ceysys_2s); 
-  //// 2) read the inut file and TGraph
   gRAA_sys[1]=(TGraphErrors*)fIn->Get("gRAA_cent");
+  gRAA_int[1]=(TGraphErrors*)fIn->Get("gRAA_int");
+  gRAA_int_sys[1]=(TGraphErrors*)fIn->Get("gRAA_int");
+  //// read input file : syst.
+  TFile* fInSys = new TFile(Form("../Systematic/mergedSys_ups%ds.root",istate),"READ");
+  TH1D* hSys = (TH1D*)fInSys->Get("hcentRAA_merged");
+  int npoint = hSys->GetSize()-2;
+  cout << "*** CENT *** Y("<<istate<<") : # of point = " << npoint << endl; 
+  TH1D* hSys_int = (TH1D*)fInSys->Get("hintRAA_merged");
+  int npoint_int = hSys_int->GetSize()-2;
+  cout << "*** INT *** Y("<<istate<<") : # of point = " << npoint_int << endl; 
+
+  //// set bin width and calculate systematic uncertainties 
   double pxtmp, pytmp, extmp, eytmp;
-  int npoint = gRAA_sys[1]->GetN();
+  double relsys;  
+  //// --- vs centrality
+  if (npoint != gRAA[1]->GetN()) {cout << "Error!! data file and syst. file have different binnig!" << endl; return; }
   for (int ipt=0; ipt< npoint; ipt++) {
-    pxtmp=0; pytmp=0; extmp=0; eytmp=0;
-    gRAA_sys[1]->GetPoint(ipt, pxtmp, pytmp);
-    extmp=gRAA_sys[1]->GetErrorX(ipt);
-    eytmp=gRAA_sys[1]->GetErrorY(ipt);
+    pxtmp=0; pytmp=0; extmp=0; eytmp=0; relsys=0;
+    gRAA[1]->GetPoint(ipt, pxtmp, pytmp);
+    extmp=gRAA[1]->GetErrorX(ipt);
+    eytmp=gRAA[1]->GetErrorY(ipt);
+    relsys=hSys->GetBinContent(ipt+1);
     // 1) remove ex from gRAA
     gRAA[1]->SetPointError(ipt, 0, eytmp);
-    // 2) set ey for gRAA_sys (assign 10% temporarily)
+    // 2) set ey for gRAA_sys
     //if (istate==1) gRAA_sys[1]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
     //else gRAA_sys[1]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
     if (istate==1) gRAA_sys[1]->SetPointError(ipt, boxw, pytmp*relsys);
     else gRAA_sys[1]->SetPointError(ipt, boxw, pytmp*relsys);
   }
- 
-	//// integrated
-  TGraphErrors* gRAA_int_sys[nfile];
-  //// 1) 15001
-  if (istate==1) gRAA_int_sys[0] = new TGraphErrors(cn_int, cpx_1s_int, cpy_1s_int, cexsys_1s_int, ceysys_1s_int); 
-  else gRAA_int_sys[0] = new TGraphErrors(cn_int, cpx_2s_int, cpy_2s_int, cexsys_2s_int, ceysys_2s_int); 
-  //// 2) read the inut file and TGraph
-  gRAA_int_sys[1]=(TGraphErrors*)fIn->Get("gRAA_int");
-  npoint = gRAA_int_sys[1]->GetN();
+  //// --- centrality-integrated
+  if (npoint_int != gRAA_int[1]->GetN()) {cout << "Error!! data file and syst. file have different binnig!" << endl; return; }
   for (int ipt=0; ipt< npoint; ipt++) {
-    pxtmp=0; pytmp=0; extmp=0; eytmp=0;
-    gRAA_int_sys[1]->GetPoint(ipt, pxtmp, pytmp);
-    extmp=gRAA_int_sys[1]->GetErrorX(ipt);
-    eytmp=gRAA_int_sys[1]->GetErrorY(ipt);
+    pxtmp=0; pytmp=0; extmp=0; eytmp=0; relsys=0;
+    gRAA_int[1]->GetPoint(ipt, pxtmp, pytmp);
+    extmp=gRAA_int[1]->GetErrorX(ipt);
+    eytmp=gRAA_int[1]->GetErrorY(ipt);
+    relsys=hSys_int->GetBinContent(ipt+1);
     // 1) remove ex from gRAA
     gRAA_int[1]->SetPointError(ipt, 0, eytmp);
-    // 2) set ey for gRAA_int_sys (assign 10% temporarily)
+    // 2) set ey for gRAA_int_sys
     //if (istate==1) gRAA_int_sys[1]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
     //else gRAA_int_sys[1]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
     if (istate==1) gRAA_int_sys[1]->SetPointError(ipt, boxw_int, pytmp*relsys);
     else gRAA_int_sys[1]->SetPointError(ipt, boxw_int, pytmp*relsys);
   }
- 
   
+  ////////////////////////////////////////////////////////////////
+ 
   //// graph style 
   SetGraphStyle(gRAA[0], 4, 4); 
   SetGraphStyleSys(gRAA_sys[0], 4); 
@@ -135,15 +147,14 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   globtex->SetTextFont(42);
   globtex->SetTextSize(0.038);
   
-  // legend
-  //TLegend *leg= new TLegend(0.55, 0.50, 0.95, 0.70);
+  //// legend
   TLegend *leg= new TLegend(0.55, 0.46, 0.95, 0.63);
   SetLegendStyle(leg);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
 
-  //// draw  
+  //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
   gRAA_sys[0]->GetXaxis()->CenterTitle();
   gRAA_sys[0]->GetYaxis()->SetTitle("R_{AA}");
@@ -158,6 +169,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   gRAA_sys[0]->GetXaxis()->SetLabelSize(0.05*1.0);
   gRAA_sys[0]->GetYaxis()->SetLabelSize(0.05*1.0);
 
+  //// draw  
   double xlonger = 120; 
   TCanvas* c1 = new TCanvas("c1","c1",600+xlonger,600);
   TPad* pad_diff = new TPad("pad_diff", "",0, 0, 600/(600.+xlonger), 1.0); // vs centrality
@@ -166,7 +178,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   pad_int->SetLeftMargin(0);
   pad_int->SetRightMargin(0.032*600/xlonger);
 
-  //// 1st pad!!!
+  //// --- 1st pad!!!
   c1->cd();
   pad_diff->Draw(); 
   pad_diff->cd(); 
@@ -178,7 +190,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   dashedLine(0.,1.,xmax,1.,1,1);
   leg->Draw();
 
-  //// Text
+  //// drwa text
   double sz_init = 0.895; double sz_step = 0.0525;
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
@@ -187,7 +199,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   
   CMS_lumi( pad_diff, iPeriod, iPos );
 
-  //// 2nd pad!!!
+  //// --- 2nd pad!!!
   c1->cd();
   pad_int->Draw();
   pad_int->cd();
@@ -206,7 +218,8 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
     gRAA_int[is]->Draw("P");
 	}
   dashedLine(0.,1.,xmax,1.,1,1);
- 
+
+  //// draw text 
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");

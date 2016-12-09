@@ -2,7 +2,7 @@
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
 
-void draw_CrossSection_pt(int ppAA=2) //1=pp, 2=AA
+void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -11,7 +11,7 @@ void draw_CrossSection_pt(int ppAA=2) //1=pp, 2=AA
   
   const int nState = 3; // Y(1S), Y(2S), and Y(3S)
   double xmax = 30.0;
-  double relsys = 0.1;
+//  double relsys = 0.1;
 
   double exsys_1s[5] =  {1.25, 1.25, 1.5, 3.5, 7.5};
   double exsys_2s[3] =  {2.5, 5., 7.5};
@@ -22,38 +22,58 @@ void draw_CrossSection_pt(int ppAA=2) //1=pp, 2=AA
   else if (ppAA==2) { sz_ppAA = "AA";}
   else { cout << "ERROR!! Select ppAA==1 or 2!!!"<< endl; return; }
 
-  //// read the inut file and TGraph
+  ////////////////////////////////////////////////////////////////
+  //// read input file : value & stat.
   TFile* fIn[nState];
 	TGraphErrors* gCrossSection[nState];
+	TGraphErrors* gCrossSection_sys[nState];
   for (int is=0; is<nState; is++){
   	fIn[is] = new TFile(Form("Ups_%d_RAA.root",is+1),"READ");
     gCrossSection[is]=(TGraphErrors*)fIn[is]->Get(Form("gCrossSection_pt_%s",sz_ppAA.Data()));
+    gCrossSection_sys[is]=(TGraphErrors*)fIn[is]->Get(Form("gCrossSection_pt_%s",sz_ppAA.Data()));
     //cout << "gCrossSection["<<is<<"] = " <<gCrossSection[is] << endl;
   }
-  
-  //// systematic uncertainties (temp)
-	TGraphErrors* gCrossSection_sys[nState];
+  //// read input file : syst.
+  TFile* fInSys[nState];
+  TH1D* hSys[nState];
   int npoint[nState];
-  double pxtmp, pytmp, extmp, eytmp;
   for (int is=0; is<nState; is++){
-    gCrossSection_sys[is]=(TGraphErrors*)fIn[is]->Get(Form("gCrossSection_pt_%s",sz_ppAA.Data()));
-    npoint[is] = gCrossSection_sys[is]->GetN();
-    //cout << "*** Y("<<is+1<<") : # of point = " << npoint[is] << endl;
-    for (int ipt=0; ipt< npoint[is] ; ipt++) {
-      pxtmp=0; pytmp=0; extmp=0; eytmp=0;
-      gCrossSection_sys[is]->GetPoint(ipt, pxtmp, pytmp);
-      extmp=gCrossSection_sys[is]->GetErrorX(ipt);
-      eytmp=gCrossSection_sys[is]->GetErrorY(ipt);
+    fInSys[is] = new TFile(Form("../Systematic/mergedSys_ups%ds.root",is+1),"READ");
+    hSys[is]=(TH1D*)fInSys[is]->Get(Form("hpt%s_merged",sz_ppAA.Data()));
+    npoint[is] = hSys[is]->GetSize()-2;
+    cout << "*** Y("<<is+1<<") : # of point = " << npoint[is] << endl;
+  }  
+  
+  //// set bin width and calculate systematic uncertainties
+  double pxtmp, pytmp, extmp, eytmp;
+  double relsys;  
+  for (int is=0; is<nState; is++){
+    cout << is+1 <<"th state***************" << endl;
+    if (npoint[is] != gCrossSection[is]->GetN()) {cout << "Error!! data file and syst. file have different binnig!" << endl; return; }
+    for (int ipt=0; ipt< npoint[is] ; ipt++) { //bin by bin
+      pxtmp=0; pytmp=0; extmp=0; eytmp=0; relsys=0;
+      gCrossSection[is]->GetPoint(ipt, pxtmp, pytmp);
+      extmp=gCrossSection[is]->GetErrorX(ipt);
+      eytmp=gCrossSection[is]->GetErrorY(ipt);
+      relsys=hSys[is]->GetBinContent(ipt+1);
+      cout << ipt <<"th bin CrossSection value = " << pytmp << endl;
+      cout << ipt <<"th bin stat. = " << eytmp << endl;
+      //cout << ipt <<"th bin rel. syst. = " << relsys << endl;
+      cout << ipt <<"th bin syst. = " << pytmp*relsys << endl; 
       // 1) remove ex from gCrossSection
       gCrossSection[is]->SetPointError(ipt, 0, eytmp);
-      // 2) set ey for gCrossSection_sys (assign 10% temporarily)
+      // 2) set ey for gCrossSection_sys
       //gCrossSection_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
       if (is==0) gCrossSection_sys[is]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
       else if (is==1) gCrossSection_sys[is]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
-      else gCrossSection_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
+      else if (is==2 && ppAA==1) gCrossSection_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
+      else if (is==2) gCrossSection_sys[is]->SetPointError(ipt, 0, 0);
+      //else gCrossSection_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
     }
   }
-  
+ 
+  ////////////////////////////////////////////////////////////////
+
   //// graph style 
   for (int is=0; is<nState; is++){
     SetGraphStyle(gCrossSection[is], is, is); 
@@ -67,15 +87,14 @@ void draw_CrossSection_pt(int ppAA=2) //1=pp, 2=AA
   globtex->SetTextFont(42);
   globtex->SetTextSize(0.038);
   
-  // legend
-  //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
+  //// legend
   TLegend *leg= new TLegend(0.75, 0.55, 0.95, 0.75);
   SetLegendStyle(leg);
   for (int is=0; is<nState; is++){
     leg -> AddEntry(gCrossSection[is],Form("#Upsilon(%dS)",is+1),"lp");
   }
-
-  //// draw  
+  
+  //// axis et. al
   gCrossSection_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gCrossSection_sys[0]->GetXaxis()->CenterTitle();
   if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B d^{2}#sigma/dp_{T}dy (nb/ GeV/c)");
@@ -83,8 +102,10 @@ void draw_CrossSection_pt(int ppAA=2) //1=pp, 2=AA
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
   gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gCrossSection_sys[0]->SetMinimum(0.00005);
+  //gCrossSection_sys[0]->SetMinimum(0.0000001);
   gCrossSection_sys[0]->SetMaximum(1.);
  
+  //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
   gPad->SetLogy(1); // for cross section
   for (int is=0; is<nState; is++){
@@ -94,7 +115,7 @@ void draw_CrossSection_pt(int ppAA=2) //1=pp, 2=AA
 	}
   leg->Draw();
 
-  //// Text
+  //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
   double sz_shift;
   if (ppAA==1) sz_shift=0.6;

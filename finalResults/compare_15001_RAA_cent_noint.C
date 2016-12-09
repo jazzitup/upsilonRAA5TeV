@@ -12,7 +12,7 @@ void compare_15001_RAA_cent_noint(int istate=1) //1 or 2 (1S or 2S)
   const int nfile = 2; // 0: 15001, 1: ours
   double xmax = 420;
   double boxw = 6.5; // for syst. box (vs cent only)
-  double relsys = 0.1;
+//  double relsys = 0.1;
   
   //// 15001 values
   const int cn_1s =  8;
@@ -41,36 +41,49 @@ void compare_15001_RAA_cent_noint(int istate=1) //1 or 2 (1S or 2S)
     ceysys_2s[it] = TMath::Sqrt(ceysys_2s_1[it]*ceysys_2s_1[it]+ceysys_2s_2[it]*ceysys_2s_2[it]);
   }
 
+  ////////////////////////////////////////////////////////////////
+  //// read input file : value & stat.
 	TGraphErrors* gRAA[nfile];
-  //// 1) 15001
-  if (istate==1) gRAA[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cex_1s, cey_1s); 
-  else gRAA[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cex_2s, cey_2s); 
-  //// 2) read the inut file and TGraph
-  TFile* fIn = new TFile(Form("Ups_%d_RAA.root",istate),"READ");
-  gRAA[1]=(TGraphErrors*)fIn->Get("gRAA_cent");
- 
-  //// systematic uncertainties (temp)
 	TGraphErrors* gRAA_sys[nfile];
   //// 1) 15001
-  if (istate==1) gRAA_sys[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cexsys_1s, ceysys_1s); 
-  else gRAA_sys[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cexsys_2s, ceysys_2s); 
-  //// 2) read the inut file and TGraph
+  if (istate==1) {
+    gRAA[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cex_1s, cey_1s); 
+    gRAA_sys[0] = new TGraphErrors(cn_1s, cpx_1s, cpy_1s, cexsys_1s, ceysys_1s); 
+  } 
+  else {
+    gRAA[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cex_2s, cey_2s); 
+    gRAA_sys[0] = new TGraphErrors(cn_2s, cpx_2s, cpy_2s, cexsys_2s, ceysys_2s); 
+  } 
+  //// 2) ours
+  TFile* fIn = new TFile(Form("Ups_%d_RAA.root",istate),"READ");
+  gRAA[1]=(TGraphErrors*)fIn->Get("gRAA_cent");
   gRAA_sys[1]=(TGraphErrors*)fIn->Get("gRAA_cent");
+  //// read input file : syst.
+  TFile* fInSys = new TFile(Form("../Systematic/mergedSys_ups%ds.root",istate),"READ");
+  TH1D* hSys = (TH1D*)fInSys->Get("hcentRAA_merged");
+  int npoint = hSys->GetSize()-2;
+  cout << "*** Y("<<istate<<") : # of point = " << npoint << endl; 
+
+  //// set bin width and calculate systematic uncertainties 
   double pxtmp, pytmp, extmp, eytmp;
-  int npoint = gRAA_sys[1]->GetN();
+  double relsys;
+  if (npoint != gRAA[1]->GetN()) {cout << "Error!! data file and syst. file have different binnig!" << endl; return; }
   for (int ipt=0; ipt< npoint; ipt++) {
-    pxtmp=0; pytmp=0; extmp=0; eytmp=0;
-    gRAA_sys[1]->GetPoint(ipt, pxtmp, pytmp);
-    extmp=gRAA_sys[1]->GetErrorX(ipt);
-    eytmp=gRAA_sys[1]->GetErrorY(ipt);
+    pxtmp=0; pytmp=0; extmp=0; eytmp=0; relsys=0;
+    gRAA[1]->GetPoint(ipt, pxtmp, pytmp);
+    extmp=gRAA[1]->GetErrorX(ipt);
+    eytmp=gRAA[1]->GetErrorY(ipt);
+    relsys=hSys->GetBinContent(ipt+1);
     // 1) remove ex from gRAA
     gRAA[1]->SetPointError(ipt, 0, eytmp);
-    // 2) set ey for gRAA_sys (assign 10% temporarily)
+    // 2) set ey for gRAA_sys
     //if (istate==1) gRAA_sys[1]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
     //else gRAA_sys[1]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
     if (istate==1) gRAA_sys[1]->SetPointError(ipt, boxw, pytmp*relsys);
     else gRAA_sys[1]->SetPointError(ipt, boxw, pytmp*relsys);
   }
+  
+  ////////////////////////////////////////////////////////////////
   
   //// graph style 
   SetGraphStyle(gRAA[0], 4, 4); 
@@ -85,15 +98,14 @@ void compare_15001_RAA_cent_noint(int istate=1) //1 or 2 (1S or 2S)
   globtex->SetTextFont(42);
   globtex->SetTextSize(0.038);
   
-  // legend
-  //TLegend *leg= new TLegend(0.55, 0.50, 0.95, 0.70);
+  //// legend
   TLegend *leg= new TLegend(0.55, 0.46, 0.95, 0.63);
   SetLegendStyle(leg);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
 
-  //// draw  
+  //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
   gRAA_sys[0]->GetXaxis()->CenterTitle();
   gRAA_sys[0]->GetYaxis()->SetTitle("R_{AA}");
@@ -108,6 +120,7 @@ void compare_15001_RAA_cent_noint(int istate=1) //1 or 2 (1S or 2S)
   gRAA_sys[0]->GetXaxis()->SetLabelSize(0.05*1.0);
   gRAA_sys[0]->GetYaxis()->SetLabelSize(0.05*1.0);
  
+  //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
   for (int is=0; is<nfile; is++){
     if ( is==0) gRAA_sys[is]->Draw("A5");
@@ -117,7 +130,7 @@ void compare_15001_RAA_cent_noint(int istate=1) //1 or 2 (1S or 2S)
   dashedLine(0.,1.,xmax,1.,1,1);
   leg->Draw();
 
-  //// Text
+  //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
