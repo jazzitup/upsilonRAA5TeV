@@ -12,12 +12,14 @@ using namespace std;
 TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 void setupMultiTreeTool( multiTreeUtil* mt=0, int UpsState=kPPMCUps1S, bool isGen=true) ;
-void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
+void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true) {  // 1S, 2S, 3S
   
   TH1::SetDefaultSumw2();
   //// modify by hand according to the pt range of the sample
-
-  
+  TString weightString = "weight";
+  if (useDataWeight == false) {
+    weightString = "weight0";
+  }
 
   
   TCut accCut = Form("(pt1>%f) && (pt2>%f)", (float)glbMuPtCut, (float)glbMuPtCut);
@@ -95,10 +97,10 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hcentintGenPP = (TH1D*) hcentintGenAA->Clone("hcentintGenPP");
   hcentintRecoPP = (TH1D*) hcentintGenAA->Clone("hcentintRecoPP");
 
-  genAA->Draw2(hcentintGenAA,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
-  recoAA->Draw2(hcentintRecoAA,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
-  genPP->Draw2(hcentintGenPP,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
-  recoPP->Draw2(hcentintRecoPP,"cBin", accCut && PtCut && CbinCut && yCut,"weight");
+  genAA->Draw2(hcentintGenAA,"cBin", accCut && PtCut && CbinCut && yCut,weightString.Data());
+  recoAA->Draw2(hcentintRecoAA,"cBin", accCut && PtCut && CbinCut && yCut,weightString.Data());
+  genPP->Draw2(hcentintGenPP,"cBin", accCut && PtCut && CbinCut && yCut,weightString.Data());
+  recoPP->Draw2(hcentintRecoPP,"cBin", accCut && PtCut && CbinCut && yCut,weightString.Data());
 
   
   //*~*~*~* for pt bins *~*~*~*
@@ -108,10 +110,10 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hptGenPP = (TH1D*)hptGenAA->Clone("hptGenPP");
   hptRecoPP = (TH1D*)hptGenAA->Clone("hptRecoPP");
 
-  genAA->Draw2( hptGenAA, "pt", accCut && yCut && CbinCut, "weight" ) ;
-  recoAA->Draw2( hptRecoAA, "pt", accCut && yCut && CbinCut,"weight" ) ;
-  genPP->Draw2( hptGenPP, "pt", accCut && yCut && CbinCut,"weight") ;
-  recoPP->Draw2( hptRecoPP, "pt", accCut && yCut && CbinCut,"weight") ;
+  genAA->Draw2( hptGenAA, "pt", accCut && yCut && CbinCut, weightString.Data() ) ;
+  recoAA->Draw2( hptRecoAA, "pt", accCut && yCut && CbinCut,weightString.Data() ) ;
+  genPP->Draw2( hptGenPP, "pt", accCut && yCut && CbinCut,weightString.Data()) ;
+  recoPP->Draw2( hptRecoPP, "pt", accCut && yCut && CbinCut,weightString.Data()) ;
 
 
   //*~*~*~* for rapidity bins *~*~*~* 
@@ -121,10 +123,10 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   hrapGenPP = (TH1D*)hrapGenAA->Clone("hrapGenPP");
   hrapRecoPP = (TH1D*)hrapGenAA->Clone("hrapRecoPP");
 
-  genAA->Draw2( hrapGenAA, "y",accCut && PtCut && CbinCut, "weight");
-  recoAA->Draw2( hrapRecoAA, "y",accCut && PtCut && CbinCut, "weight");
-  genPP->Draw2( hrapGenPP, "y",accCut && PtCut && CbinCut, "weight");
-  recoPP->Draw2( hrapRecoPP, "y",accCut && PtCut && CbinCut, "weight");
+  genAA->Draw2( hrapGenAA, "y",accCut && PtCut && CbinCut, weightString.Data());
+  recoAA->Draw2( hrapRecoAA, "y",accCut && PtCut && CbinCut, weightString.Data());
+  genPP->Draw2( hrapGenPP, "y",accCut && PtCut && CbinCut, weightString.Data());
+  recoPP->Draw2( hrapRecoPP, "y",accCut && PtCut && CbinCut, weightString.Data());
 
 
   //*~*~*~* for centrality bins *~*~*~* 
@@ -135,11 +137,11 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
     hcentGenPP = (TH1D*)hcentintGenAA->Clone("hcentGenPP");
     hcentRecoPP = (TH1D*)hcentintGenAA->Clone("hcentRecoPP");
 
-    genAA->Draw2( hcentGenAA, "cBin", accCut && yCut && PtCut, "weight" ) ;
-    recoAA->Draw2( hcentRecoAA, "cBin", accCut && yCut && PtCut,"weight" ) ;
+    genAA->Draw2( hcentGenAA, "cBin", accCut && yCut && PtCut, weightString.Data() ) ;
+    recoAA->Draw2( hcentRecoAA, "cBin", accCut && yCut && PtCut,weightString.Data() ) ;
 
-    genPP->Draw2( hcentGenPP, "cBin", accCut && yCut && PtCut, "weight" ) ;
-    recoPP->Draw2( hcentRecoPP, "cBin", accCut && yCut && PtCut,"weight" ) ;
+    genPP->Draw2( hcentGenPP, "cBin", accCut && yCut && PtCut, weightString.Data() ) ;
+    recoPP->Draw2( hcentRecoPP, "cBin", accCut && yCut && PtCut,weightString.Data() ) ;
   }
 
 
@@ -316,7 +318,7 @@ void getEfficiencyUpsilon(int state = 1) {  // 1S, 2S, 3S
   c_eff_cent->SaveAs(Form("eff_vs_cent_%ds.pdf",state));
 
   
-  TFile *fout = new TFile(Form("efficiency_ups%ds_MCDATA.root",state),"recreate");
+  TFile *fout = new TFile(Form("efficiency_ups%ds_useDataWeight%d.root",state,useDataWeight),"recreate");
   hptGenPP->Write();
   hptRecoPP->Write();
   hptEffPP->Write();
@@ -344,29 +346,36 @@ void setupMultiTreeTool( multiTreeUtil* mt, int UpsState, bool isGen) {
   if ( isGen) treeName = "mmGen";
 
   if ( UpsState == kPPMCUps1S) {    
-    //    mt->addFile("../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142115_3c54df0419c4813e2d7256dc8952ac699405d027.root",treeName,""); }// pT weighted 
     mt->addFile(
-"../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142115_3c54df0419c4813e2d7256dc8952ac699405d027.root"
-,treeName,""); } 
+		//"../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142115_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		"../skimmedFilesWeight2/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281226_.root"
+		,treeName,""); } 
   else if ( UpsState == kPPMCUps2S) { 
     mt->addFile(
-		"../skimmedFiles/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142117_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		//		"../skimmedFiles/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142117_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		"../skimmedFilesWeight2/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281228_.root"
 		,treeName,"");  }
   else if ( UpsState == kPPMCUps3S) { 
     mt->addFile(
-		"../skimmedFiles/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142119_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		//		"../skimmedFiles/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142119_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		"../skimmedFilesWeight2/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281230_.root"
 		,treeName,"");  }
   
   else if ( UpsState == kAAMCUps1S) { 
     mt->addFile(
-		"../skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142122_3c54df0419c4813e2d7256dc8952ac699405d027.root",
-		treeName,"");  } // Weighted
+		//		"../skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142122_3c54df0419c4813e2d7256dc8952ac699405d027.root",
+		"../skimmedFilesWeight2/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281233_.root"
+		,treeName,"");  } // Weighted
   else if ( UpsState == kAAMCUps2S) { 
-    mt->addFile("../skimmedFiles/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142123_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+    mt->addFile(
+		//		"../skimmedFiles/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142123_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		"../skimmedFilesWeight2/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281234_.root"
 		,treeName,"");
   }
   else if ( UpsState == kAAMCUps3S) {
-    mt->addFile("../skimmedFiles/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142124_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+    mt->addFile(
+		//		"../skimmedFiles/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168142124_3c54df0419c4813e2d7256dc8952ac699405d027.root"
+		"../skimmedFilesWeight2/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281235_.root"
 		,treeName,"");
   }
   

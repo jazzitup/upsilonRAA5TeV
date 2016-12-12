@@ -99,7 +99,7 @@ void getSpectra(int state = 1 ) {
   // ##################################
   // ~*~*~*~*~* Rapidity ~*~*~*~*~*~*~*
   // ##################################
-  TFile* inf = new TFile(Form("efficiency/efficiency_ups%ds_MCDATA.root",state));
+  TFile* inf = new TFile(Form("efficiency/efficiency_ups%ds_useDataWeight1.root",state));
   hrapEffAA  = (TH1D*)inf->Get("hrapEffAA");
   hrapEffPP  = (TH1D*)inf->Get("hrapEffPP");
   
