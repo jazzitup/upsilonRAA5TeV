@@ -14,6 +14,8 @@ TString ResultDir  = "nominalFits";
 //// do NOT use "hadded" ttrees!! (e.g.6-100 GeV) 
 valErr getYield(int state=0, int collId=0, float ptLow=0, float ptHigh=0, float yLow=0, float yHigh=0, int cLow=0, int cHigh=0, 	float dphiEp2Low=0,  float dphiEp2High=0) ;
 
+double getScale(int fTAA = 1, double* TAA =  TAA1s, double* centBin = centBin1s, int nCentBins=0);
+
 void stripErrorBars( TH1* h =0, double defaultErr = 0 ); 
 
 void getSpectra(int state = 1 ) {  
@@ -31,6 +33,7 @@ void getSpectra(int state = 1 ) {
   double* centBin;
   double* nPart;  // In order from peripheral to central 
   double* nColl;  // In order from central to peripheral 
+  double* TAA;
   //  double nColl1s[nCentBins] = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
   //  double nPart1s[nCentBins] = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4};
 
@@ -39,25 +42,23 @@ void getSpectra(int state = 1 ) {
   if ( state == 1 ) { 
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
     nYBins = nYBins1S;    yBin = yBin1S; 
-    nCentBins = nCentBins1s;  centBin = centBin1s; nPart = nPart1s; nColl = nColl1s;
+    nCentBins = nCentBins1s;  centBin = centBin1s; nPart = nPart1s; nColl = nColl1s; TAA = TAA1s;
   }
   else if ( state == 2 ) { 
     nPtBins = nPtBins2s;    ptBin = ptBin2s;
     nYBins = nYBins2S;    yBin = yBin2S; 
-    nCentBins = nCentBins2s;  centBin = centBin2s; nPart = nPart2s; nColl = nColl2s;
+    nCentBins = nCentBins2s;  centBin = centBin2s; nPart = nPart2s; nColl = nColl2s; TAA = TAA2s;
   }
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
     nYBins = nYBins3S;    yBin = yBin3S; 
-    nCentBins = nCentBins3s;  centBin = centBin3s; nPart = nPart3s; nColl = nColl3s;
+    nCentBins = nCentBins3s;  centBin = centBin3s; nPart = nPart3s; nColl = nColl3s; TAA = TAA3s;
   }
   
   double ptMin = ptBin[0];    double ptMax = ptBin[nPtBins];  
   double yMin = yBin[0];    double yMax = yBin[nYBins];  
   double centMin = centBin[0];    double centMax = centBin[nCentBins];  
- 
-  
-  
+
   TH1D* hrapEffAA;
   TH1D* hrapEffPP;
   TH1D* hrapAccAA;
@@ -173,8 +174,13 @@ void getSpectra(int state = 1 ) {
   TCanvas* cRAA_rap =  new TCanvas("cRAA_rap","",400,400);
   hRAAraw_rap = (TH1D*)hrapSigAA->Clone("hRAAraw_rap");
   hRAAraw_rap->Divide( hrapSigPP );
-  hRAAraw_rap->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hRAAraw_rap->Scale( 1./ (208.*208) );
+
+  double scale_rap = getScale(nCentBins+1, TAA, centBin, nCentBins);
+
+//  hRAAraw_rap->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+//  hRAAraw_rap->Scale( 1./ (208.*208) );
+  
+  hRAAraw_rap->Scale(scale_rap);
   hRAAraw_rap->SetAxisRange(0,1.2,"Y");
   hRAAraw_rap->SetYTitle("R_{AA} (efficiency UNcorrected)");
   hRAAraw_rap->Draw();
@@ -294,8 +300,12 @@ void getSpectra(int state = 1 ) {
   cptRAA1->cd();
   hRAAraw_pt = (TH1D*)hptSigAA->Clone("hRAAraw_pt");
   hRAAraw_pt->Divide( hptSigPP );
-  hRAAraw_pt->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hRAAraw_pt->Scale( 1./ (208.*208) );
+
+  double scale_pt = getScale(nCentBins+1, TAA, centBin, nCentBins);
+//  hRAAraw_pt->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+//  hRAAraw_pt->Scale( 1./ (208.*208) );
+  
+  hRAAraw_pt->Scale(scale_pt);
   hRAAraw_pt->SetAxisRange(0,1.2,"Y");
   hRAAraw_pt->SetYTitle("R_{AA} (efficiency UNcorrected)");
   hRAAraw_pt->Draw();
@@ -340,8 +350,10 @@ void getSpectra(int state = 1 ) {
   TH1D *hRAA_int;
   hRAA_int = (TH1D*) hcentSigAA_int->Clone("hRAAraw_centint");
   hRAA_int ->Divide(hcentSigPP);
-  hRAA_int ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hRAA_int ->Scale( 1./(208*208));
+  double scale_cent_int = getScale(nCentBins+1, TAA, centBin, nCentBins);
+//  hRAA_int ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+//  hRAA_int ->Scale( 1./(208*208));
+  hRAA_int -> Scale(scale_cent_int);
 
   // Ratio of efficiency 
   hcentEffAA_int->Divide( hcentEffPP );
@@ -361,17 +373,24 @@ void getSpectra(int state = 1 ) {
   
   hRAAraw_cent = (TH1D*) hcentSigAA->Clone("hRAAraw_cent");
   TH1D* htempPP = (TH1D*)hRAAraw_cent->Clone("htempPP_cent"); 
+  TH1D* hRAAScaleCent = (TH1D*)hRAAraw_cent->Clone("hRAAScaleCent"); 
   htempPP->Reset();
+  hRAAScaleCent->Reset();
+  double scale_cent[nCentBins];
   for(int icent=1; icent<=nCentBins;icent++) {
     htempPP->SetBinContent( icent, yCentPP.val );
     htempPP->SetBinError( icent, yCentPP.err );
+    scale_cent[icent-1] = getScale(icent, TAA, centBin, nCentBins);
+    hRAAScaleCent->SetBinContent(icent, 1./scale_cent[icent-1]);
   }
-  hRAAraw_cent->Divide(htempPP); 
+  
+  hRAAraw_cent->Divide(htempPP);
+  hRAAraw_cent->Divide(hRAAScaleCent); 
 
-  hRAAraw_cent ->Divide(hSetBin);
-  hRAAraw_cent ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
-  hRAAraw_cent ->Scale( 1./(208*208));
-  hRAAraw_cent ->Scale(200.*392.);
+//  hRAAraw_cent ->Divide(hSetBin);
+//  hRAAraw_cent ->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
+//  hRAAraw_cent ->Scale( 1./(208*208));
+//  hRAAraw_cent ->Scale(200.*392.);
   hRAAraw_cent ->SetAxisRange(0,1.2,"Y");
   hRAAraw_cent ->SetYTitle("R_{AA} (efficiency UNcorrected)");
   hRAAraw_cent ->Draw();
@@ -529,3 +548,37 @@ void stripErrorBars( TH1* h, double defaultErr  ) {
     h->SetBinError( i, defaultErr);
   }
 }
+
+double getScale(int fTAA, double* TAA, double* centBin, int nCentBins)
+{
+  double flumi_;
+  if(fTAA == nCentBins+1) flumi_ = 351;
+  else if(centBin[fTAA-1]>=60 && fTAA !=nCentBins+1) flumi_ = 464;
+  else if(centBin[fTAA-1]<60 && fTAA !=nCentBins+1) flumi_ = 351;
+  double nMBColl = flumi_*inel_cross_PbPb*1000;
+  double scaleFactor;
+  if(fTAA == nCentBins+1) scaleFactor = 26000000000000./(nMBColl*TAA[fTAA-1]*1000);
+  else scaleFactor = 26000000000000./(nMBColl*(centBin[fTAA]-centBin[fTAA-1])/200.*TAA[fTAA-1]*1000);
+  
+  if(fTAA!=nCentBins+1){
+  cout << endl;
+  cout << "icent : " << centBin[fTAA-1] << " - " << centBin[fTAA] << endl;
+  cout << "nMBColl : " << nMBColl << endl;
+  cout << "nMBColl*(centBin[fTAA]-centBin[fTAA-1])/100. : " << nMBColl*(centBin[fTAA]-centBin[fTAA-1])/200. << endl;
+  cout << "TAA : " << TAA[fTAA-1] << endl;
+  cout << "flumi : " << flumi_ << endl;
+  cout << "scale : " << scaleFactor << endl;
+  cout << endl;
+  }
+
+  else if(fTAA==nCentBins+1){
+  cout << endl;
+  cout << "nMBColl : " << nMBColl << endl;
+  cout << "TAA : " << TAA[fTAA-1] << endl;
+  cout << "flumi : " << flumi_ << endl;
+  cout << "scale : " << scaleFactor << endl;
+  cout << endl;
+  }
+  return scaleFactor;
+}
+
