@@ -288,7 +288,8 @@ if ( binMatched( 4, 0, 30, 1.2, 2.4) )  { setSignalParMC( 3.73744, 1.45492, 0.09
 
 void PSetUpsAndBkg::SetMCSgl_CBGaus() 
 {
-    /*    cout << " ///////////////////////////////////////////" << endl;
+  
+  /*    cout << " ///////////////////////////////////////////" << endl;
     cout << " MC signal PDFs are not defined for this bin" << endl; 
     cout << " ///////////////////////////////////////////" << endl;
   */
