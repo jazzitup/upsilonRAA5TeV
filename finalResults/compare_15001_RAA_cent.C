@@ -11,9 +11,10 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   
   const int nfile = 2; // 0: 15001, 1: ours
   double xmax = 420;
-  double xmax_int = 2.0;
+  double xmin_int = 0.5;
+  double xmax_int = 1.5;
   double boxw = 6.5; // for syst. box (vs cent only)
-  double boxw_int = 0.17;
+  double boxw_int = 0.09;
 //  double relsys = 0.1;
   
   //// 15001 values
@@ -198,19 +199,21 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
   
   CMS_lumi( pad_diff, iPeriod, iPos );
-
+  
   //// --- 2nd pad!!!
   c1->cd();
   pad_int->Draw();
   pad_int->cd();
 
   //// for int
-  gRAA_int_sys[0]->GetXaxis()->SetLimits(0.,xmax_int);
+  gRAA_int_sys[0]->GetXaxis()->SetLimits(xmin_int,xmax_int);
   gRAA_int_sys[0]->SetMinimum(0.0);
 //  gRAA_int_sys[0]->SetMaximum(1.3);
   gRAA_int_sys[0]->SetMaximum(1.6);
   gRAA_int_sys[0]->GetXaxis()->SetNdivisions(101);
+  gRAA_int_sys[0]->GetXaxis()->SetLabelSize(0);
   gRAA_int_sys[0]->GetYaxis()->SetTickLength(0.03*600/xlonger);
+  gRAA_int_sys[0]->GetYaxis()->SetLabelSize(0);
   
   for (int is=0; is<nfile; is++){
     if ( is==0) gRAA_int_sys[is]->Draw("A5");
@@ -224,7 +227,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   globtex->SetTextSize(0.038*600./xlonger);
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %"); 
-
+  
   c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent.pdf",istate));
   c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent.png",istate));
 

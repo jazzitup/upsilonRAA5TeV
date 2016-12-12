@@ -11,9 +11,10 @@ void draw_RAA_cent()
   
   const int nState = 3; // Y(1S), Y(2S), and Y(3S)
   double xmax = 420.0;
-  double xmax_int = 2.0;
+  double xmin_int = 0.5;
+  double xmax_int = 1.5;
   double boxw = 6.5; // for syst. box (vs cent)
-  double boxw_int = 0.17;
+  double boxw_int = 0.09;
 //  double relsys = 0.1;
 
   ////////////////////////////////////////////////////////////////
@@ -170,11 +171,13 @@ void draw_RAA_cent()
   pad_int->cd(); 
   
   //// for int
-  gRAA_int_sys[0]->GetXaxis()->SetLimits(0.,xmax_int);
+  gRAA_int_sys[0]->GetXaxis()->SetLimits(xmin_int,xmax_int);
   gRAA_int_sys[0]->SetMinimum(0.0);
   gRAA_int_sys[0]->SetMaximum(1.3);
   gRAA_int_sys[0]->GetXaxis()->SetNdivisions(101);
+  gRAA_int_sys[0]->GetXaxis()->SetLabelSize(0);
   gRAA_int_sys[0]->GetYaxis()->SetTickLength(0.03*600/xlonger);
+  gRAA_int_sys[0]->GetYaxis()->SetLabelSize(0);
   
   for (int is=0; is<nState; is++){
     if ( is==0) gRAA_int_sys[is]->Draw("A5");
