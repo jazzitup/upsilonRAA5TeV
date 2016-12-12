@@ -104,7 +104,7 @@ class  PSetUpsAndBkg {
     sigma1s_1 = MCsigma1S_ ;         sigma2s_1 = MCsigma1S_ * (pdgMass.Y2S/pdgMass.Y1S) ;     sigma3s_1 = MCsigma1S_ * (pdgMass.Y3S/pdgMass.Y1S) ; 
     sigma1s_2 = sigma1s_1*MCx_ ;     sigma2s_2 = sigma2s_1*MCx_ ;  sigma3s_2 = sigma3s_1*MCx_  ;
     mean1s  = MCm0_ ;   mean2s  = MCm0_ * (pdgMass.Y2S/pdgMass.Y1S);  mean3s  = MCm0_ * (pdgMass.Y3S/pdgMass.Y1S); 
-    f1s = MCf_;     f2s= MCf_;    f3s= MCf_;
+    f1s = MCf_;     f2s= MCf_;    f3s= MCf_;   x1s = MCx_;
   }
 
   void setSignalParPPDATA(float MCn_, float MCalpha_, float MCsigma1S_, float MCm0_, float MCf_, float MCx_)
@@ -163,6 +163,7 @@ class  PSetUpsAndBkg {
   }
 
   void SetMCSgl();
+  void SetMCSgl_CBGaus();
   void SetParPPDATASgl();
   void SetMCBkg();
   bool binMatched( float muonPtCut_, float ptLow_, float ptHigh_, float yLow_, float yHigh_, int cLow_=-1, int cHigh_=-1); 
@@ -281,6 +282,70 @@ if ( binMatched( 4, 0, 30, 1.6, 2.0) )  { setSignalParMC( 1.65287, 2.063, 0.0727
 if ( binMatched( 4, 0, 30, 2.0, 2.4) )  { setSignalParMC( 1.22102, 2.05874, 0.0874083, 9.4581, 0.0987932, 1.99991 );}
 if ( binMatched( 4, 0, 30, 0, 1.2) )    { setSignalParMC( 1.92198, 1.75, 0.0971168, 9.45798, 0.437838, 0.611932 );}
 if ( binMatched( 4, 0, 30, 1.2, 2.4) )  { setSignalParMC( 3.73744, 1.45492, 0.0980838, 9.45048, 0.40192, 1.47978 );}
+
+    }
+}
+
+void PSetUpsAndBkg::SetMCSgl_CBGaus() 
+{
+    /*    cout << " ///////////////////////////////////////////" << endl;
+    cout << " MC signal PDFs are not defined for this bin" << endl; 
+    cout << " ///////////////////////////////////////////" << endl;
+  */
+    cout << " ///////////////////////////////////////////" << endl;
+    cout << " Fixing the Parameters..." << endl;
+    cout << " ///////////////////////////////////////////" << endl;
+    cout << " muPtCut = " << muPtCut << endl;
+    cout << " ptLow = " << ptLow << endl;
+    cout << " ptHigh = " << ptHigh << endl;
+    cout << " yLow = " << yLow << endl;
+    cout << " yHigh = " << yHigh << endl;
+    
+// mcFit_MuPt4_2016_11_30
+if ( collId == kPPDATA) 
+{
+  //Bin for 1S 
+if ( binMatched( 4, 0, 2.5, 0, 2.4) ) { setSignalParMC( 2.54917, 1.42834, 0.0635914, 9.45874, 0.550769, 1.97849 );}
+if ( binMatched( 4, 2.5, 5, 0, 2.4) ) { setSignalParMC( 2.25675, 1.52031, 0.0678987, 9.45834, 0.604787, 1.93158 );}
+if ( binMatched( 4, 5, 8, 0, 2.4) ) { setSignalParMC( 2.32471, 1.46647, 0.069625, 9.45746, 0.623759, 1.87018 );}
+if ( binMatched( 4, 8, 15, 0, 2.4) ) { setSignalParMC( 2.96275, 1.37205, 0.068278, 9.45618, 0.590451, 1.84018 );}
+if ( binMatched( 4, 15, 30, 0, 2.4) ) { setSignalParMC( 1.26121, 1.71552, 0.0694964, 9.45629, 0.579887, 1.8375 );}
+if ( binMatched( 4, 0, 5, 0, 2.4) ) { setSignalParMC( 2.42309, 1.47628, 0.0660568, 9.45852, 0.581272, 1.9476 );}
+if ( binMatched( 4, 5, 15, 0, 2.4) ) { setSignalParMC( 2.17838, 1.48911, 0.0681602, 9.45644, 0.584384, 1.84755 );}
+if ( binMatched( 4, 0, 30, 0, 2.4) ) { setSignalParMC( 2.38608, 1.46817, 0.0677718, 9.45744, 0.59193, 1.88768 );}
+if ( binMatched( 4, 0, 30, 0, 0.4) ) { setSignalParMC( 3.26941, 1.00226, 0.0814565, 9.45797, 0.306372, 0.649771 );}
+if ( binMatched( 4, 0, 30, 0.4, 0.8) ) { setSignalParMC( 6.0228, 1.10246, 0.0915191, 9.45847, 0.392614, 0.693605 );}
+if ( binMatched( 4, 0, 30, 0.8, 1.2) ) { setSignalParMC( 1.45606, 1.76583, 0.0805061, 9.45651, 0.584548, 1.39205 );}
+if ( binMatched( 4, 0, 30, 1.2, 1.6) ) { setSignalParMC( 5.4975, 1.75295, 0.103362, 9.4511, 0.773069, 1.42089 );}
+if ( binMatched( 4, 0, 30, 1.6, 2.0) ) { setSignalParMC( 1.29178, 1.1729, 0.0739975, 9.45059, 0.132347, 1.85865 );}
+if ( binMatched( 4, 0, 30, 2, 2.4) ) { setSignalParMC( 1.04519, 1.39037, 0.0668717, 9.45001, 0.04459, 2.45326 );}
+if ( binMatched( 4, 0, 30, 0, 1.2) ) { setSignalParMC( 5.93553, 1.3038, 0.0929776, 9.45749, 0.545774, 0.612201 );}
+if ( binMatched( 4, 0, 30, 1.2, 2.4) ) { setSignalParMC( 2.44464, 1.8087, 0.105676, 9.45, 0.568479, 1.47023 );}
+
+}
+
+else if (collId == kAADATA ) 
+{ 
+ 
+//for pt bin
+if ( binMatched( 4, 0, 30, 0, 2.4) )   { setSignalParMC( 2.84517, 1.36894, 0.0684228, 9.45737, 0.602446, 1.85621 );}
+if ( binMatched( 4, 0, 2.5, 0, 2.4) )   { setSignalParMC( 2.51572, 1.36038, 0.0660054, 9.45828, 0.575459, 1.94671 );}
+if ( binMatched( 4, 2.5, 5, 0, 2.4) ) { setSignalParMC( 2.63763, 1.42659, 0.0689422, 9.45728, 0.604498, 1.80244 );}
+if ( binMatched( 4, 5, 8, 0, 2.4) )  { setSignalParMC( 4.01878, 1.32223, 0.0681323, 9.45799, 0.612437, 1.87951 );}
+if ( binMatched( 4, 8, 15, 0, 2.4) ) { setSignalParMC( 2.75442, 1.31236, 0.0681348, 9.45692, 0.605204, 1.85662 );}
+if ( binMatched( 4, 15, 30, 0, 2.4) ) { setSignalParMC( 2.63653, 1.46321, 0.0735693, 9.45612, 0.645267, 1.80864 );}
+if ( binMatched( 4, 0, 5, 0, 2.4) ) { setSignalParMC( 2.47191, 1.40481, 0.0673622, 9.45771, 0.584689, 1.86278 );}
+if ( binMatched( 4, 5, 15, 0, 2.4) ) { setSignalParMC( 3.15578, 1.3226, 0.0681048, 9.45737, 0.607122, 1.86533 );}
+
+if ( binMatched( 4, 0, 30, 0, 0.4) )   { setSignalParMC( 3.05697, 1.06017, 0.0754069, 9.45866, 0.326219, 0.715251 );}
+if ( binMatched( 4, 0, 30, 0.4, 0.8) ) { setSignalParMC( 1.27276, 1.84114, 0.0648444, 9.4588, 0.694488, 1.46609 );}
+if ( binMatched( 4, 0, 30, 0.8, 1.2) )   { setSignalParMC( 1.90975, 1.5204, 0.0761292, 9.45537, 0.471149, 1.42498 );}
+if ( binMatched( 4, 0, 30, 1.2, 1.6) )   { setSignalParMC( 6.01133, 1.00139, 0.0839045, 9.45273, 0.297959, 1.44207 );}
+if ( binMatched( 4, 0, 30, 1.6, 2) ) { setSignalParMC( 6.01654, 1.63034, 0.122955, 9.45, 0.734874, 1.34836 );}
+if ( binMatched( 4, 0, 30, 2, 2.4) )   { setSignalParMC( 1.00114, 1.00121, 0.0677261, 9.44797, 0.11848, 2.49903 );}
+if ( binMatched( 4, 0, 30, 0, 1.2) )   { setSignalParMC( 5.96691, 1.39766, 0.0877459, 9.45737, 0.664216, 0.602696 );}
+if ( binMatched( 4, 0, 30, 1.2, 2.4) ) { setSignalParMC( 1.0824, 1.00126, 0.0534197, 9.45014, 0.108649, 2.46433 );}
+
 
     }
 }
