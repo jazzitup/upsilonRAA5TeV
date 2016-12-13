@@ -43,6 +43,11 @@ double nColl1s[nCentBins1s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
 double nColl2s[nCentBins2s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67}; 
 double nColl3s[nCentBins3s]   = {1626, 805, 267, 30.8};
 
+double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
+double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
+double TAA3s[nCentBins3s+1] = {23.22, 11.51, 3.819, 0.4395, 5.607};
+
+const double inel_cross_PbPb = 7716;
 
 //const int nCentBins2s  = 4;   double centBin2s[nCentBins2s+1] = {0,20,60,100,200};
 
