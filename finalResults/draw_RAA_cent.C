@@ -99,22 +99,29 @@ void draw_RAA_cent(bool isArrow =true)
   ////////////////////////////////////////////////////////////////
   //// 3S upper limit (arrow)
   int ulstate = 2; //3S
-  double lower68, upper68;// 68%
-  double lower95, upper95; // 95%
-  
+  static const int n3s = 4;
+  double lower68[n3s] = {0., 0., 0., 0.};
+  double upper68[n3s] = {0.1, 0.1, 0.1, 0.1};
+  double lower95[n3s] = {0., 0., 0., 0.};
+  double upper95[n3s] = {0.2, 0.2, 0.2, 0.2};
+  static const int n3s_int = 1;
+  double lower68_int[n3s_int] = {0.};
+  double upper68_int[n3s_int] = {0.1};
+  double lower95_int[n3s_int] = {0.};
+  double upper95_int[n3s_int] = {0.2};
+ 
+  if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
+  if (n3s_int != npoint_int[ulstate]) {cout<<"ERROR!! # of bins for UL (int) is wrong!!"<<endl;return;} 
+
   //// --- vs centrality
-  TBox *box68per[npoint[ulstate]];
-  TArrow *arr95per[npoint[ulstate]];
-  for (int ipt=0; ipt< npoint[ulstate] ; ipt++) { //bin by bin
+  TBox *box68per[n3s];
+  TArrow *arr95per[n3s];
+  for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
     pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
-    lower68=0; upper68=0; lower95=0; upper95=0; 
+    //lower68=0; upper68=0; lower95=0; upper95=0; 
     gRAA[ulstate]->GetPoint(ipt, pxtmp, pytmp);
-    lower68=0; 
-    upper68= 0.1;
-    lower95 =0;
-    upper95=0.2;
-    box68per[ipt] = new TBox(pxtmp-boxw,lower68,pxtmp+boxw,upper68);
-    arr95per[ipt] = new TArrow(pxtmp,lower95,pxtmp,upper95,0.027,"<-|"); //95%
+    box68per[ipt] = new TBox(pxtmp-boxw,lower68[ipt],pxtmp+boxw,upper68[ipt]);
+    arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%
     box68per[ipt]->SetLineColor(kGreen+2);
     box68per[ipt]->SetFillColorAlpha(kGreen-10,0.5);
     box68per[ipt]->SetLineWidth(1);
@@ -122,18 +129,13 @@ void draw_RAA_cent(bool isArrow =true)
     arr95per[ipt]->SetLineWidth(2);
   }
   //// --- centrality-integrated
-  TBox *box68per_int[npoint_int[ulstate]];
-  TArrow *arr95per_int[npoint_int[ulstate]];
-  for (int ipt=0; ipt< npoint_int[ulstate] ; ipt++) { //bin by bin
+  TBox *box68per_int[n3s_int];
+  TArrow *arr95per_int[n3s_int];
+  for (int ipt=0; ipt< n3s_int ; ipt++) { //bin by bin
     pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
-    lower68=0; upper68=0; lower95=0; upper95=0; 
     gRAA_int[ulstate]->GetPoint(ipt, pxtmp, pytmp);
-    lower68=0; 
-    upper68= 0.1;
-    lower95 =0;
-    upper95=0.2;
-    box68per_int[ipt] = new TBox(pxtmp-boxw_int,lower68,pxtmp+boxw_int,upper68);
-    arr95per_int[ipt] = new TArrow(pxtmp,lower95,pxtmp,upper95,0.027,"<-|"); //95%
+    box68per_int[ipt] = new TBox(pxtmp-boxw_int,lower68_int[ipt],pxtmp+boxw_int,upper68_int[ipt]);
+    arr95per_int[ipt] = new TArrow(pxtmp,lower95_int[ipt],pxtmp,upper95_int[ipt],0.027,"<-|"); //95%
     box68per_int[ipt]->SetLineColor(kGreen+2);
     box68per_int[ipt]->SetFillColorAlpha(kGreen-10,0.5);
     box68per_int[ipt]->SetLineWidth(1);
@@ -158,13 +160,6 @@ void draw_RAA_cent(bool isArrow =true)
   globtex->SetTextFont(42);
   globtex->SetTextSize(0.038);
   
-  //// legend
-  TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  SetLegendStyle(leg);
-  for (int is=0; is<nState; is++){
-    leg -> AddEntry(gRAA[is],Form("#Upsilon(%dS)",is+1),"lp");
-  }
-
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
   gRAA_sys[0]->GetXaxis()->CenterTitle();
@@ -196,7 +191,7 @@ void draw_RAA_cent(bool isArrow =true)
   for (int is=0; is<nState; is++){
     if ( is==0) { gRAA_sys[is]->Draw("A5"); }
     else if (is==ulstate && isArrow==true) { 
-      for (int ipt=0; ipt< npoint[ulstate] ; ipt++) { //bin by bin
+      for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
         box68per[ipt]->Draw("l"); 
       }
     }
@@ -205,14 +200,39 @@ void draw_RAA_cent(bool isArrow =true)
   //// point
   for (int is=0; is<nState; is++){
     if (is==ulstate && isArrow==true) {
-      for (int ipt=0; ipt< npoint[ulstate] ; ipt++) { //bin by bin
+      for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
         arr95per[ipt]->Draw();
       }
     }
     else { gRAA[is]->Draw("P"); }
 	}
   dashedLine(0.,1.,xmax,1.,1,1);
-  //leg->Draw("same");
+  
+  //// legend
+  //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
+  TLegend *leg= new TLegend(0.65, 0.50, 0.85, 0.70);
+  SetLegendStyle(leg);
+  TArrow *arrLeg = new TArrow(255.,0.6,255.,0.65,0.025,"<-|");
+  arrLeg->SetLineColor(kGreen+2);
+  arrLeg->SetLineWidth(2);
+  
+  if (isArrow==false) { 
+    for (int is=0; is<nState; is++){
+      leg -> AddEntry(gRAA[is],Form(" #Upsilon(%dS)",is+1),"lp");
+    }
+  }
+  else {
+    leg -> AddEntry(gRAA[0]," #Upsilon(1S)","lp");
+    leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
+    TLegendEntry *ent=leg->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
+    ent->SetLineColor(kGreen+2);
+    ent->SetFillColorAlpha(kGreen-10,0.5);
+    ent->SetFillStyle(1001);
+    ent=leg->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
+    ent->SetLineColor(kWhite);
+    arrLeg->Draw();
+  }
+  leg->Draw("same");
   
   //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
@@ -242,7 +262,7 @@ void draw_RAA_cent(bool isArrow =true)
   for (int is=0; is<nState; is++){
     if ( is==0) { gRAA_int_sys[is]->Draw("A5"); }
     else if (is==ulstate && isArrow==true) { 
-      for (int ipt=0; ipt< npoint_int[ulstate] ; ipt++) { //bin by bin
+      for (int ipt=0; ipt< n3s_int ; ipt++) { //bin by bin
         box68per_int[ipt]->Draw("l"); 
       }
     }
@@ -251,7 +271,7 @@ void draw_RAA_cent(bool isArrow =true)
   //// point
   for (int is=0; is<nState; is++){
     if (is==ulstate && isArrow==true) {
-      for (int ipt=0; ipt< npoint_int[ulstate] ; ipt++) { //bin by bin
+      for (int ipt=0; ipt< n3s_int ; ipt++) { //bin by bin
         arr95per_int[ipt]->Draw();
       }
     }
