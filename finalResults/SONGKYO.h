@@ -35,6 +35,7 @@
 #include <TMath.h>
 #include <math.h>
 
+#include <TArrow.h>
 #include <TLorentzVector.h>
 #include <TClonesArray.h>
 #include <TLorentzRotation.h>
