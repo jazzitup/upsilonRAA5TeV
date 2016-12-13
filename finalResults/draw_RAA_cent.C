@@ -11,8 +11,8 @@ void draw_RAA_cent(bool isArrow =true)
   
   const int nState = 3; // Y(1S), Y(2S), and Y(3S)
   double xmax = 420.0;
-  double xmin_int = 0.5;
-  double xmax_int = 1.5;
+  double xmin_int = 0.6;
+  double xmax_int = 1.8;
   double boxw = 6.5; // for syst. box (vs cent)
   double boxw_int = 0.09;
 //  double relsys = 0.1;
@@ -51,6 +51,7 @@ void draw_RAA_cent(bool isArrow =true)
   //// set bin width and calculate systematic uncertainties
   double pxtmp, pytmp, extmp, eytmp;
   double relsys;
+  double xshift = 0.2;
   //// --- vs centrality
   for (int is=0; is<nState; is++){
     cout << is+1 <<"th state***************" << endl;
@@ -89,8 +90,10 @@ void draw_RAA_cent(bool isArrow =true)
       //cout << ipt <<"th bin rel. syst. = " << relsys << endl;
       cout << ipt <<"th bin syst. = " << pytmp*relsys << endl; 
       //// 1) remove ex from gRAA
+      gRAA_int[is]->SetPoint(ipt, pxtmp+xshift*is, pytmp);
       gRAA_int[is]->SetPointError(ipt, 0, eytmp);
       //// 2) set ey for gRAA_sys
+      gRAA_int_sys[is]->SetPoint(ipt, pxtmp+xshift*is, pytmp);
       //gRAA_int_sys[is]->SetPointError(ipt, extmp, pytmp*relsys);
       gRAA_int_sys[is]->SetPointError(ipt, boxw_int, pytmp*relsys); //extemp fixed
     }
