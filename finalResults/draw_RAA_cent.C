@@ -2,7 +2,7 @@
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
 
-void draw_RAA_cent()
+void draw_RAA_cent(bool isArrow =true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -97,6 +97,51 @@ void draw_RAA_cent()
   }
 
   ////////////////////////////////////////////////////////////////
+  //// 3S upper limit (arrow)
+  int ulstate = 2; //3S
+  double lower68, upper68;// 68%
+  double lower95, upper95; // 95%
+  
+  //// --- vs centrality
+  TBox *box68per[npoint[ulstate]];
+  TArrow *arr95per[npoint[ulstate]];
+  for (int ipt=0; ipt< npoint[ulstate] ; ipt++) { //bin by bin
+    pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
+    lower68=0; upper68=0; lower95=0; upper95=0; 
+    gRAA[ulstate]->GetPoint(ipt, pxtmp, pytmp);
+    lower68=0; 
+    upper68= 0.1;
+    lower95 =0;
+    upper95=0.2;
+    box68per[ipt] = new TBox(pxtmp-boxw,lower68,pxtmp+boxw,upper68);
+    arr95per[ipt] = new TArrow(pxtmp,lower95,pxtmp,upper95,0.027,"<-|"); //95%
+    box68per[ipt]->SetLineColor(kGreen+2);
+    box68per[ipt]->SetFillColorAlpha(kGreen-10,0.5);
+    box68per[ipt]->SetLineWidth(1);
+    arr95per[ipt]->SetLineColor(kGreen+2);
+    arr95per[ipt]->SetLineWidth(2);
+  }
+  //// --- centrality-integrated
+  TBox *box68per_int[npoint_int[ulstate]];
+  TArrow *arr95per_int[npoint_int[ulstate]];
+  for (int ipt=0; ipt< npoint_int[ulstate] ; ipt++) { //bin by bin
+    pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
+    lower68=0; upper68=0; lower95=0; upper95=0; 
+    gRAA_int[ulstate]->GetPoint(ipt, pxtmp, pytmp);
+    lower68=0; 
+    upper68= 0.1;
+    lower95 =0;
+    upper95=0.2;
+    box68per_int[ipt] = new TBox(pxtmp-boxw_int,lower68,pxtmp+boxw_int,upper68);
+    arr95per_int[ipt] = new TArrow(pxtmp,lower95,pxtmp,upper95,0.027,"<-|"); //95%
+    box68per_int[ipt]->SetLineColor(kGreen+2);
+    box68per_int[ipt]->SetFillColorAlpha(kGreen-10,0.5);
+    box68per_int[ipt]->SetLineWidth(1);
+    arr95per_int[ipt]->SetLineColor(kGreen+2);
+    arr95per_int[ipt]->SetLineWidth(2);
+  }
+  
+  ////////////////////////////////////////////////////////////////
   
   //// graph style 
   for (int is=0; is<nState; is++){
@@ -147,13 +192,27 @@ void draw_RAA_cent()
   c1->cd();
   pad_diff->Draw(); 
   pad_diff->cd(); 
+  //// syst
   for (int is=0; is<nState; is++){
-    if ( is==0) gRAA_sys[is]->Draw("A5");
-    else gRAA_sys[is]->Draw("5");
-    gRAA[is]->Draw("P");
+    if ( is==0) { gRAA_sys[is]->Draw("A5"); }
+    else if (is==ulstate && isArrow==true) { 
+      for (int ipt=0; ipt< npoint[ulstate] ; ipt++) { //bin by bin
+        box68per[ipt]->Draw("l"); 
+      }
+    }
+    else { gRAA_sys[is]->Draw("5"); }
+	}
+  //// point
+  for (int is=0; is<nState; is++){
+    if (is==ulstate && isArrow==true) {
+      for (int ipt=0; ipt< npoint[ulstate] ; ipt++) { //bin by bin
+        arr95per[ipt]->Draw();
+      }
+    }
+    else { gRAA[is]->Draw("P"); }
 	}
   dashedLine(0.,1.,xmax,1.,1,1);
-  leg->Draw("same");
+  //leg->Draw("same");
   
   //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
@@ -179,10 +238,24 @@ void draw_RAA_cent()
   gRAA_int_sys[0]->GetYaxis()->SetTickLength(0.03*600/xlonger);
   gRAA_int_sys[0]->GetYaxis()->SetLabelSize(0);
   
+  //// syst
   for (int is=0; is<nState; is++){
-    if ( is==0) gRAA_int_sys[is]->Draw("A5");
-    else gRAA_int_sys[is]->Draw("5");
-    gRAA_int[is]->Draw("P");
+    if ( is==0) { gRAA_int_sys[is]->Draw("A5"); }
+    else if (is==ulstate && isArrow==true) { 
+      for (int ipt=0; ipt< npoint_int[ulstate] ; ipt++) { //bin by bin
+        box68per_int[ipt]->Draw("l"); 
+      }
+    }
+    else { gRAA_int_sys[is]->Draw("5"); }
+	}
+  //// point
+  for (int is=0; is<nState; is++){
+    if (is==ulstate && isArrow==true) {
+      for (int ipt=0; ipt< npoint_int[ulstate] ; ipt++) { //bin by bin
+        arr95per_int[ipt]->Draw();
+      }
+    }
+    else { gRAA_int[is]->Draw("P"); }
 	}
   dashedLine(0.,1.,xmax_int,1.,1,1);
   
@@ -193,8 +266,8 @@ void draw_RAA_cent()
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %");
 
 	c1->Update();
-  c1->SaveAs("RAA_vs_cent.pdf");
-  c1->SaveAs("RAA_vs_cent.png");
+  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
+  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.png",(int)isArrow));
 
 /*
 	///////////////////////////////////////////////////////////////////
