@@ -22,7 +22,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true) {  // 1S, 2S, 
   }
 
   
-  TCut accCut = Form("(pt1>%f) && (pt2>%f)", (float)glbMuPtCut, (float)glbMuPtCut);
+  TCut accCut = Form("(pt1>%f) && (pt2>%f) && abs(eta1)<2.4 && abs(eta2)<2.4", (float)glbMuPtCut, (float)glbMuPtCut);
   multiTreeUtil* genAA = new multiTreeUtil();
   multiTreeUtil* recoAA = new multiTreeUtil();
   multiTreeUtil* genPP = new multiTreeUtil();
