@@ -25,8 +25,8 @@
 float glbMuPtCut = 4; // for acceptance
 const int nPtBins1s  = 5;   double ptBin1s[nPtBins1s+1] = {0,2.5,5,8,15,30};
 const int nPtBins2s  = 3;   double ptBin2s[nPtBins2s+1] = {0,5,15,30};
-//const int nPtBins3s  = 3;   double ptBin3s[nPtBins3s+1] = {0,5,15,30};
-const int nPtBins3s  = 2;   double ptBin3s[nPtBins3s+1] = {0,15,30}; // Dec.13th pre-approval
+const int nPtBins3s  = 3;   double ptBin3s[nPtBins3s+1] = {0,5,15,30};
+//const int nPtBins3s  = 2;   double ptBin3s[nPtBins3s+1] = {0,15,30}; 
 
 const int nYBins1S  = 6;   double yBin1S[nYBins1S+1] ={0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4};
 const int nYBins2S  = 2;   double yBin2S[nYBins2S+1] ={0, 1.2, 2.4};
@@ -36,34 +36,32 @@ const int nYBins  = 2;   double yBin[nYBins+1] ={0, 1.2, 2.4}; // for event rewe
 
 const int nCentBins1s  = 9;   double centBin1s[nCentBins1s+1] = {0,10,20,40,60,80,100,120,140,200}; 
 const int nCentBins2s  = 9;   double centBin2s[nCentBins2s+1] = {0,10,20,40,60,80,100,120,140,200};
-//const int nCentBins3s  = 4;   double centBin3s[nCentBins3s+1] = {0,20,60,100,200};
-const int nCentBins3s  = 2;   double centBin3s[nCentBins3s+1] = {0,60,200};  // Dec.13th pre-approval
+const int nCentBins3s  = 4;   double centBin3s[nCentBins3s+1] = {0,20,60,100,200};
+//const int nCentBins3s  = 2;   double centBin3s[nCentBins3s+1] = {0,60,200}; 
 
 // Glauber variables https://twiki.cern.ch/twiki/pub/CMS/HiCentrality2016/AN-15-080_temp_20161206.pdf
 
 double nPart1s[nCentBins1s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4}; // HIN-16-008 paper
 double nPart2s[nCentBins2s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4};
-//double nPart3s[nCentBins3s]   = {21.9, 109.2, 226.7, 358.8}; 
-double nPart3s[nCentBins3s]   = {46.81, 270.7};  // Dec.13th pre-approval
+double nPart3s[nCentBins3s]   = {21.9, 109.2, 226.7, 358.8}; 
+//double nPart3s[nCentBins3s]   = {46.81, 270.7};
 double nColl1s[nCentBins1s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67}; 
 double nColl2s[nCentBins2s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67}; 
-//double nColl3s[nCentBins3s]   = {1626, 805, 267, 30.};
-double nColl3s[nCentBins3s]   = {1079, 98.36};  // Dec.13th pre-approval
+double nColl3s[nCentBins3s]   = {1626, 805, 267, 30.};
+//double nColl3s[nCentBins3s]   = {1079, 98.36};  
 
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
-//double TAA3s[nCentBins3s+1] = {23.22, 11.51, 3.819, 0.4395, 5.507};
-double TAA3s[nCentBins3s+1] = {15.41, 1.405};   // Dec.13th pre-approval
+double TAA3s[nCentBins3s+1] = {23.22, 11.51, 3.819, 0.4395, 5.507}; 
+//double TAA3s[nCentBins3s+1] = {15.41, 1.405};   
 
 // In ratio! 
 double TAA_unc1s[nCentBins1s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc2s[nCentBins2s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
-//double TAA_unc3s[nCentBins3s+1] = {0.017, 0.024, 0.049, 0.15, 0.089};
-double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12};   // Dec.13th pre-approval
+double TAA_unc3s[nCentBins3s+1] = {0.017, 0.024, 0.049, 0.15, 0.089};
+//double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12}; 
 
 const double inel_cross_PbPb = 7716;
-
-//const int nCentBins2s  = 4;   double centBin2s[nCentBins2s+1] = {0,20,60,100,200};
 
 
 
