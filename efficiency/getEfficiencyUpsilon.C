@@ -405,9 +405,22 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   leg4->Draw();
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,200,1);
-  c_eff_cent->SaveAs(Form("efficiencyTable/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",state,useDataWeight,useTnpWeight,tnpIdx)) ;
-    
-  TFile *fout = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.root",state,useDataWeight,useTnpWeight,tnpIdx),"recreate");
+
+  if ( tnpIdx == 0) { 
+    c_eff_cent->SaveAs(Form("efficiencyTable/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",state,useDataWeight,useTnpWeight,tnpIdx)) ;
+  }
+  else {
+    c_eff_cent->SaveAs(Form("efficiencyTableSys/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",state,useDataWeight,useTnpWeight,tnpIdx)) ;
+  }
+  TFile *fout;
+  if ( tnpIdx == 0) {
+    fout = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.root",state,useDataWeight,useTnpWeight,tnpIdx),"recreate");
+  }
+  else {
+    fout = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.root",state,useDataWeight,useTnpWeight,tnpIdx),"recreate");
+  }
+
+
   //  hptGenPP->Write();
   //  hptRecoPP->Write();
   //  hptGenAA->Write();
