@@ -38,7 +38,7 @@ void getSysAcc(int state = 1) {
     nYBins = nYBins3S;  yBin = yBin3S;
   }
 
-  TFile* f0 = new TFile("acceptance_wgt_20161207_final.root");
+  TFile* f0 = new TFile("acceptance.root");
   TH1D* hptAccPP = (TH1D*)f0->Get(Form("hptAccPP%dS",state));
   TH1D* hrapAccPP = (TH1D*)f0->Get(Form("hrapAccPP%dS",state));
   TH1D* hcentAccPP = (TH1D*)f0->Get(Form("hIntAccPP%dS",state));  // Integrated bin for pp.
