@@ -15,7 +15,7 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeigt=false) {  // 1S, 2S, 3S
+void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=false) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
 
   float massLow = 8;
@@ -126,10 +126,12 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
 	    )
 	continue;
       
-      hcentintRecoAA->Fill( dmAA.cBin, dmAA.weight);
-      hcentRecoAA->Fill   ( dmAA.cBin, dmAA.weight);
-      hptRecoAA->Fill     ( dmAA.pt,   dmAA.weight);
-      hrapRecoAA->Fill    ( dmAA.y,    dmAA.weight);
+      float ptWeight = dmAA.weight0; 
+      if (useDataWeight) ptWeight = dmAA.weight;
+      hcentintRecoAA->Fill( dmAA.cBin, ptWeight);
+      hcentRecoAA->Fill   ( dmAA.cBin, ptWeight);
+      hptRecoAA->Fill     ( dmAA.pt,   ptWeight);
+      hrapRecoAA->Fill    ( dmAA.y,    ptWeight);
     }
   
   
@@ -155,10 +157,12 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
 	    )
 	continue;
       
-      hcentintGenAA->Fill( dmGenAA.cBin, dmGenAA.weight);
-      hcentGenAA->Fill   ( dmGenAA.cBin, dmGenAA.weight);
-      hptGenAA->Fill     ( dmGenAA.pt,   dmGenAA.weight);
-      hrapGenAA->Fill    ( dmGenAA.y,    dmGenAA.weight);
+      float ptWeight = dmGenAA.weight0;
+      if (useDataWeight) ptWeight = dmGenAA.weight;
+      hcentintGenAA->Fill( dmGenAA.cBin, ptWeight);
+      hcentGenAA->Fill   ( dmGenAA.cBin, ptWeight);
+      hptGenAA->Fill     ( dmGenAA.pt,   ptWeight);
+      hrapGenAA->Fill    ( dmGenAA.y,    ptWeight);
     }
 
   // pp
@@ -184,10 +188,12 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
                && ( fabs(dmPP.y) < yMax)              )
             )
         continue;
-
-      hcentintRecoPP->Fill( dmPP.cBin, dmPP.weight);
-      hptRecoPP->Fill     ( dmPP.pt,   dmPP.weight);
-      hrapRecoPP->Fill    ( dmPP.y,    dmPP.weight);
+      
+      float ptWeight = dmPP.weight0;
+      if (useDataWeight) ptWeight = dmPP.weight;
+      hcentintRecoPP->Fill( dmPP.cBin, ptWeight);
+      hptRecoPP->Fill     ( dmPP.pt,   ptWeight);
+      hrapRecoPP->Fill    ( dmPP.y,    ptWeight);
     }
   
   
@@ -214,9 +220,11 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
             )
         continue;
       
-      hcentintGenPP->Fill( dmGenPP.cBin, dmGenPP.weight);
-      hptGenPP->Fill     ( dmGenPP.pt,   dmGenPP.weight);
-      hrapGenPP->Fill    ( dmGenPP.y,    dmGenPP.weight);
+      float ptWeight = dmGenPP.weight0;
+      if (useDataWeight) ptWeight = dmGenPP.weight;
+      hcentintGenPP->Fill( dmGenPP.cBin, ptWeight);
+      hptGenPP->Fill     ( dmGenPP.pt,   ptWeight);
+      hrapGenPP->Fill    ( dmGenPP.y,    ptWeight);
     }
   
 
@@ -315,8 +323,8 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,30,1);
 
-  c_eff_pt->SaveAs(Form("eff_vs_pt_%ds.pdf",state));
-
+  c_eff_pt->SaveAs(Form("eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d.pdf",state,useDataWeight,useTnpWeight)) ;
+  
   // Efficiency Rap
   TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",400,400);
   TH1D* hrapEffAA;
@@ -340,8 +348,9 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   leg3->Draw();
   jumSun(0,1,30,1);
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
-  c_eff_rap->SaveAs(Form("eff_vs_rap_%ds.pdf",state));
+  c_eff_rap->SaveAs(Form("eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d.pdf",state,useDataWeight,useTnpWeight)) ;
 
+  
   // Centrality Efficiency
   TCanvas* c_eff_cent =  new TCanvas("c_eff_cent","",400,400);
   TH1D* hcentEffAA;
@@ -371,10 +380,9 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   leg4->Draw();
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,200,1);
-  c_eff_cent->SaveAs(Form("eff_vs_cent_%ds.pdf",state));
-
-
-  TFile *fout = new TFile(Form("efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d.root",state,useDataWeight,useTnpWeigt),"recreate");
+  c_eff_cent->SaveAs(Form("eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d.pdf",state,useDataWeight,useTnpWeight)) ;
+    
+  TFile *fout = new TFile(Form("efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d.root",state,useDataWeight,useTnpWeight),"recreate");
   //  hptGenPP->Write();
   //  hptRecoPP->Write();
   //  hptGenAA->Write();
