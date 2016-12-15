@@ -15,7 +15,7 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=false) {  // 1S, 2S, 3S
+void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=false, int tnpIdx=0) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
 
   float massLow = 8;
@@ -128,10 +128,14 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       
       float ptWeight = dmAA.weight0; 
       if (useDataWeight) ptWeight = dmAA.weight;
-      hcentintRecoAA->Fill( dmAA.cBin, ptWeight);
-      hcentRecoAA->Fill   ( dmAA.cBin, ptWeight);
-      hptRecoAA->Fill     ( dmAA.pt,   ptWeight);
-      hrapRecoAA->Fill    ( dmAA.y,    ptWeight);
+      float tnpWeight = 1;
+      if (useTnpWeight) { 
+	tnpWeight = tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, tnpIdx) ; 
+      }
+      hcentintRecoAA->Fill( dmAA.cBin, ptWeight*tnpWeight);
+      hcentRecoAA->Fill   ( dmAA.cBin, ptWeight*tnpWeight);
+      hptRecoAA->Fill     ( dmAA.pt,   ptWeight*tnpWeight);
+      hrapRecoAA->Fill    ( dmAA.y,    ptWeight*tnpWeight);
     }
   
   
@@ -191,9 +195,12 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       
       float ptWeight = dmPP.weight0;
       if (useDataWeight) ptWeight = dmPP.weight;
-      hcentintRecoPP->Fill( dmPP.cBin, ptWeight);
-      hptRecoPP->Fill     ( dmPP.pt,   ptWeight);
-      hrapRecoPP->Fill    ( dmPP.y,    ptWeight);
+      float tnpWeight = 1; 
+      if (useTnpWeight)  
+	tnpWeight = tnp_weight_trg_pbpb(dmPP.pt1, dmPP.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmPP.pt2, dmPP.eta2, tnpIdx) ; 
+      hcentintRecoPP->Fill( dmPP.cBin, ptWeight*tnpWeight);
+      hptRecoPP->Fill     ( dmPP.pt,   ptWeight*tnpWeight);
+      hrapRecoPP->Fill    ( dmPP.y,    ptWeight*tnpWeight);
     }
   
   
@@ -227,7 +234,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       hrapGenPP->Fill    ( dmGenPP.y,    ptWeight);
     }
   
-
+  
   // DRAW! 
 
   // Pt Bins
@@ -323,7 +330,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,30,1);
 
-  c_eff_pt->SaveAs(Form("eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d.pdf",state,useDataWeight,useTnpWeight)) ;
+  c_eff_pt->SaveAs(Form("eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",state,useDataWeight,useTnpWeight,tnpIdx)) ;
   
   // Efficiency Rap
   TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",400,400);
@@ -348,7 +355,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   leg3->Draw();
   jumSun(0,1,30,1);
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
-  c_eff_rap->SaveAs(Form("eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d.pdf",state,useDataWeight,useTnpWeight)) ;
+  c_eff_rap->SaveAs(Form("eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",state,useDataWeight,useTnpWeight,tnpIdx)) ;
 
   
   // Centrality Efficiency
@@ -380,9 +387,9 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   leg4->Draw();
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,200,1);
-  c_eff_cent->SaveAs(Form("eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d.pdf",state,useDataWeight,useTnpWeight)) ;
+  c_eff_cent->SaveAs(Form("eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",state,useDataWeight,useTnpWeight,tnpIdx)) ;
     
-  TFile *fout = new TFile(Form("efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d.root",state,useDataWeight,useTnpWeight),"recreate");
+  TFile *fout = new TFile(Form("efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.root",state,useDataWeight,useTnpWeight,tnpIdx),"recreate");
   //  hptGenPP->Write();
   //  hptRecoPP->Write();
   //  hptGenAA->Write();
