@@ -99,7 +99,7 @@ void getSpectra(int state = 1 ) {
   // ##################################
   // ~*~*~*~*~* Rapidity ~*~*~*~*~*~*~*
   // ##################################
-  TFile* inf = new TFile(Form("efficiency/efficiency_ups%ds_useDataWeight1.root",state));
+  TFile* inf = new TFile(Form("efficiency/efficiencyTable/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx0.root",state));
   hrapEffAA  = (TH1D*)inf->Get("hrapEffAA");
   hrapEffPP  = (TH1D*)inf->Get("hrapEffPP");
   
@@ -132,16 +132,16 @@ void getSpectra(int state = 1 ) {
   // ~*~*~*~*~* Cent ~*~*~*~*~*~*
   // ############################
   hcentEffAA = (TH1D*) inf -> Get("hcentEffAA");
-  hcentEffPP = (TH1D*) inf -> Get("hcentEffPP");
+  hcentEffPP = (TH1D*) inf -> Get("hcentintEffPP");
 
   hcentSigAA = (TH1D*) hcentEffAA -> Clone("hcentSigAA_cent");
-  hcentSigPP = (TH1D*) hcentEffPP -> Clone("hcentSigPP");
+  hcentSigPP = (TH1D*) hcentEffPP -> Clone("hcentintSigPP");
   hcentSigAA -> Reset(); 
   hcentSigPP -> Reset(); 
   
   TH1D *hSetBin;
   hSetBin = (TH1D*) hcentSigAA ->Clone("hSetBin");
-  TH1D *hcentEffAA_int = (TH1D*) inf -> Get("hcentEffAA_int");
+  TH1D *hcentEffAA_int = (TH1D*) inf -> Get("hcentintEffAA");
   TH1D *hcentSigAA_int = (TH1D*) hcentEffAA_int -> Clone("hcentSigAA_int");
   hcentSigAA_int->Reset();
 
@@ -174,7 +174,6 @@ void getSpectra(int state = 1 ) {
   TCanvas* cRAA_rap =  new TCanvas("cRAA_rap","",400,400);
   hRAAraw_rap = (TH1D*)hrapSigAA->Clone("hRAAraw_rap");
   hRAAraw_rap->Divide( hrapSigPP );
-
   double scale_rap = getScale(nCentBins+1, TAA, centBin, nCentBins);
 
 //  hRAAraw_rap->Scale( 26000000. / 351 ) ;   // pp : 26pb-1,  PbPb : 351 microBarn-1
@@ -240,10 +239,14 @@ void getSpectra(int state = 1 ) {
   hcsPP_pt->Divide(hptEffPP);
   hcsAA_rap->Divide(hrapEffAA); 
   hcsPP_rap->Divide(hrapEffPP);
+  cout << " here1 " << endl;
   hcsAA_pt->Divide(hptAccAA);  // acceptance
+  cout << " here2 " << endl;
   hcsPP_pt->Divide(hptAccPP);
+  cout << " here3 " << endl;
   hcsAA_rap->Divide(hrapAccAA);
   hcsPP_rap->Divide(hrapAccPP);
+
   
   // d_sigma 
   hcsAA_pt->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
@@ -319,7 +322,9 @@ void getSpectra(int state = 1 ) {
   TH1D* relativeAcc = (TH1D*)hptAccAA->Clone("relAccAA");
   relativeAcc->Divide(hptAccPP);
   hRAA_pt->Divide( relativeEff ) ; //efficiency correction
+  cout << " here4 " << endl;
   hRAA_pt->Divide( relativeAcc ) ; // acceptance correction
+  cout << " here5 " << endl;
   hRAA_pt->SetAxisRange(0,1.2,"Y");
   hRAA_pt->SetYTitle("R_{AA}");
   hRAA_pt->Draw();
