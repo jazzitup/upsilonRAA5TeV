@@ -130,7 +130,15 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       if (useDataWeight) ptWeight = dmAA.weight;
       float tnpWeight = 1;
       if (useTnpWeight) { 
-	tnpWeight = tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, tnpIdx) ; 
+	if ( tnpIdx == 200 ) {  
+          tnpWeight = tnp_weight_muid_pbpb(dmAA.pt1, dmAA.eta1) *  tnp_weight_muid_pbpb(dmAA.pt2, dmAA.eta2) ;
+	}
+	else if ( tnpIdx == 300 ) { 
+          tnpWeight = tnp_weight_sta_pp(dmAA.pt1, dmAA.eta1) *  tnp_weight_sta_pp(dmAA.pt2, dmAA.eta2) ;
+	}
+	else   {
+	  tnpWeight = tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, tnpIdx) ; 
+	}
       }
       hcentintRecoAA->Fill( dmAA.cBin, ptWeight*tnpWeight);
       hcentRecoAA->Fill   ( dmAA.cBin, ptWeight*tnpWeight);
@@ -196,8 +204,18 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       float ptWeight = dmPP.weight0;
       if (useDataWeight) ptWeight = dmPP.weight;
       float tnpWeight = 1; 
-      if (useTnpWeight)  
-	tnpWeight = tnp_weight_trg_pbpb(dmPP.pt1, dmPP.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmPP.pt2, dmPP.eta2, tnpIdx) ; 
+      if (useTnpWeight)   {
+	if ( tnpIdx == 200 ) {  
+          tnpWeight = tnp_weight_muid_pp(dmPP.pt1, dmPP.eta1) *  tnp_weight_muid_pp(dmPP.pt2, dmPP.eta2) ;
+	}
+	else if ( tnpIdx == 300 ) { 
+          tnpWeight = tnp_weight_sta_pp(dmPP.pt1, dmPP.eta1) *  tnp_weight_sta_pp(dmPP.pt2, dmPP.eta2) ;
+	}
+	else   {
+	  tnpWeight = tnp_weight_trg_pbpb(dmPP.pt1, dmPP.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmPP.pt2, dmPP.eta2, tnpIdx) ; 
+	}
+      }
+      
       hcentintRecoPP->Fill( dmPP.cBin, ptWeight*tnpWeight);
       hptRecoPP->Fill     ( dmPP.pt,   ptWeight*tnpWeight);
       hrapRecoPP->Fill    ( dmPP.y,    ptWeight*tnpWeight);
