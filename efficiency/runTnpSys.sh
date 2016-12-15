@@ -24,7 +24,7 @@ do
     root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-10)'
     root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,200)'
     root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,300)'
-    for (( i=1 ; i<=2 ; i++ ))
+    for (( i=1 ; i<=100 ; i++ ))
     do
 	root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,'$i')'
     done
