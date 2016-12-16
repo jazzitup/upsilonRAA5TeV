@@ -228,14 +228,14 @@ void getTnpSys(int state =1, int Nsamples=100) {
   
   TFile* fout = new TFile(Form("sys_tnp_ups%d.root",state),"recreate");
   eff1sys->Write();  eff1sysVar->Write(); eff1binned->Write(); eff1sta->Write(); eff1muid->Write(); eff1stat->Write();
-  /*
+
     eff2sys->Write();  eff2sysVar->Write(); eff2binned->Write(); eff2sta->Write(); eff2muid->Write(); eff2stat->Write();
    eff3sys->Write();  eff3sysVar->Write(); eff3binned->Write(); eff3sta->Write(); eff3muid->Write(); eff3stat->Write();
    eff4sys->Write();  eff4sysVar->Write(); eff4binned->Write(); eff4sta->Write(); eff4muid->Write(); eff4stat->Write();
    eff5sys->Write();  eff5sysVar->Write(); eff5binned->Write(); eff5sta->Write(); eff5muid->Write(); eff5stat->Write();
    eff6sys->Write();  eff6sysVar->Write(); eff6binned->Write(); eff6sta->Write(); eff6muid->Write(); eff6stat->Write();
    eff7sys->Write();  eff7sysVar->Write(); eff7binned->Write(); eff7sta->Write(); eff7muid->Write(); eff7stat->Write();
-  */
+
 
 }
 
