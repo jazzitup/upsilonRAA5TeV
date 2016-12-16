@@ -25,7 +25,8 @@ void addInQuad ( TH1D* h0=0, TH1D* h1=0) ;
 void getDevRatio ( TH1D* h0=0, TH1D* h1=0) ;
 void getMaxTH1D ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0) ;
 void addInQuadFive ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D* h5=0);
-void getTnpSys(int state =1, int Nsamples=100) { 
+void addInQuadSix ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D* h5=0, TH1D* h6=0);
+void getEffSys(int state =1, int Nsamples=100) { 
   TH1::SetDefaultSumw2();
 
   TFile* f1 = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx0.root",state) );
@@ -45,6 +46,7 @@ void getTnpSys(int state =1, int Nsamples=100) {
   TH1D* eff6sys = (TH1D*)eff6->Clone("hcentintEffAASys"); eff6sys->Reset();
   TH1D* eff7sys = (TH1D*)eff7->Clone("hcentEffAASys"); eff7sys->Reset();
 
+  // sys. tnp variaiton 
   TH1D* eff1sysVar = (TH1D*)eff1sys->Clone("hptEffPPSysVar"); 
   TH1D* eff2sysVar = (TH1D*)eff2sys->Clone("hptEffAASysVar"); 
   TH1D* eff3sysVar = (TH1D*)eff3sys->Clone("hrapEffPPSysVar");
@@ -52,7 +54,7 @@ void getTnpSys(int state =1, int Nsamples=100) {
   TH1D* eff5sysVar = (TH1D*)eff5sys->Clone("hcentintEffPPSysVar"); 
   TH1D* eff6sysVar = (TH1D*)eff6sys->Clone("hcentintEffAASysVar"); 
   TH1D* eff7sysVar = (TH1D*)eff7sys->Clone("hcentEffAASysVar");
-
+  // stat. fluc.
   TH1D* eff1stat = (TH1D*)eff1sys->Clone("hptEffPPStat"); 
   TH1D* eff2stat = (TH1D*)eff2sys->Clone("hptEffAAStat"); 
   TH1D* eff3stat = (TH1D*)eff3sys->Clone("hrapEffPPStat");
@@ -60,7 +62,6 @@ void getTnpSys(int state =1, int Nsamples=100) {
   TH1D* eff5stat = (TH1D*)eff5sys->Clone("hcentintEffPPStat"); 
   TH1D* eff6stat = (TH1D*)eff6sys->Clone("hcentintEffAAStat"); 
   TH1D* eff7stat = (TH1D*)eff7sys->Clone("hcentEffAAStat");
-
 
   // sys.var_1
   TFile* fid_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx-1.root",state) );
@@ -128,6 +129,30 @@ void getTnpSys(int state =1, int Nsamples=100) {
   eff5binned->Add( eff5, -1 );     eff5binned->Divide( eff5);
   eff6binned->Add( eff6, -1 );     eff6binned->Divide( eff6);
   eff7binned->Add( eff7, -1 );     eff7binned->Divide( eff7);
+
+  // pT reweight (nothing to do with TNP
+  TFile* fid_ptw = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight0_tnpWeight1_tnpIdx0.root",state) );
+  TH1D* eff1ptw = (TH1D*)fid_ptw->Get("hptEffPP");
+  TH1D* eff2ptw = (TH1D*)fid_ptw->Get("hptEffAA");
+  TH1D* eff3ptw = (TH1D*)fid_ptw->Get("hrapEffPP");
+  TH1D* eff4ptw = (TH1D*)fid_ptw->Get("hrapEffAA");
+  TH1D* eff5ptw = (TH1D*)fid_ptw->Get("hcentintEffPP");
+  TH1D* eff6ptw = (TH1D*)fid_ptw->Get("hcentintEffAA");
+  TH1D* eff7ptw = (TH1D*)fid_ptw->Get("hcentEffAA");
+  eff1ptw ->SetName("hptRelSysPtwPP");
+  eff2ptw ->SetName("hptRelSysPtwAA");
+  eff3ptw ->SetName("hrapRelSysPtwPP");
+  eff4ptw ->SetName("hrapRelSysPtwAA");
+  eff5ptw ->SetName("hcentintRelSysPtwPP");
+  eff6ptw ->SetName("hcentintRelSysPtwAA");
+  eff7ptw ->SetName("hcentRelSysPtwAA");
+  eff1ptw->Add( eff1, -1 );     eff1ptw->Divide( eff1);
+  eff2ptw->Add( eff2, -1 );     eff2ptw->Divide( eff2);
+  eff3ptw->Add( eff3, -1 );     eff3ptw->Divide( eff3);
+  eff4ptw->Add( eff4, -1 );     eff4ptw->Divide( eff4);
+  eff5ptw->Add( eff5, -1 );     eff5ptw->Divide( eff5);
+  eff6ptw->Add( eff6, -1 );     eff6ptw->Divide( eff6);
+  eff7ptw->Add( eff7, -1 );     eff7ptw->Divide( eff7);
 
   // Muon ID
   TFile* fid_200 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx200.root",state) );
@@ -217,24 +242,23 @@ void getTnpSys(int state =1, int Nsamples=100) {
   eff7stat->Scale( 1./sqrt( float(Nsamples) ) );
 
   // Merge them! 
-  addInQuadFive( eff1sys,  eff1sysVar, eff1binned, eff1sta, eff1muid, eff1stat );
-  addInQuadFive( eff2sys,  eff2sysVar, eff2binned, eff2sta, eff2muid, eff2stat );
-  addInQuadFive( eff3sys,  eff3sysVar, eff3binned, eff3sta, eff3muid, eff3stat );
-  addInQuadFive( eff4sys,  eff4sysVar, eff4binned, eff4sta, eff4muid, eff4stat );
-  addInQuadFive( eff5sys,  eff5sysVar, eff5binned, eff5sta, eff5muid, eff5stat );
-  addInQuadFive( eff6sys,  eff6sysVar, eff6binned, eff6sta, eff6muid, eff6stat );
-  addInQuadFive( eff7sys,  eff7sysVar, eff7binned, eff7sta, eff7muid, eff7stat );
+  addInQuadSix( eff1sys,  eff1sysVar, eff1binned, eff1sta, eff1muid, eff1stat, eff1ptw );
+  addInQuadSix( eff2sys,  eff2sysVar, eff2binned, eff2sta, eff2muid, eff2stat, eff2ptw );
+  addInQuadSix( eff3sys,  eff3sysVar, eff3binned, eff3sta, eff3muid, eff3stat, eff3ptw );
+  addInQuadSix( eff4sys,  eff4sysVar, eff4binned, eff4sta, eff4muid, eff4stat, eff4ptw );
+  addInQuadSix( eff5sys,  eff5sysVar, eff5binned, eff5sta, eff5muid, eff5stat, eff5ptw );
+  addInQuadSix( eff6sys,  eff6sysVar, eff6binned, eff6sta, eff6muid, eff6stat, eff6ptw );
+  addInQuadSix( eff7sys,  eff7sysVar, eff7binned, eff7sta, eff7muid, eff7stat, eff7ptw );
   
   
   TFile* fout = new TFile(Form("sys_tnp_ups%d.root",state),"recreate");
-  eff1sys->Write(); // eff1sysVar->Write(); eff1binned->Write(); eff1sta->Write(); eff1muid->Write(); eff1stat->Write();
-
-  eff2sys->Write(); // eff2sysVar->Write(); eff2binned->Write(); eff2sta->Write(); eff2muid->Write(); eff2stat->Write();
-  eff3sys->Write(); // eff3sysVar->Write(); eff3binned->Write(); eff3sta->Write(); eff3muid->Write(); eff3stat->Write();
-  eff4sys->Write(); // eff4sysVar->Write(); eff4binned->Write(); eff4sta->Write(); eff4muid->Write(); eff4stat->Write();
-  eff5sys->Write();  //eff5sysVar->Write(); eff5binned->Write(); eff5sta->Write(); eff5muid->Write(); eff5stat->Write();
-  eff6sys->Write();  //eff6sysVar->Write(); eff6binned->Write(); eff6sta->Write(); eff6muid->Write(); eff6stat->Write();
-  eff7sys->Write();  //eff7sysVar->Write(); eff7binned->Write(); eff7sta->Write(); eff7muid->Write(); eff7stat->Write();
+  eff1sys->Write(); // eff1sysVar->Write(); eff1binned->Write(); eff1sta->Write(); eff1muid->Write(); eff1stat->Write(); eff1ptw->Write();
+  eff2sys->Write(); // eff2sysVar->Write(); eff2binned->Write(); eff2sta->Write(); eff2muid->Write(); eff2stat->Write(); eff2ptw->Write();
+  eff3sys->Write(); // eff3sysVar->Write(); eff3binned->Write(); eff3sta->Write(); eff3muid->Write(); eff3stat->Write(); eff3ptw->Write();
+  eff4sys->Write(); // eff4sysVar->Write(); eff4binned->Write(); eff4sta->Write(); eff4muid->Write(); eff4stat->Write(); eff4ptw->Write();
+  eff5sys->Write();  //eff5sysVar->Write(); eff5binned->Write(); eff5sta->Write(); eff5muid->Write(); eff5stat->Write(); eff5ptw->Write();
+  eff6sys->Write();  //eff6sysVar->Write(); eff6binned->Write(); eff6sta->Write(); eff6muid->Write(); eff6stat->Write(); eff6ptw->Write();
+  eff7sys->Write();  //eff7sysVar->Write(); eff7binned->Write(); eff7sta->Write(); eff7muid->Write(); eff7stat->Write(); eff7ptw->Write();
 
 
 }
@@ -260,6 +284,23 @@ void addInQuadFive ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5)
     float x4 =  h4->GetBinContent(i);
     float x5 =  h5->GetBinContent(i);
     h0->SetBinContent(i,  sqrt ( x1*x1 + x2*x2 + x3*x3 + x4*x4 + x5*x5 ) );
+  }
+}
+void addInQuadSix ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5, TH1D* h6) { 
+  if ( h0->GetNbinsX() != h1->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h2->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h3->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h4->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h5->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h6->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  for ( int i=1 ;  i<=h0->GetNbinsX(); i++) {
+    float x1 =  h1->GetBinContent(i);
+    float x2 =  h2->GetBinContent(i);
+    float x3 =  h3->GetBinContent(i);
+    float x4 =  h4->GetBinContent(i);
+    float x5 =  h5->GetBinContent(i);
+    float x6 =  h6->GetBinContent(i);
+    h0->SetBinContent(i,  sqrt ( x1*x1 + x2*x2 + x3*x3 + x4*x4 + x5*x5 * x6*x6) );
   }
 }
 void getMaxTH1D ( TH1D* h0, TH1D* h1, TH1D* h2) {
