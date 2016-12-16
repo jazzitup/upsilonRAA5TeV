@@ -1,3 +1,3 @@
-root -l -b -q 'getSysEff.C+(1)'
-root -l -b -q 'getSysEff.C+(2)'
-root -l -b -q 'getSysEff.C+(3)'
+root -l -b -q 'getEffSys.C+(1)'
+root -l -b -q 'getEffSys.C+(2)'
+root -l -b -q 'getEffSys.C+(3)'
