@@ -251,7 +251,7 @@ void getEffSys(int state =1, int Nsamples=100) {
   addInQuadSix( eff7sys,  eff7sysVar, eff7binned, eff7sta, eff7muid, eff7stat, eff7ptw );
   
   
-  TFile* fout = new TFile(Form("sys_tnp_ups%d.root",state),"recreate");
+  TFile* fout = new TFile(Form("sys_efficiency_ups%d.root",state),"recreate");
   eff1sys->Write(); // eff1sysVar->Write(); eff1binned->Write(); eff1sta->Write(); eff1muid->Write(); eff1stat->Write(); eff1ptw->Write();
   eff2sys->Write(); // eff2sysVar->Write(); eff2binned->Write(); eff2sta->Write(); eff2muid->Write(); eff2stat->Write(); eff2ptw->Write();
   eff3sys->Write(); // eff3sysVar->Write(); eff3binned->Write(); eff3sta->Write(); eff3muid->Write(); eff3stat->Write(); eff3ptw->Write();
