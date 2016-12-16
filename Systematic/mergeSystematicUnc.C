@@ -42,13 +42,13 @@ void mergeSystematicUnc(int state = 1) {
 
   // 1 : efficiency
   TFile* f1 = new TFile(Form("../efficiency/sys_efficiency_ups%d.root",state) );
-  hptPP[1] = (TH1D*)f1->Get("hptEffPPsys");
-  hptAA[1] = (TH1D*)f1->Get("hptEffAAsys");
-  hrapPP[1] = (TH1D*)f1->Get("hrapEffPPsys");
-  hrapAA[1] = (TH1D*)f1->Get("hrapEffAAsys");
-  hintPP[1] = (TH1D*)f1->Get("hcentEffPPsys");
-  hintAA[1] = (TH1D*)f1->Get("hcentEffAA_intsys");
-  hcentAA[1]= (TH1D*)f1->Get("hcentEffAAsys");
+  hptPP[1] = (TH1D*)f1->Get("hptEffPPSys");
+  hptAA[1] = (TH1D*)f1->Get("hptEffAASys");
+  hrapPP[1] = (TH1D*)f1->Get("hrapEffPPSys");
+  hrapAA[1] = (TH1D*)f1->Get("hrapEffAASys");
+  hintPP[1] = (TH1D*)f1->Get("hcentintEffPPSys");
+  hintAA[1] = (TH1D*)f1->Get("hcentintEffAASys");
+  hcentAA[1]= (TH1D*)f1->Get("hcentEffAASys");
 
   hptRAA[1] = (TH1D*)hptAA[1]->Clone("hptRAA_1");   hptRAA[1]->Reset();
   hrapRAA[1] = (TH1D*)hrapAA[1]->Clone("hrapRAA_1");   hrapRAA[1]->Reset();
