@@ -9,7 +9,6 @@
 #   * only one SF (for systematic uncertainty only)
 
 root -l -b <<EOF
-EOF
 .L getEfficiencyUpsilon.C++
 .q
 EOF
@@ -19,6 +18,7 @@ for state in 1 2 3
 do
     root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,0,0)'
     root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,0,0)'
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,1,0)'
     root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,1,0)'
 done
 
@@ -37,6 +37,6 @@ do
     done
 done
 
-EOF
+
 
 
