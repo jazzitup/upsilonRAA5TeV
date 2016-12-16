@@ -1,10 +1,6 @@
-Get the nominal efficinecy:
+Get the nominal efficinecy and yssystematically varied efficiency table:
 ./runEff.sh
 
+Merge Systematic uncertainteis:
 
-Systematic uncertainties: 
-
-./runTnpStatFluc.sh #to produce the systematically varied efficiency table! 
-
-To merge T&P related uncertainteis: 
-runTnpSys.sh # merge uncertainties due to STA, MuID, stat fluctation, variation, pT weighting.. 
+runTnpSys.sh # Merge uncertainties due to STA, MuID, stat fluctation, variation, pT weighting.. 
