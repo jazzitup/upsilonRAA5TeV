@@ -8,16 +8,35 @@
 # - MuID, STA:
 #   * only one SF (for systematic uncertainty only)
 
-root -l -b -q 'getEfficiencyUpsilon.C+(1,0,0,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(2,0,0,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(3,0,0,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(1,1,0,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(2,1,0,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(3,1,0,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(1,1,1,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(2,1,1,0)'
-root -l -b -q 'getEfficiencyUpsilon.C+(3,1,1,0)'
+root -l -b <<EOF
+EOF
+.L getEfficiencyUpsilon.C++
+.q
+EOF
 
+# NOMINAL
+for state in 1 2 3
+do
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,0,0)'
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,0,0)'
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,1,0)'
+done
 
+# SYSTEMATICS
+
+for state in 1 2 3
+do
+    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-1)'
+    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-2)'
+    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-10)'
+    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,200)'
+    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,300)'
+    for (( i=1 ; i<=100 ; i++ ))
+    do
+        root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,'$i')'
+    done
+done
+
+EOF
 
 
