@@ -57,20 +57,8 @@ void toyMC(
   if(inputOption == 3) finput = "4th poly";
   else if(inputOption == 4) finput = "Nominal+Exp";
   
-  TFile *wf = new TFile(Form("%s_fit_pt%.1f-%.1f_rap%.1f-%.1f_cent%d-%d_Gen%d_input%d_useCentBkg%d_nToys%d_%d.root",fcoll.Data(),ptLow,ptHigh,yLow,yHigh,cLow,cHigh,nGen,inputOption,useCentIntBkgShape,nToys, rdmseed),"recreate");
+  TFile *wf = new TFile(Form("%s_fit_pt%.1f-%.1f_rap%.1f-%.1f_cent%d-%d_Gen1000000_input%d_useCentBkg%d_nToys%d_%d.root",fcoll.Data(),ptLow,ptHigh,yLow,yHigh,cLow,cHigh,inputOption,useCentIntBkgShape,nToys, rdmseed),"recreate");
   
-  TH1D *hNom_1S = new TH1D("hNom_1S",Form("SR Nominal, %d toys, %d events, cent %d-%d;N(1S) nom;Counts",nToys,nGen,cLow,cHigh),500,0,nGen);
-  TH1D *hAlt_1S = new TH1D("hAlt_1S",Form("SR %s, %d toys, %d events, cent %d-%d;N(1S) alt;Counts",finput.Data(),nToys,nGen,cLow,cHigh),500,0,nGen);
-  TH1D *hDev_1S = new TH1D("hDev_1S","Deviation;1S dev;Counts",2000,-100,100);
-
-  TH1D *hNom_2S = new TH1D("hNom_2S",Form("SR Nominal, %d toys, %d events, cent %d-%d;N(2S) nom;Counts",nToys,nGen,cLow,cHigh),500,0,nGen);
-  TH1D *hAlt_2S = new TH1D("hAlt_2S",Form("SR %s, %d toys, %d events, cent %d-%d;N(2S) alt;Counts",finput.Data(),nToys,nGen,cLow,cHigh),500,0,nGen);
-  TH1D *hDev_2S = new TH1D("hDev_2S","Deviation;2S dev;Counts",2000,-100,100);
-
-  TH1D *hNom_3S = new TH1D("hNom_3S",Form("SR Nominal, %d toys, %d events, cent %d-%d;N(3S) nom;Counts",nToys,nGen,cLow,cHigh),500,0,nGen);
-  TH1D *hAlt_3S = new TH1D("hAlt_3S",Form("SR %s, %d toys, %d events, cent %d-%d;N(3S) alt;Counts",finput.Data(),nToys,nGen,cLow,cHigh),500,0,nGen);
-  TH1D *hDev_3S = new TH1D("hDev_3S","Deviation;3S dev;Counts",200000,-10000,10000);
-
   float massLow = 8. ;
   float massHigh = 14.;
   int   nMassBin  = (massHigh-massLow)*10;
@@ -197,6 +185,18 @@ void toyMC(
   RooAddPdf* modelInput_gen; 
   modelInput_gen = new RooAddPdf("modelInput_gen","1S+2S + Bkg",RooArgList(*cb1s, *cb2s, *cb3s, *bkgInp_gen),RooArgList(*nSig1sInp,*nSig2sInp,*nSig3sInp,*nBkgInp));
   
+  TH1D *hNom_1S = new TH1D("hNom_1S",Form("SR Nominal, %d toys, %d events, cent %d-%d;N(1S) nom;Counts",nToys,nGen,cLow,cHigh),500,nGen * r1S_overTot*0.5 ,nGen * r1S_overTot*2);
+  TH1D *hAlt_1S = new TH1D("hAlt_1S",Form("SR %s, %d toys, %d events, cent %d-%d;N(1S) alt;Counts",finput.Data(),nToys,nGen,cLow,cHigh),500,nGen * r1S_overTot*0.5, nGen * r1S_overTot*2);
+  TH1D *hDev_1S = new TH1D("hDev_1S","Deviation;1S dev;Counts",2000,-100,100);
+
+  TH1D *hNom_2S = new TH1D("hNom_2S",Form("SR Nominal, %d toys, %d events, cent %d-%d;N(2S) nom;Counts",nToys,nGen,cLow,cHigh),500,nGen * r2S_overTot*0.5,nGen * r2S_overTot*2);
+  TH1D *hAlt_2S = new TH1D("hAlt_2S",Form("SR %s, %d toys, %d events, cent %d-%d;N(2S) alt;Counts",finput.Data(),nToys,nGen,cLow,cHigh),500,nGen * r2S_overTot*0.5,nGen * r2S_overTot*2);
+  TH1D *hDev_2S = new TH1D("hDev_2S","Deviation;2S dev;Counts",2000,-100,100);
+
+  TH1D *hNom_3S = new TH1D("hNom_3S",Form("SR Nominal, %d toys, %d events, cent %d-%d;N(3S) nom;Counts",nToys,nGen,cLow,cHigh),500,nGen * r3S_overTot*0.5,nGen * r3S_overTot * 2);
+  TH1D *hAlt_3S = new TH1D("hAlt_3S",Form("SR %s, %d toys, %d events, cent %d-%d;N(3S) alt;Counts",finput.Data(),nToys,nGen,cLow,cHigh),500,nGen * r3S_overTot*0.5,nGen * r3S_overTot *2);
+  TH1D *hDev_3S = new TH1D("hDev_3S","Deviation;3S dev;Counts",200000,-10000,10000);
+
 
   cout << "nSig1s : " << nGen * r1S_overTot << endl;
   cout << "nSig2s : " << nGen * r2S_overTot << endl;
