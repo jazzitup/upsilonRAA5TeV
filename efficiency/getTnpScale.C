@@ -4,6 +4,7 @@
 #include "TFile.h"
 #include "../cutsAndBin.h"
 #include "../multiTreeUtil.h"
+#include "tnp_weight.h"
 using namespace std;
 
 
@@ -37,7 +38,7 @@ void getTnpScale(int state =1, int Nsamples=100) {
   TH1D* eff5 = (TH1D*)f1->Get("hcentintEffPP");
   TH1D* eff6 = (TH1D*)f1->Get("hcentintEffAA");
   TH1D* eff7 = (TH1D*)f1->Get("hcentEffAA");
-
+  
   TFile* f2 = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx0.root",state) );
   TH1D* tnp1 = (TH1D*)f2->Get("hptEffPP");
   TH1D* tnp2 = (TH1D*)f2->Get("hptEffAA");
@@ -64,11 +65,57 @@ void getTnpScale(int state =1, int Nsamples=100) {
   stripErr(tnp7);
 
 
+  TH1D* sfptAA1 = new TH1D("sfptAA1","",30,0,20);
+  for ( int i =1 ; i<= sfptAA1->GetNbinsX() ; i++) { 
+    float pt = sfptAA1->GetBinCenter(i);
+    if ( pt < 4 ) continue;
+    sfptAA1->SetBinContent( i,  tnp_weight_trg_pbpb( pt, 0.2, 0 ) );
+  }
+  TH1D* sfptAA2 = new TH1D("sfptAA2","",30,0,20);
+  for ( int i =1 ; i<= sfptAA2->GetNbinsX() ; i++) { 
+    float pt = sfptAA2->GetBinCenter(i);
+    if ( pt < 4 ) continue;
+    sfptAA2->SetBinContent( i,  tnp_weight_trg_pbpb( pt, 2.2, 0 ) );
+  }
+
+  TH1D* sfptPP1 = new TH1D("sfptPP1","",30,0,20);
+  for ( int i =1 ; i<= sfptPP1->GetNbinsX() ; i++) { 
+    float pt = sfptPP1->GetBinCenter(i);
+    if ( pt < 4 ) continue;
+    sfptPP1->SetBinContent( i,  tnp_weight_trg_pp( pt, 0.2, 0 ) );
+  }
+  TH1D* sfptPP2 = new TH1D("sfptPP2","",30,0,20);
+  for ( int i =1 ; i<= sfptPP2->GetNbinsX() ; i++) { 
+    float pt = sfptPP2->GetBinCenter(i);
+    if ( pt < 4 ) continue;
+    sfptPP2->SetBinContent( i,  tnp_weight_trg_pp( pt, 2.2, 0 ) );
+  }
+
+  
+  TCanvas* c_eff_singleMu =  new TCanvas("cSingleMu","",800,400);
+  c_eff_singleMu->Divide(2,1);
+  c_eff_singleMu->cd(1);
+  handsomeTH1(sfptPP1,1) ;
+  handsomeTH1(sfptAA1,1) ;
+  sfptPP1->SetMarkerStyle(24);
+  sfptPP1->SetAxisRange(0.7,1.3,"Y");
+  sfptPP1->Draw("p");
+  sfptAA1->Draw("same p");
+  c_eff_singleMu->cd(2);
+  handsomeTH1(sfptPP2,1) ;
+  handsomeTH1(sfptAA2,1) ;
+  sfptPP2->SetMarkerStyle(24);
+  sfptPP2->SetAxisRange(0.7,1.3,"Y");
+  sfptPP2->Draw("p");
+  sfptAA2->Draw("same p");
+
+
+
   TCanvas* c_eff_pt =  new TCanvas("c_eff_pt","",400,400);
   TH1D* hptEffAA;
   TH1D* hptEffPP;
   c_eff_pt->cd();
-  tnp2 ->SetAxisRange(0.7,1.3,"Y");
+  tnp2->SetAxisRange(0.7,1.3,"Y");
   tnp2->SetYTitle("efficiency");
   tnp2->Draw("p");
   tnp1->SetAxisRange(0.7,1.3,"Y");
@@ -82,7 +129,7 @@ void getTnpScale(int state =1, int Nsamples=100) {
   leg2->Draw();
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,30,1); 
-  c_eff_pt->SaveAs("tnpCorrection_pt.pdf");
+  //  c_eff_pt->SaveAs("tnpCorrection_pt.pdf");
  
   // Efficiency Rap
   TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",400,400);
@@ -100,7 +147,7 @@ void getTnpScale(int state =1, int Nsamples=100) {
   leg3->AddEntry(tnp3, "pp");
   leg3->Draw();
   jumSun(0,1,30,1);
-  c_eff_rap->SaveAs("tnpCorrection_rap.pdf");
+  //  c_eff_rap->SaveAs("tnpCorrection_rap.pdf");
 
   // Centrality Efficiency
   TCanvas* c_eff_cent =  new TCanvas("c_eff_cent","",400,400);
