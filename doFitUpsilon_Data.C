@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "rootFitHeaders.h"
 #include "commonUtility.h"
 #include <RooGaussian.h>
@@ -12,6 +12,8 @@
 #include "TFile.h"
 #include "cutsAndBin.h"
 #include "PsetCollection.h"
+#include "CMS_lumi.C"
+#include "tdrstyle.C"
 
 using namespace std;
 using namespace RooFit;
@@ -34,16 +36,16 @@ void doFitUpsilon_Data(
   TString SignalCB = "Double";
 
   float massLow = 8; 
-  float massHigh = 13;
+  float massHigh = 14;
 
   float massLowForPlot = massLow;    
   float massHighForPlot = massHigh;
 
   int   nMassBin  = (massHigh-massLow)*10;
   TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  if      ( collId == kPPDATA) f1 = new TFile("../skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("../skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("../skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
   else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
   else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
@@ -70,7 +72,7 @@ void doFitUpsilon_Data(
 
   TCanvas* c1 =  new TCanvas("canvas2","My plots",4,45,550,520);
   c1->cd();
-  TPad *pad1 = new TPad("pad1", "pad1", 0, 0.25, 0.98, 1.0);
+  TPad *pad1 = new TPad("pad1", "pad1", 0, 0.16, 0.98, 1.0);
   pad1->SetTicks(1,1);
   pad1->Draw(); pad1->cd();
   
@@ -181,15 +183,17 @@ void doFitUpsilon_Data(
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
  
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
-  /* 2-4pT PbPb
+
+
+ /* 
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
   RooRealVar m_lambda("#lambda","m_lambda",  5, 0,23);
-  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-  */ 
+*/  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
+   
   /*
   RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
@@ -217,49 +221,70 @@ void doFitUpsilon_Data(
 //  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb1s)),LineColor(kRed),LineStyle(kDashed));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kRed),LineStyle(kDashed));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kRed),LineStyle(kDashed));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*bkg)),LineColor(kBlack),LineStyle(kDashed));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2.7));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2.7));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2.7));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*bkg)),LineColor(kBlue),LineStyle(kDashed),LineWidth(2.2));
 
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
-  myPlot2->GetYaxis()->SetTitleOffset(1.5);
+  myPlot2->GetYaxis()->SetTitleOffset(1.4);
+  myPlot2->GetYaxis()->CenterTitle();
+  myPlot2->GetXaxis()->SetLabelSize(0);
+  myPlot2->GetXaxis()->SetRangeUser(8,14);
+  myPlot2->GetXaxis()->SetTitleSize(0);
   myPlot2->Draw();
   fitRes2->Print("v");
   Double_t theNLL = fitRes2->minNll();
   cout << " *** NLL : " << theNLL << endl;
   TString perc = "%";
 
-  drawText(getCollID(collId),0.12,0.85,1,11);
-  drawText(Form("%.2f < p_{T}^{#mu#mu} < %.2f GeV",ptLow,ptHigh ),0.12,0.80,2,11);
-  drawText(Form("%.2f < y^{#mu#mu} < %.2f",yLow,yHigh ), 0.12,0.75,2,11);
+  float pos_text_x = 0.34;
+  float pos_text_y = 0.78;
+  float pos_y_diff = 0.056;
+  float text_size = 15;
+  int text_color = 1;
+  if(ptLow==0 && ptHigh == 2.5) drawText(Form("%.f < p_{T}^{#mu#mu} < %.1f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  else if(ptLow == 2.5 && ptHigh==5) drawText(Form("%.1f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  else drawText(Form("%.f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  drawText(Form("%.1f < |#eta^{#mu#mu}| < %.1f",yLow,yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
   if(collId != kPPDATA && collId != kPPMCUps1S && collId != kPPMCUps2S) 
   {
-      drawText(Form("Cent %d-%d%s",cLow/2,cHigh/2,perc.Data()),0.12,0.7,2,12);
-      drawText(Form("(p_{T}^{#mu} > %.2f GeV)", muPtCut ), 0.12,0.65,1,12);
+      drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
+      drawText(Form("Centrality %d-%d%s",cLow/2,cHigh/2,perc.Data()),pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
   }
-  else drawText(Form("(p_{T}^{#mu} > %.2f GeV)", muPtCut ), 0.12,0.65,1,12);
+  else drawText(Form("p_{T}^{#mu} > %.2f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
 //  drawText(Form("Signal Function : %s CB", SignalCB.Data() ), 0.55,0.54,1,14);
 
   // PULL 
 
   TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 0.98, 0.25);
-  pad2->SetBottomMargin(0); // Upper and lower plot are joined
-  c1->cd();  
-  pad2->Draw(); 
+  pad2->SetTopMargin(0); // Upper and lower plot are joined
+  pad2->SetBottomMargin(0.4); 
+  pad2->SetTicks(1,1);
   pad2->cd();
   
   
   RooHist* hpull = myPlot2->pullHist("dataHist","modelHist");
   RooPlot* pullFrame = ws->var("mass")->frame(Title("Pull Distribution")) ;
   pullFrame->addPlotable(hpull,"P") ;
-  pullFrame->SetTitleSize(2.57);
-  pullFrame->GetYaxis()->SetTitleOffset(1.8) ;
-  pullFrame->GetYaxis()->SetLabelSize(0.16) ;
+  pullFrame->SetTitleSize(0);
+  pullFrame->GetYaxis()->SetTitleOffset(0.3) ;
+  pullFrame->GetYaxis()->SetTitle("Pull") ;
+  pullFrame->GetYaxis()->SetTitleSize(0.09) ;
+  pullFrame->GetYaxis()->SetLabelSize(0.07) ;
   pullFrame->GetYaxis()->SetRange(-10,10) ;
-  pullFrame->GetXaxis()->SetTitleOffset(0.7) ;
-  pullFrame->GetXaxis()->SetLabelSize(0.1) ;
-  pullFrame->GetXaxis()->SetTitleSize(0.13) ;
+  pullFrame->GetYaxis()->CenterTitle();
+
+  pullFrame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
+  pullFrame->GetXaxis()->SetTitleOffset(1.1) ;
+  pullFrame->GetXaxis()->SetLabelOffset(0.03) ;
+  pullFrame->GetXaxis()->SetLabelSize(0.140) ;
+  pullFrame->GetXaxis()->SetTitleSize(0.162) ;
+  pullFrame->GetXaxis()->CenterTitle();
+  
+  pullFrame->GetYaxis()->SetTickSize(0.02);
+  pullFrame->GetYaxis()->SetNdivisions(15,4,0);
+  pullFrame->GetXaxis()->SetTickSize(0.03);
   pullFrame->Draw() ;
   
   double chisq = 0;
@@ -279,14 +304,16 @@ void doFitUpsilon_Data(
   TLine *l1 = new TLine(massLow,0,massHigh,0);
   l1->SetLineStyle(9);
   l1->Draw("same");
-  drawText(Form("chi^{2}/ndf : %.3f / %d ",chisq,ndf ),0.15,0.95,1,12);
-
-  TPad *pad3 = new TPad("pad3", "pad3", 0.65, 0.55, 0.85, 0.92);
+  drawText(Form("chi^{2}/ndf : %.3f / %d ",chisq,ndf ),0.12,0.87,1,10);
+/*
+  TPad *pad3 = new TPad("pad3", "pad3", 0.685, 0.42, 0.885, 0.77);
   pad3->SetBottomMargin(0);
-  c1->cd();  
-  pad3->Draw(); 
+  pad3->SetTopMargin(0);
+  pad3->SetLeftMargin(0);
+  pad3->SetRightMargin(0);
+  pad3->SetFillColorAlpha(kWhite,1.00);
   pad3->cd();
-
+*/
   RooPlot* legFrame = ws->var("mass")->frame(Name("Fit Results"), Title("Fit Results"));
   
   //// Show floating parameters only! (not observables)
@@ -295,16 +322,19 @@ void doFitUpsilon_Data(
   RooArgList paramList = fitRes2->floatParsFinal();
   paramList.Print("v");
   //ws->pdf("model")->paramOn(legFrame,Layout(0,.95, .97));
-  ws->pdf("model")->paramOn(legFrame,Layout(0,.95, .97),Parameters(paramList));
+  ws->pdf("model")->paramOn(legFrame,Layout(0.71,.9,0.77),Parameters(paramList));
   legFrame->getAttText()->SetTextAlign(11);
-  legFrame->getAttText()->SetTextSize(0.09);
-  
+  legFrame->getAttText()->SetTextSize(0.02);
+  legFrame->getAttFill()->SetFillStyle(0);
+
+
   TPaveText* hh = (TPaveText*)legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()));
-  hh->SetY1(0.01); hh->SetY2(0.95);
+  hh->SetY1(0.37); hh->SetY2(0.71);
+  pad1->cd();
   hh->Draw();
+  pad1->Update();
   //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
-  c1->SaveAs(Form("fitresults_upsilon_%sCB_%s.png",SignalCB.Data(),kineLabel.Data()));
   
   TH1D* outh = new TH1D("fitResults","fit result",20,0,20);
 
@@ -332,9 +362,23 @@ void doFitUpsilon_Data(
   cout << "2S signal    =  " << outh->GetBinContent(2) << " +/- " << outh->GetBinError(2) << endl;
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
 
+  setTDRStyle();
+  writeExtraText = true;
+  extraText = "Preliminary";
 
-  TFile* outf = new TFile(Form("fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()),"recreate");
+  if(collId == kPPDATA) CMS_lumi(pad1, 104 ,33); 
+  else if(collId == kAADATA && cLow < 60) CMS_lumi(pad1, 105 ,33); 
+  else if(collId == kAADATA && cLow>=60) CMS_lumi(pad1, 1051 ,33); 
+  pad1->Update();
+
+  c1->cd();
+  pad1->Draw();
+  pad2->Update();
+  pad2->Draw();
+
+  TFile* outf = new TFile(Form("fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
+  c1->SaveAs(Form("fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
   c1->Write();
   ws->Write();
   outf->Close();
