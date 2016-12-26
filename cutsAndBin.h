@@ -63,9 +63,6 @@ double TAA_unc3s[nCentBins3s+1] = {0.017, 0.024, 0.049, 0.15, 0.089};
 
 const double inel_cross_PbPb = 7716;
 
-
-
-
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };
 
