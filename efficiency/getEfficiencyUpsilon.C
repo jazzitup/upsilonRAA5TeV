@@ -14,9 +14,14 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-
 void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=false, int tnpIdx=0) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
+
+TH1D* ncoll1SBin = new TH1D("ncoll1sbin","", nCentBins1s, centBin1s );
+for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
+  {
+    ncoll1SBin->SetBinContent( ii , nColl1s[ii-1] ) ;
+  }
 
   TString outputDirName = "efficiencyTable";
   if ( tnpIdx != 0) 
@@ -51,9 +56,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   
   double ptMin = ptBin[0];    double ptMax = ptBin[nPtBins];
   double yMin = yBin[0];    double yMax = yBin[nYBins];
-
-
-
+  
 
   TH1D* hptGenAA;
   TH1D* hptRecoAA;
@@ -133,6 +136,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       
       float ptWeight = dmAA.weight0; 
       if (useDataWeight) ptWeight = dmAA.weight;
+      float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmAA.cBin ) ) ;
       float tnpWeight = 1;
       if (useTnpWeight) { 
 	if ( tnpIdx == 200 ) {  
@@ -145,10 +149,10 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
 	  tnpWeight = tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, tnpIdx) ; 
 	}
       }
-      hcentintRecoAA->Fill( dmAA.cBin, ptWeight*tnpWeight);
-      hcentRecoAA->Fill   ( dmAA.cBin, ptWeight*tnpWeight);
-      hptRecoAA->Fill     ( dmAA.pt,   ptWeight*tnpWeight);
-      hrapRecoAA->Fill    ( dmAA.y,    ptWeight*tnpWeight);
+      hcentintRecoAA->Fill( dmAA.cBin, ptWeight*tnpWeight*ncollWeight);
+      hcentRecoAA->Fill   ( dmAA.cBin, ptWeight*tnpWeight*ncollWeight);
+      hptRecoAA->Fill     ( dmAA.pt,   ptWeight*tnpWeight*ncollWeight);
+      hrapRecoAA->Fill    ( dmAA.y,    ptWeight*tnpWeight*ncollWeight);
     }
   
   
@@ -176,10 +180,11 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
       
       float ptWeight = dmGenAA.weight0;
       if (useDataWeight) ptWeight = dmGenAA.weight;
-      hcentintGenAA->Fill( dmGenAA.cBin, ptWeight);
-      hcentGenAA->Fill   ( dmGenAA.cBin, ptWeight);
-      hptGenAA->Fill     ( dmGenAA.pt,   ptWeight);
-      hrapGenAA->Fill    ( dmGenAA.y,    ptWeight);
+      float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmGenAA.cBin ) ) ;
+      hcentintGenAA->Fill( dmGenAA.cBin, ptWeight*ncollWeight);
+      hcentGenAA->Fill   ( dmGenAA.cBin, ptWeight*ncollWeight);
+      hptGenAA->Fill     ( dmGenAA.pt,   ptWeight*ncollWeight);
+      hrapGenAA->Fill    ( dmGenAA.y,    ptWeight*ncollWeight);
     }
 
   // pp
@@ -259,6 +264,9 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWei
   
   
   // DRAW! 
+  // Ncoll
+  TCanvas* cnoll = new TCanvas("cnoll","",400,400);
+  ncoll1SBin->Draw();
 
   // Pt Bins
   TCanvas* c_pt =  new TCanvas("c_pt","",600,600);
