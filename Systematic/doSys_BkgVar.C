@@ -1,4 +1,3 @@
-
 #include "rootFitHeaders.h"
 #include "commonUtility.h"
 #include <RooGaussian.h>
