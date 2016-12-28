@@ -49,17 +49,17 @@ void computeSysUncrt_signalPDF(int state=1)
   cout << endl;
   cout << " CENTRALITY DEPENDENCE===================== " << endl;
   cout << " pp :   " << endl; 
-  pp = getMaxDev("fitresults_upsilon_DoubleCB_PP_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0"); // pp.  pT/y integrated
+  pp = getMaxDev("fitresults_upsilon_DoubleCB_PP_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0",state); // pp.  pT/y integrated
   cout << " AA :   " << endl; 
   for ( int icent = 0 ; icent<= nCentBins ; icent++ ) 
   {
     if(icent == 0) cout << "Centrality 0 - 200" << endl;
-    else cout << Form("Centrality  %d - %d", centBin[icent-1], centBin[icent]) << endl;
+    else cout << Form("Centrality  %.f - %.f", centBin[icent-1], centBin[icent]) << endl;
     if(icent == 0) aa = getMaxDev("fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI");
     else 
     {
-      if(centBin[icent] <= 60) aa = getMaxDev(Form("fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0_centrality%d-%d_dphiEp_0.00PI_100.00PI", centBin[icent-1], centBin[icent]),state );
-      else if(centBin[icent] > 60) aa = getMaxDev(Form("fitresults_upsilon_DoubleCB_AA_DATA_PeriL1_pt0.0-30.0_y0.0-2.4_muPt4.0_centrality%d-%d_dphiEp_0.00PI_100.00PI", centBin[icent-1], centBin[icent]),state );
+      if(centBin[icent] <= 60) aa = getMaxDev(Form("fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0_centrality%.f-%.f_dphiEp_0.00PI_100.00PI", centBin[icent-1], centBin[icent]),state );
+      else if(centBin[icent] > 60) aa = getMaxDev(Form("fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0_centrality%.f-%.f_dphiEp_0.00PI_100.00PI", centBin[icent-1], centBin[icent]),state );
     }
     finalUnc = sqrt( pp*pp + aa*aa );
     cout << "Unc. of double ratio  " << 0.00001* int(10000000*finalUnc) << "%%" << endl;
@@ -142,7 +142,7 @@ double getRMS(TString fileName , int state)
   cout << "Var1 - Var5 : " ;
   for ( int ivar=0 ; ivar<=nVar ; ivar++) 
   { 
-    if(ivar ==0) fin = Form("%s.root",fileName.Data());
+    if(ivar ==0) fin = Form("/home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04/%s.root",fileName.Data());
     else fin = Form("Sys_SignalVar_%s_%d.root", fileName.Data(), ivar);
     TFile* f1 = new TFile(fin.Data() );
     TH1D* h = (TH1D*)f1->Get("fitResults");
@@ -174,7 +174,7 @@ double getMaxDev(TString fileName , int state)
   cout << "Var1 - Var5 : " ;
   for ( int ivar=0 ; ivar<=nVar ; ivar++) 
   { 
-    if(ivar ==0) fin = Form("%s.root",fileName.Data());
+    if(ivar ==0) fin = Form("/home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04/%s.root",fileName.Data());
     else fin = Form("Sys_SignalVar_%s_%d.root", fileName.Data(), ivar);
     TFile* f1 = new TFile(fin.Data() );
     TH1D* h = (TH1D*)f1->Get("fitResults");
@@ -184,14 +184,14 @@ double getMaxDev(TString fileName , int state)
       cout << " & " << Form("%.6f",100*double(relVar[ivar])) << "%%";
   }
   
-  MaxDev = relVar[1]*relVar[1];
+  MaxDev = TMath::Abs(relVar[1]);
     
   for ( int ivar=1 ; ivar<=nVar ; ivar++) 
   {
-    if(MaxDev >= relVar[ivar]*relVar[ivar]) {MaxDev = relVar[ivar]*relVar[ivar];}
+    if(MaxDev <= TMath::Abs(relVar[ivar])) {MaxDev = TMath::Abs(relVar[ivar]);}
   }
   
-  cout << " & " << Form("%.6f",100*double(MaxDev)) << endl;
+  cout << " &&& " << Form("%.6f",100*double(MaxDev)) << endl;
   return MaxDev;
 }
 
