@@ -50,18 +50,21 @@ double nColl2s[nCentBins2s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
 double nColl3s[nCentBins3s]   = {1626, 805, 267, 30.};
 //double nColl3s[nCentBins3s]   = {1079, 98.36};  
 
+// TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA3s[nCentBins3s+1] = {23.22, 11.51, 3.819, 0.4395, 5.507}; 
-//double TAA3s[nCentBins3s+1] = {15.41, 1.405};   
 
-// In ratio! 
+// TAA Unc 
 double TAA_unc1s[nCentBins1s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc2s[nCentBins2s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc3s[nCentBins3s+1] = {0.017, 0.024, 0.049, 0.15, 0.089};
-//double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12}; 
 
 const double inel_cross_PbPb = 7716;
+
+// lumi Unc 
+double lumi_unc_pp = 0.023;
+double lumi_unc_aa = 0.02;
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };
