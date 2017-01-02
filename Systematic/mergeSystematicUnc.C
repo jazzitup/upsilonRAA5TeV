@@ -97,13 +97,14 @@ void mergeSystematicUnc(int state = 1) {
   hcentRAA[3] = (TH1D*)hcentAA[3]->Clone("hcentRAA_3");    hcentRAA[3]->Reset();
   hintRAA[3] = (TH1D*)hintAA[3]->Clone("hintRAA_3");    hintRAA[3]->Reset();
 
-  mergeTwoInQuad( hptRAA[2], hptAA[2], hptPP[2] );
-  mergeTwoInQuad( hrapRAA[2], hrapAA[2], hrapPP[2] );
-  mergeTwoInQuadCent( hcentRAA[2], hcentAA[2], hintPP[2] );
-  mergeTwoInQuad( hintRAA[2], hintAA[2], hintPP[2] );
+  mergeTwoInQuad( hptRAA[3], hptAA[3], hptPP[3] );
+  mergeTwoInQuad( hrapRAA[3], hrapAA[3], hrapPP[3] );
+  mergeTwoInQuadCent( hcentRAA[3], hcentAA[3], hintPP[3] );
+  mergeTwoInQuad( hintRAA[3], hintAA[3], hintPP[3] );
 
   // 4 : background PDF 
-  TFile* f4 = new TFile(Form("backgroundVariation/sys_bkgPDFVariaion_%ds.root",state));
+  TFile* f4 = new TFile(Form("ToyMC/sys_toyMC_bkg_%ds.root",state));
+  //TFile* f4 = new TFile(Form("backgroundVariation/sys_bkgPDFVariaion_%ds.root",state));
   hptPP[4] = (TH1D*)f4->Get("hptPP"); hptPP[4]->SetName("hptPPbkg");
   hptAA[4] = (TH1D*)f4->Get("hptAA"); hptAA[4]->SetName("hptAAbkg");
   hrapPP[4] = (TH1D*)f4->Get("hrapPP"); hrapPP[4]->SetName("hrapPPbkg");
@@ -143,7 +144,7 @@ void mergeSystematicUnc(int state = 1) {
   mergeTwoInQuad( hintRAA[5], hintAA[5], hintPP[5] );
 
   // 6 : TAA uncertainty 
-  TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_%ds.root",state));
+  TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_Tracking_%ds.root",state));
   hptPP[6] = (TH1D*)f6->Get("hptPP"); hptPP[6]->SetName("hptPPTAA");
   hptAA[6] = (TH1D*)f6->Get("hptAA"); hptAA[6]->SetName("hptAATAA");
   hrapPP[6] = (TH1D*)f6->Get("hrapPP"); hrapPP[6]->SetName("hrapPPTAA");

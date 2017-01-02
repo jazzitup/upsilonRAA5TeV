@@ -3,7 +3,7 @@
 #include "CMS_lumi.C"
 #include "../cutsAndBin.h"
 
-void draw_RAA_cent(bool isArrow =true)
+void strickland_RAA_cent(bool isArrow =true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -113,17 +113,7 @@ void draw_RAA_cent(bool isArrow =true)
   double upper68_int[n3s_int] = {0.051328471};
   double lower95_int[n3s_int] = {0.};
   double upper95_int[n3s_int] = {0.083117666};
-  /*
-  double lower68[n3s] = {0., 0., 0.0183, 0.};
-  double upper68[n3s] = {0.154250585, 0.01689862101, 0.0943 , 0.03990571614};
-  double lower95[n3s] = {0., 0., 0., 0.};
-  double upper95[n3s] = {0.22041872, 0.07136456236, 0.1333, 0.06203828951};
-  static const int n3s_int = 1;
-  double lower68_int[n3s_int] = {0.};
-  double upper68_int[n3s_int] = {0.1536360214};
-  double lower95_int[n3s_int] = {0.};
-  double upper95_int[n3s_int] = {0.2477551813};
- */
+ 
   if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
   if (n3s_int != npoint_int[ulstate]) {cout<<"ERROR!! # of bins for UL (int) is wrong!!"<<endl;return;} 
 
@@ -149,7 +139,7 @@ void draw_RAA_cent(bool isArrow =true)
     pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
     gRAA_int[ulstate]->GetPoint(ipt, pxtmp, pytmp);
     box68per_int[ipt] = new TBox(pxtmp-boxw_int,lower68_int[ipt],pxtmp+boxw_int,upper68_int[ipt]);
-    arr95per_int[ipt] = new TArrow(pxtmp,lower95_int[ipt],pxtmp,upper95_int[ipt],0.02,"<-|"); //95%
+    arr95per_int[ipt] = new TArrow(pxtmp,lower95_int[ipt],pxtmp,upper95_int[ipt],0.027,"<-|"); //95%
     box68per_int[ipt]->SetLineColor(kGreen+2);
     box68per_int[ipt]->SetFillColorAlpha(kGreen-10,0.5);
     box68per_int[ipt]->SetLineWidth(1);
@@ -255,6 +245,43 @@ void draw_RAA_cent(bool isArrow =true)
   globtex->DrawLatex(0.22+0.04, sz_init-sz_step*2, "|y|^{#mu#mu} < 2.4");
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
 
+  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
+  
+  TGraphErrors *gRAA_1S_strickland[3]; 
+  TGraphErrors *gRAA_2S_strickland[3]; 
+  
+  for(int i=0;i<3;i++)
+  {
+    gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_1S_%d",i));
+    gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_2S_%d",i));
+    gRAA_1S_strickland[i] -> SetLineWidth(2.5);
+    gRAA_2S_strickland[i] -> SetLineWidth(3.0);
+  }
+  gRAA_1S_strickland[0]->SetLineColor(kOrange+9);
+  gRAA_1S_strickland[1]->SetLineColor(kBlack);
+  gRAA_1S_strickland[2]->SetLineColor(kBlue+1);
+  
+  gRAA_2S_strickland[0]->SetLineColor(kOrange+9);
+  gRAA_2S_strickland[1]->SetLineColor(kBlack);
+  gRAA_2S_strickland[2]->SetLineColor(kBlue+1);
+
+  gRAA_2S_strickland[0]->SetLineStyle(2);
+  gRAA_2S_strickland[1]->SetLineStyle(2);
+  gRAA_2S_strickland[2]->SetLineStyle(2);
+
+  for(int i=0;i<3;i++){
+    gRAA_1S_strickland[i]->Draw("same");
+    gRAA_2S_strickland[i]->Draw("same");
+  }
+   
+  TLegend *leg_strick= new TLegend(0.4, 0.50, 0.6, 0.70);
+  SetLegendStyle(leg_strick);
+  leg_strick->AddEntry(gRAA_1S_strickland[0],"4#pi#eta/s=1","l");
+  leg_strick->AddEntry(gRAA_1S_strickland[1],"4#pi#eta/s=2","l");
+  leg_strick->AddEntry(gRAA_1S_strickland[2],"4#pi#eta/s=3","l");
+
+  leg_strick->Draw("same");
+
   //Global Unc.
   TH1D* hSys_glb[nState];
   double sys_global_pp[nState];
@@ -262,13 +289,14 @@ void draw_RAA_cent(bool isArrow =true)
   for(int is=0; is<nState; is++){
     hSys_glb[is] = (TH1D*) fInSys[is]->Get("hintPP_merged");
     sys_global_pp[is] = hSys_glb[is]->GetBinContent(1);
+    sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + sys_global_pp[is]*sys_global_pp[is]);
   } 
   
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
   double sys_global_y = sys_global_val; 
   double sys_global_x = 15;
-  double sys_pp_1S = sys_global_pp[0];
-  double sys_pp_2S = sys_global_pp[1];
+  double sys_pp_1S = sys_global_pp[1];
+  double sys_pp_2S = sys_global_pp[2];
  
   TBox *globalUncBox = new TBox(xmax-sys_global_x*3,1-sys_global_y,xmax-sys_global_x*2,1+sys_global_y);
   globalUncBox -> SetFillColorAlpha(kGray+2,0);
@@ -276,11 +304,11 @@ void draw_RAA_cent(bool isArrow =true)
   globalUncBox -> SetLineWidth(2);
   globalUncBox -> Draw("l same");
 
-  TBox *ppRefUncBox1S = new TBox(xmax-sys_global_x*2,1-sys_pp_1S,xmax-sys_global_x+1,1+sys_pp_1S);
+  TBox *ppRefUncBox1S = new TBox(xmax-sys_global_x*2,1-sys_global_pp[1],xmax-sys_global_x,1+sys_global_pp[1]);
   ppRefUncBox1S -> SetFillColor(kPink-6);
   ppRefUncBox1S -> Draw("same");
 
-  TBox *ppRefUncBox2S = new TBox(xmax-sys_global_x,1-sys_pp_2S,xmax,1+sys_pp_2S);
+  TBox *ppRefUncBox2S = new TBox(xmax-sys_global_x,1-sys_global_pp[2],xmax,1+sys_global_pp[2]);
   ppRefUncBox2S -> SetFillColor(kBlue-3);
   ppRefUncBox2S -> Draw("same");
 
@@ -329,8 +357,12 @@ void draw_RAA_cent(bool isArrow =true)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %");
 
 	c1->Update();
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.png",(int)isArrow));
+  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
+  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.png",(int)isArrow));
+
+  
+
+
 
 /*
 	///////////////////////////////////////////////////////////////////

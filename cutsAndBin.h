@@ -60,11 +60,12 @@ double TAA_unc1s[nCentBins1s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081
 double TAA_unc2s[nCentBins2s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc3s[nCentBins3s+1] = {0.017, 0.024, 0.049, 0.15, 0.089};
 
-const double inel_cross_PbPb = 7716;
+const double inel_cross_PbPb = 6723;
+//const double inel_cross_PbPb = 7716;
 
 // lumi Unc 
 double lumi_unc_pp = 0.023;
-double lumi_unc_aa = 0.02;
+double nMB_unc = 0.02;
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };
