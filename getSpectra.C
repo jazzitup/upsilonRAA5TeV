@@ -252,11 +252,10 @@ void getSpectra(int state = 1 ) {
   hcsPP_pt->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
   hcsPP_rap->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
   
-  hcsAA_pt->Scale(1./TAA[nCentBins] );
-  hcsAA_rap->Scale(1./TAA[nCentBins] );
+  hcsAA_pt->Scale(1000000./TAA[nCentBins] );  // TAA : 5.607mb-1 = 5.607e-6 nb-1
+  hcsAA_rap->Scale(1000000./TAA[nCentBins] ); // TAA : 5.607mb-1 = 5.607e-6 nb-1
   hcsAA_pt->Scale(1./NumberOfMBColl);
   hcsAA_rap->Scale(1./NumberOfMBColl);
-  
 
 //  hcsAA_pt->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
 //  hcsAA_pt->Scale( 1./(208. * 208) );
@@ -268,7 +267,7 @@ void getSpectra(int state = 1 ) {
   TH1ScaleByWidth(hcsAA_rap);
   TH1ScaleByWidth(hcsPP_rap);
 
-  // pT cross-section is normalized by delta y 
+  // pT cr:oss-section is normalized by delta y 
   hcsAA_pt->Scale( 0.5 / yMax );   // 1 / 4.8
   hcsPP_pt->Scale( 0.5 / yMax );   // 1 / 4.8
   
@@ -545,7 +544,7 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
 		float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  TFile* inf = new TFile(Form("fitResults/%s/fitresults_upsilon_%sCB_%s.root",ResultDir.Data(), SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("/home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
   ret.val = fitResults->GetBinContent(state);
