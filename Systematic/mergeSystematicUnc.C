@@ -104,7 +104,7 @@ void mergeSystematicUnc(int state = 1) {
 
   // 4 : background PDF 
   TFile* f4 = new TFile(Form("ToyMC/sys_toyMC_bkg_%ds.root",state));
-  //TFile* f4 = new TFile(Form("backgroundVariation/sys_bkgPDFVariaion_%ds.root",state));
+  //TFile* f4 = new TFile(Form("BkgVariation/sys_bkgPDFVariaion_%ds.root",state));
   hptPP[4] = (TH1D*)f4->Get("hptPP"); hptPP[4]->SetName("hptPPbkg");
   hptAA[4] = (TH1D*)f4->Get("hptAA"); hptAA[4]->SetName("hptAAbkg");
   hrapPP[4] = (TH1D*)f4->Get("hrapPP"); hrapPP[4]->SetName("hrapPPbkg");

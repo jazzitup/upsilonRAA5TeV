@@ -1,5 +1,5 @@
-#include "rootFitHeaders.h"
-#include "commonUtility.h"
+#include "../rootFitHeaders.h"
+#include "../commonUtility.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -9,10 +9,10 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "cutsAndBin.h"
-#include "PsetCollection.h"
-#include "CMS_lumi.C"
-#include "tdrstyle.C"
+#include "../cutsAndBin.h"
+#include "../PsetCollection.h"
+#include "../CMS_lumi.C"
+#include "../tdrstyle.C"
 
 using namespace std;
 using namespace RooFit;
@@ -45,7 +45,8 @@ void doSys_SignalVar(
   TFile* f1;
   if      ( collId == kPPDATA) f1 = new TFile("../../skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
   else if ( collId == kAADATA) f1 = new TFile("../../skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("../../skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri && cLow != 120 && cLow !=140) f1 = new TFile("../../skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri && (cLow == 120 || cLow ==140)) f1 = new TFile("../yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0NoHFRequired_OpSign_EP-OppositeHF_201612121839_.root");
   else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
   else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
@@ -88,17 +89,17 @@ void doSys_SignalVar(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
   
-  RooRealVar sigma1s_1("#sigma_{CB}","width/sigma of the signal gaussian mass PDF", initPset.sigma1s_1, initPset.sigma1s_1*0.8, initPset.sigma1s_1*1.2);
-  RooRealVar X("x","ratio of sigma values",initPset.x1s,initPset.x1s*0.5,initPset.x1s*1.5);
+  RooRealVar sigma1s_1("#sigma_{CB}","width/sigma of the signal gaussian mass PDF", initPset.sigma1s_1, initPset.sigma1s_1*0.93, initPset.sigma1s_1*1.05);
+  RooRealVar X("x","ratio of sigma values",initPset.x1s,initPset.x1s*0.9,initPset.x1s*1.1);
   
   RooFormulaVar sigma2s_1("sigma2s_1","#sigma_{CB}*mRatio21", RooArgSet(sigma1s_1,mRatio21));
   RooFormulaVar sigma3s_1("sigma3s_1","#sigma_{CB}*mRatio31", RooArgSet(sigma1s_1,mRatio31));
 
 
-  RooRealVar Alpha("#alpha_{CB}","tail shift", initPset.alpha1s_1 , initPset.alpha1s_1*0.8, initPset.alpha1s_1*1.2);
+  RooRealVar Alpha("#alpha_{CB}","tail shift", initPset.alpha1s_1 , initPset.alpha1s_1*0.9, initPset.alpha1s_1*1.1);
   
-  RooRealVar N("n_{CB}","power order", initPset.n1s_1 , initPset.n1s_1*0.8, initPset.n1s_1*1.2);
-  RooRealVar *F = new RooRealVar("f","1S CB fraction", initPset.f1s, 0, 1);
+  RooRealVar N("n_{CB}","power order", initPset.n1s_1 , initPset.n1s_1*0.9, initPset.n1s_1*1.1);
+  RooRealVar *F = new RooRealVar("f","1S CB fraction", initPset.f1s, initPset.f1s*0.8, initPset.f1s*1.1);
 
   // Fix the parameters 
   if (fixParameters) 
@@ -195,10 +196,29 @@ void doSys_SignalVar(
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
  
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
+  //70-100%
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
-
+  //60-70% f variation
+  /*
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 26) ;
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
+  RooRealVar m_lambda("#lambda","m_lambda",  13, 12,30.36);
+  */
+  // 60-70% sigma variation
+  /*
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 26) ;
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
+  RooRealVar m_lambda("#lambda","m_lambda",  15, 5,31.46);
+  */
+  //60-70%
+  //RooRealVar m_lambda("#lambda","m_lambda",  20, 0,31.5);
+  /*
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
+  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
+*/
 
  /* 
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
@@ -376,7 +396,8 @@ void doSys_SignalVar(
 
   if(collId == kPPDATA) CMS_lumi(pad1, 104 ,33); 
   else if(collId == kAADATA && cLow < 60) CMS_lumi(pad1, 105 ,33); 
-  else if(collId == kAADATA && cLow>=60) CMS_lumi(pad1, 1051 ,33); 
+  else if(collId == kAADATA && cLow>=60 && cLow<120) CMS_lumi(pad1, 1051 ,33); 
+  else if(collId == kAADATA && cLow>=60 && cLow>=120) CMS_lumi(pad1, 10512 ,33); 
   pad1->Update();
 
   c1->cd();

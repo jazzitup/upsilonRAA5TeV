@@ -249,12 +249,19 @@ void getSpectra(int state = 1 ) {
 
   
   // d_sigma 
-  hcsAA_pt->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
   hcsPP_pt->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
-  hcsAA_pt->Scale( 1./(208. * 208) );
-  hcsAA_rap->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
   hcsPP_rap->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
-  hcsAA_rap->Scale( 1./(208. * 208) );
+  
+  hcsAA_pt->Scale(1./TAA[nCentBins] );
+  hcsAA_rap->Scale(1./TAA[nCentBins] );
+  hcsAA_pt->Scale(1./NumberOfMBColl);
+  hcsAA_rap->Scale(1./NumberOfMBColl);
+  
+
+//  hcsAA_pt->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
+//  hcsAA_pt->Scale( 1./(208. * 208) );
+//  hcsAA_rap->Scale( 1000. / 351. ) ;     // PbPb : 351 microBarn-1 = 0.351 nb-1
+//  hcsAA_rap->Scale( 1./(208. * 208) );
   // d_sigma/dpT and d_sigma/dy
   TH1ScaleByWidth(hcsAA_pt);
   TH1ScaleByWidth(hcsPP_pt);
@@ -558,7 +565,8 @@ double getScale(int fTAA, double* TAA, double* centBin, int nCentBins)
 {
   double flumi_;
   if(fTAA == nCentBins+1) flumi_ = 351;
-  else if(centBin[fTAA-1]>=60 && fTAA !=nCentBins+1) flumi_ = 464;
+  else if(centBin[fTAA-1]>=60 && centBin[fTAA-1]<120 && fTAA !=nCentBins+1) flumi_ = 464;
+  else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 334.82249848;
   else if(centBin[fTAA-1]<60 && fTAA !=nCentBins+1) flumi_ = 351;
   double nMBColl = flumi_*inel_cross_PbPb*1000;
   double scaleFactor;
