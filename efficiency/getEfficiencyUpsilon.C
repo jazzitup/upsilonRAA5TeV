@@ -403,13 +403,13 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   // Print the results for the table in for AN
   for ( int ii = 1 ; ii<= nYBins ; ii++)   {
     if ( state == 1 ) {  
-      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << " &" <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ &" <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
     }
     if ( state == 2 ) {  
-      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << " & & & " <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & " <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
     }    
     if ( state == 3 ) {  
-      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << " & & & & & " <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & & & " <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
     }    
   }
 
@@ -448,13 +448,13 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   // Print the results for the table in for AN
   for ( int ii = 1 ; ii<= nCentBins ; ii++)   {
     if ( state == 1 ) {  
-      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% $ &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
     }
     if ( state == 2 ) {  
-      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% $ & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
     }    
     if ( state == 3 ) {  
-      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% & & & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% $ & & & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
     }    
   }
 
