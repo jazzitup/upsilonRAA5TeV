@@ -14,7 +14,7 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=false, int tnpIdx=0) {  // 1S, 2S, 3S
+void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=true, int tnpIdx=0) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
 
 TH1D* ncoll1SBin = new TH1D("ncoll1sbin","", nCentBins1s, centBin1s );
@@ -292,6 +292,9 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   drawText("pp", 0.3, 0.8, 1, 15);
   drawText("|y| < 2.4", 0.3, 0.4, 1, 17);
 
+
+
+  
   // Rap Bins
   TCanvas* c_rap =  new TCanvas("c_rap","",600,600);
   c_rap->Divide(2,1);
@@ -361,9 +364,18 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,30,1);
 
-  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
-  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.gif",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
-  
+  //Print the results for AN table 
+  for ( int ii = 1 ; ii<= nPtBins ; ii++)   {
+    if ( state == 1 ) {  
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc &" <<  int(hptEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hptEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+    }
+    if ( state == 2 ) {  
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & " <<  int(hptEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hptEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+    }    
+    if ( state == 3 ) {  
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & & & " <<  int(hptEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hptEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+    }    
+  }
   // Efficiency Rap
   TCanvas* c_eff_rap =  new TCanvas("c_eff_rap","",400,400);
   TH1D* hrapEffAA;
@@ -387,7 +399,19 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   leg3->Draw();
   jumSun(0,1,30,1);
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
-  c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
+
+  // Print the results for the table in for AN
+  for ( int ii = 1 ; ii<= nYBins ; ii++)   {
+    if ( state == 1 ) {  
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << " &" <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+    }
+    if ( state == 2 ) {  
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << " & & & " <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+    }    
+    if ( state == 3 ) {  
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << " & & & & & " <<  int(hrapEffPP->GetBinContent(ii) *1000) / 1000. << " & " <<  int(hrapEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+    }    
+  }
 
   
   // Centrality Efficiency
@@ -420,10 +444,29 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
   jumSun(0,1,200,1);
 
-  c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
 
+  // Print the results for the table in for AN
+  for ( int ii = 1 ; ii<= nCentBins ; ii++)   {
+    if ( state == 1 ) {  
+      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+    }
+    if ( state == 2 ) {  
+      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+    }    
+    if ( state == 3 ) {  
+      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% & & & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+    }    
+  }
+
+  // Integrated bin:
+  cout << " pp = " << int(hcentintEffPP->GetBinContent(1)*1000)/1000. << ",  PbPb = " << int(hcentintEffAA->GetBinContent(1)*1000)/1000. << endl; 
+
+  
   TFile* fout = new TFile(Form("%s/efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.root",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx),"recreate");
 
+  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
+  c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
+  c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
   
   //  hptGenPP->Write();
   //  hptRecoPP->Write();
