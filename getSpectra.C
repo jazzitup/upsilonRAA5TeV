@@ -249,8 +249,8 @@ void getSpectra(int state = 1 ) {
 
   
   // d_sigma 
-  hcsPP_pt->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
-  hcsPP_rap->Scale( 1. / 26000. )  ;     // pp : 26pb-1 = 26000 nb-1
+  hcsPP_pt->Scale( 1. / 28000. )  ;     // pp : 25.8pb-1 = 25800 nb-1
+  hcsPP_rap->Scale( 1. / 28000. )  ;     // pp : 25.8pb-1 = 25800 nb-1
   
   hcsAA_pt->Scale(1000000./TAA[nCentBins] );  // TAA : 5.607mb-1 = 5.607e-6 nb-1
   hcsAA_rap->Scale(1000000./TAA[nCentBins] ); // TAA : 5.607mb-1 = 5.607e-6 nb-1
@@ -563,14 +563,15 @@ void stripErrorBars( TH1* h, double defaultErr  ) {
 double getScale(int fTAA, double* TAA, double* centBin, int nCentBins)
 {
   double flumi_;
-  if(fTAA == nCentBins+1) flumi_ = 351;
+  if(fTAA == nCentBins+1) flumi_ = 368;
   else if(centBin[fTAA-1]>=60 && centBin[fTAA-1]<120 && fTAA !=nCentBins+1) flumi_ = 464;
-  else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 334.82249848;
-  else if(centBin[fTAA-1]<60 && fTAA !=nCentBins+1) flumi_ = 351;
-  double nMBColl = flumi_*inel_cross_PbPb*1000;
+  else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 368;
+  //else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 334.82249848;
+  else if(centBin[fTAA-1]<60 && fTAA !=nCentBins+1) flumi_ = 368;
+  double nMBColl = NumberOfMBColl;
   double scaleFactor;
-  if(fTAA == nCentBins+1) scaleFactor = 26000000000000./(nMBColl*TAA[fTAA-1]*1000);
-  else scaleFactor = 26000000000000./(nMBColl*(centBin[fTAA]-centBin[fTAA-1])/200.*TAA[fTAA-1]*1000);
+  if(fTAA == nCentBins+1) scaleFactor = 28000000000000./(nMBColl*TAA[fTAA-1]*1000);
+  else scaleFactor = 28000000000000./(nMBColl*(centBin[fTAA]-centBin[fTAA-1])/200.*TAA[fTAA-1]*1000);
   
   if(fTAA!=nCentBins+1){
   cout << endl;

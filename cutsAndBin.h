@@ -60,8 +60,9 @@ double TAA_unc1s[nCentBins1s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081
 double TAA_unc2s[nCentBins2s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12, 0.089};
 
-const double inel_cross_PbPb = 6723;
-const double NumberOfMBColl = 2366003000;
+const double inel_cross_PbPb = 6740;
+//const double NumberOfMBColl = 2366003000;
+const double NumberOfMBColl = 2484303150;
 //const double inel_cross_PbPb = 7716;
 
 // lumi Unc 
