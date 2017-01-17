@@ -14,9 +14,9 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
   double xmax = 30.0;
 //  double relsys = 0.1;
 
-  double exsys_1s[5] =  {1.25, 1.25, 1.5, 3.5, 7.5};
-  double exsys_2s[3] =  {2.5, 5., 7.5};
-  double exsys_3s[3] =  {2.5, 5., 7.5};
+  double exsys_1s[6] =  {1., 1., 1., 1.5, 1.5, 9.};
+  double exsys_2s[3] =  {2., 2.5, 10.5};
+  double exsys_3s[2] =  {3., 12.};
 
   ////////////////////////////////////////////////////////////////
   //// read input file : value & stat.
@@ -69,12 +69,12 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
  
   ////////////////////////////////////////////////////////////////
   int ulstate = 2; //3S
-  static const int n3s = 3;
+  static const int n3s = 2;
   double boxw = 0.6; // for syst. box (vs cent)
-  double lower68[n3s] = {0.,0.,0.};
-  double upper68[n3s] = {0.078061833,0.019275349};
-  double lower95[n3s] = {0., 0.,0.};
-  double upper95[n3s] = {0.134525951,0.06215052,0.};
+  double lower68[n3s] = {0.,0.};
+  double upper68[n3s] = {0.077425873,0.037306442};
+  double lower95[n3s] = {0., 0};
+  double upper95[n3s] = {0.125605752,0.076217074};
   if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
 
   //// --- vs centrality
@@ -122,10 +122,14 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
         gRAA_sys[2]->SetPointError(0,0,0);
         gRAA_sys[2]->SetPoint(1,-11,-11);
         gRAA_sys[2]->SetPointError(1,0,0);
+        gRAA_sys[2]->SetPoint(2,-12,-12);
+        gRAA_sys[2]->SetPointError(2,0,0);
         gRAA[2]->SetPoint(0,-10,-10);
         gRAA[2]->SetPointError(0,0,0);
         gRAA[2]->SetPoint(1,-11,-11);
         gRAA[2]->SetPointError(1,0,0);
+        gRAA[2]->SetPoint(2,-12,-12);
+        gRAA[2]->SetPointError(2,0,0);
         gRAA_sys[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
         gRAA_sys[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
         gRAA_sys[2]->SetMinimum(0.0);
@@ -135,12 +139,13 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
         gRAA[2]->SetMinimum(0.0);
         gRAA[2]->SetMaximum(1.3);
       }
+  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
   for (int is=0; is<nState; is++){
     if ( is==0) {gRAA_sys[is]->Draw("A5");}
     else if(is==ulstate && isArrow==true) {
-      for(int ipt=0;ipt<n3s-1;ipt++){
+      for(int ipt=0;ipt<n3s;ipt++){
         box68per[ipt]->Draw("l");
       }
       gRAA_sys[is]->Draw("5");
@@ -149,7 +154,7 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
   }
   for(int is=0;is<nState;is++){
     if(is==ulstate && isArrow==true) {
-      for(int ipt=0;ipt<n3s-1;ipt++) {
+      for(int ipt=0;ipt<n3s;ipt++) {
         arr95per[ipt]->Draw();
       }
       gRAA[is]->Draw("P");
@@ -160,7 +165,7 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
   dashedLine(0.,1.,xmax,1.,1,1);
   TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
   SetLegendStyle(leg);
-  TLegend *leg_up= new TLegend(0.4, 0.54, 0.55, 0.70);
+  TLegend *leg_up= new TLegend(0.75, 0.44, 0.95, 0.50);
   SetLegendStyle(leg_up);
 
   TArrow *arrLeg = new TArrow(9.5,0.68,9.5,0.73,0.02,"<-|");
@@ -175,7 +180,7 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
   else {
     leg -> AddEntry(gRAA[0]," #Upsilon(1S)","lp");
     leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
-    leg -> AddEntry(gRAA[2]," #Upsilon(3S)","lp");
+//    leg -> AddEntry(gRAA[2]," #Upsilon(3S)","lp");
     TLegendEntry *ent=leg_up->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
     ent->SetLineColor(kGreen+3);
     ent->SetFillColorAlpha(kGreen-6,0.5);

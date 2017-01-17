@@ -14,7 +14,7 @@ void compare_15001_RAA_rap(int istate=1) //1 or 2 (1S or 2S)
 //  double relsys = 0.1;
   
   double exsys_1s[6] =  {0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
-  double exsys_2s[2] =  {0.6, 0.6};
+  double exsys_2s[3] =  {0.4, 0.4, 0.4};
   double exsys_3s[2] =  {0.6, 0.6};
 
   //// 15001 values

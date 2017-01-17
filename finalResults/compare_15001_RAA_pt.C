@@ -13,9 +13,9 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   double xmax = 30.0;
 //  double relsys = 0.1;
   
-  double exsys_1s[5] =  {1.25, 1.25, 1.5, 3.5, 7.5};
-  double exsys_2s[3] =  {2.5, 5., 7.5};
-  double exsys_3s[3] =  {2.5, 5., 7.5};
+  double exsys_1s[6] =  {1., 1., 1., 1.5, 1.5, 9.};
+  double exsys_2s[3] =  {2., 2.5, 10.5};
+  double exsys_3s[2] =  {3.,12.};
 
   //// 15001 values
   const int cn_1s =  5;

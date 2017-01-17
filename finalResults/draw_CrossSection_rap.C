@@ -14,7 +14,7 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
 //  double relsys = 0.1;
 
   double exsys_1s[6] =  {0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
-  double exsys_2s[2] =  {0.6, 0.6};
+  double exsys_2s[3] =  {0.4, 0.4, 0.4};
   double exsys_3s[2] =  {0.6, 0.6};
 
   TString sz_ppAA;
@@ -103,9 +103,11 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   //// axis et. al
   gCrossSection_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
   gCrossSection_sys[0]->GetXaxis()->CenterTitle();
-  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B d#sigma/dy (nb)");
-  else gCrossSection_sys[0]->GetYaxis()->SetTitle("(1/A^{2}) B d#sigma/dy (nb)");
+  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("#frac{d#sigma}{dy} (nb)");
+  else gCrossSection_sys[0]->GetYaxis()->SetTitle("#frac{1}{T_{AA}} #frac{dN}{dy} (nb)");
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
+  gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
+  gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);
   gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gCrossSection_sys[0]->SetMinimum(0.001);
   gCrossSection_sys[0]->SetMaximum(100.);
@@ -121,16 +123,17 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
     gCrossSection[is]->Draw("P");
 	}
   leg->Draw();
+  gPad->SetLeftMargin(0.23);
 
   //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
   double sz_shift;
   if (ppAA==1) sz_shift=0.6;
   else sz_shift=0.0;
-  globtex->DrawLatex(0.22, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
+  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step*2, "Centrality 0-100%");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "Centrality 0-100%");
   
   CMS_lumi( c1, ppAA, iPos );
 

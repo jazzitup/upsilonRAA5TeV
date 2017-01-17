@@ -13,9 +13,9 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
   double xmax = 30.0;
 //  double relsys = 0.1;
 
-  double exsys_1s[5] =  {1.25, 1.25, 1.5, 3.5, 7.5};
-  double exsys_2s[3] =  {2.5, 5., 7.5};
-  double exsys_3s[3] =  {2.5, 5., 7.5};
+  double exsys_1s[6] =  {1., 1., 1., 1.5, 1.5, 9.};
+  double exsys_2s[3] =  {2., 2.5, 10.5};
+  double exsys_3s[2] =  {3.,12.};
 
   TString sz_ppAA;
   if (ppAA==1) { sz_ppAA = "PP";}
@@ -97,9 +97,11 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
   //// axis et. al
   gCrossSection_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gCrossSection_sys[0]->GetXaxis()->CenterTitle();
-  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B d^{2}#sigma/dp_{T}dy (nb/ GeV/c)");
-  else gCrossSection_sys[0]->GetYaxis()->SetTitle("(1/A^{2}) B d^{2}#sigma/dp_{T}dy (nb/ GeV/c)");
+  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("#frac{1}{#Deltay} #frac{d#sigma}{dp_{T}} (nb/ GeV/c)");
+  else gCrossSection_sys[0]->GetYaxis()->SetTitle("#frac{1}{T_{AA}} #frac{dN}{#Deltaydp_{T}} (nb/ GeV/c)");
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
+  gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
+  gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);
   gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gCrossSection_sys[0]->SetMinimum(0.00005);
   //gCrossSection_sys[0]->SetMinimum(0.0000001);
@@ -114,16 +116,17 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
     gCrossSection[is]->Draw("P");
 	}
   leg->Draw();
+  gPad->SetLeftMargin(0.23);
 
   //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
   double sz_shift;
   if (ppAA==1) sz_shift=0.6;
   else sz_shift=0.0;
-  globtex->DrawLatex(0.22, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step*2, "Centrality 0-100%");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "Centrality 0-100%");
   
   CMS_lumi( c1, ppAA, iPos );
 

@@ -103,16 +103,16 @@ void draw_RAA_cent(bool isArrow =true)
   ////////////////////////////////////////////////////////////////
   //// 3S upper limit (arrow)
   int ulstate = 2; //3S
-  static const int n3s = 4;
-  double lower68[n3s] = {0.010828498,0,0.007411043,0.001294704};
-  double upper68[n3s] = {0.050909307,0.005736568,0.031998131,0.013533234};
-  double lower95[n3s] = {0., 0., 0., 0.};
-  double upper95[n3s] = {0.071863064,0.024288601,0.044854172,0.020996828};
+  static const int n3s = 2;
+  double lower68[n3s] = {0,0.010274277};
+  double upper68[n3s] = {0.026982415,0.037286395};
+  double lower95[n3s] = {0., 0.};
+  double upper95[n3s] = {0.054552485,0.001150934};
   static const int n3s_int = 1;
-  double lower68_int[n3s_int] = {0.001200406};
-  double upper68_int[n3s_int] = {0.051328471};
+  double lower68_int[n3s_int] = {0.001165011};
+  double upper68_int[n3s_int] = {0.048811869};
   double lower95_int[n3s_int] = {0.};
-  double upper95_int[n3s_int] = {0.083117666};
+  double upper95_int[n3s_int] = {0.079011206};
   /*
   double lower68[n3s] = {0., 0., 0.0183, 0.};
   double upper68[n3s] = {0.154250585, 0.01689862101, 0.0943 , 0.03990571614};
