@@ -11,10 +11,12 @@
 #include "TFile.h"
 #include "../../cutsAndBin.h"
 #include "../../PsetCollection.h"
+#include "../../CMS_lumi.C"
+#include "../../tdrstyle.C"
 
 using namespace std;
 using namespace RooFit;
-void doSys_BkgVar( 
+void doSys_BkgVar_linear( 
        int collId = kAADATA,  
        float ptLow=4, float ptHigh=6, 
        float yLow=0, float yHigh=1.2,
@@ -40,10 +42,10 @@ void doSys_BkgVar(
 
   int   nMassBin  = (massHigh-massLow)*10;
   TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("../../skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("../../skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("../../skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-//  else if ( collId == kAADATAPeri && cLow>=120) f1 = new TFile("../yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0NoHFRequired_OpSign_EP-OppositeHF_201612121839_.root");
+  if      ( collId == kPPDATA) f1 = new TFile("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+//  else if ( collId == kAADATAPeri && cLow>=120) f1 = new TFile("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/Systematic/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0NoHFRequired_OpSign_EP-OppositeHF_201612121839_.root");
   else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
   else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
@@ -165,71 +167,109 @@ void doSys_BkgVar(
   RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",1000,-100,100000);
   RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",100, -100,10000);
   RooRealVar *nBkg = new RooRealVar("nBkg"," Bkg signals",10000,0,300000);
+  
+  RooRealVar *fbkg = new RooRealVar("fbkg"," fbkg ",0.5,0,1);
 
   // background : 
   initPset.SetMCBkg();
   
-  RooRealVar ch4_k1("ch4_k1","ch4_k1",0.1,-1.,1.) ;
-  RooRealVar ch4_k2("ch4_k2","ch4_k2",0.1,-1.,1.) ;
-  RooRealVar ch4_k3("ch4_k3","ch4_k3",0.1,-1.,1.) ;
-  RooRealVar ch4_k4("ch4_k4","ch4_k4",0.1,-1.,1.) ;
+  double init_mu = initPset.bkg_mu;
+  double init_sigma = initPset.bkg_sigma;
+  double init_lambda = initPset.bkg_lambda;
 
-  RooChebychev * bkg = new RooChebychev("cPol4Bkg","Background",*(ws->var("mass")),RooArgSet(ch4_k1,ch4_k2,ch4_k3,ch4_k4));
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
+  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
 
+  
+  RooGenericPdf *bkg_nom;
+  RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
+  RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));
+ 
+  if  (ptLow >= 5)        bkg_nom = bkgHighPt ;
+  else bkg_nom = bkgLowPt;
+
+
+  RooRealVar sl("sl","sl",0.5,-42,40);
+  RooRealVar cnst("cnst","cnst",100,0,300);
+  RooGenericPdf *bkg_linear = new RooGenericPdf("bkglinear","bkglinear","@0*@1+@2",RooArgList( *(ws->var("mass")),sl,cnst) );
+
+  RooAddPdf *bkg = new RooAddPdf("bkg","background",RooArgList(*bkg_nom,*bkg_linear),RooArgList(*fbkg) );
   
   RooAddPdf* model = new RooAddPdf();
   model = new RooAddPdf("model","1S+2S+3S + Bkg",RooArgList(*cb1s, *cb2s, *cb3s, *bkg),RooArgList(*nSig1s,*nSig2s,*nSig3s,*nBkg));
 
   ws->import(*model);
-
+  
   RooPlot* myPlot2 = (RooPlot*)myPlot->Clone();
   ws->data("reducedDS")->plotOn(myPlot2);
-  
+
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb1s)),LineColor(kRed),LineStyle(kDashed));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kRed),LineStyle(kDashed));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kRed),LineStyle(kDashed));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*bkg)),LineColor(kBlack),LineStyle(kDashed));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2.7));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2.7));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2.7));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*bkg)),LineColor(kBlue),LineStyle(kDashed),LineWidth(2.2));
 
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
-  myPlot2->GetYaxis()->SetTitleOffset(1.5);
+  myPlot2->GetYaxis()->SetTitleOffset(1.4);
+  myPlot2->GetYaxis()->CenterTitle();
+  myPlot2->GetXaxis()->SetLabelSize(0);
+  myPlot2->GetXaxis()->SetRangeUser(8,14);
+  myPlot2->GetXaxis()->SetTitleSize(0);
   myPlot2->Draw();
   fitRes2->Print("v");
   Double_t theNLL = fitRes2->minNll();
   cout << " *** NLL : " << theNLL << endl;
   TString perc = "%";
 
-  drawText(getCollID(collId),0.12,0.85,1,11);
-  drawText(Form("%.2f < p_{T}^{#mu#mu} < %.2f GeV",ptLow,ptHigh ),0.12,0.80,2,11);
-  drawText(Form("%.2f < y^{#mu#mu} < %.2f",yLow,yHigh ), 0.12,0.75,2,11);
+  float pos_text_x = 0.34;
+  float pos_text_y = 0.78;
+  float pos_y_diff = 0.056;
+  float text_size = 15;
+  int text_color = 1;
+  if(ptLow==0 && ptHigh == 2.5) drawText(Form("%.f < p_{T}^{#mu#mu} < %.1f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  else if(ptLow == 2.5 && ptHigh==5) drawText(Form("%.1f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  else drawText(Form("%.f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  drawText(Form("%.1f < |#eta^{#mu#mu}| < %.1f",yLow,yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
   if(collId != kPPDATA && collId != kPPMCUps1S && collId != kPPMCUps2S) 
   {
-      drawText(Form("Cent %d-%d%s",cLow/2,cHigh/2,perc.Data()),0.12,0.7,2,12);
-      drawText(Form("(p_{T}^{#mu} > %.2f GeV)", muPtCut ), 0.12,0.65,1,12);
+      drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
+      drawText(Form("Centrality %d-%d%s",cLow/2,cHigh/2,perc.Data()),pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
   }
-  else drawText(Form("(p_{T}^{#mu} > %.2f GeV)", muPtCut ), 0.12,0.65,1,12);
+  else drawText(Form("p_{T}^{#mu} > %.2f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
 //  drawText(Form("Signal Function : %s CB", SignalCB.Data() ), 0.55,0.54,1,14);
 
   // PULL 
 
   TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 0.98, 0.25);
-  pad2->SetBottomMargin(0); // Upper and lower plot are joined
-  c1->cd();  
-  pad2->Draw(); 
+  pad2->SetTopMargin(0); // Upper and lower plot are joined
+  pad2->SetBottomMargin(0.4); 
+  pad2->SetTicks(1,1);
   pad2->cd();
   
   
   RooHist* hpull = myPlot2->pullHist("dataHist","modelHist");
   RooPlot* pullFrame = ws->var("mass")->frame(Title("Pull Distribution")) ;
   pullFrame->addPlotable(hpull,"P") ;
-  pullFrame->SetTitleSize(2.57);
-  pullFrame->GetYaxis()->SetTitleOffset(1.8) ;
-  pullFrame->GetYaxis()->SetLabelSize(0.16) ;
+  pullFrame->SetTitleSize(0);
+  pullFrame->GetYaxis()->SetTitleOffset(0.3) ;
+  pullFrame->GetYaxis()->SetTitle("Pull") ;
+  pullFrame->GetYaxis()->SetTitleSize(0.09) ;
+  pullFrame->GetYaxis()->SetLabelSize(0.07) ;
   pullFrame->GetYaxis()->SetRange(-10,10) ;
-  pullFrame->GetXaxis()->SetTitleOffset(0.7) ;
-  pullFrame->GetXaxis()->SetLabelSize(0.1) ;
-  pullFrame->GetXaxis()->SetTitleSize(0.13) ;
+  pullFrame->GetYaxis()->CenterTitle();
+
+  pullFrame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
+  pullFrame->GetXaxis()->SetTitleOffset(1.1) ;
+  pullFrame->GetXaxis()->SetLabelOffset(0.03) ;
+  pullFrame->GetXaxis()->SetLabelSize(0.140) ;
+  pullFrame->GetXaxis()->SetTitleSize(0.162) ;
+  pullFrame->GetXaxis()->CenterTitle();
+  
+  pullFrame->GetYaxis()->SetTickSize(0.02);
+  pullFrame->GetYaxis()->SetNdivisions(15,4,0);
+  pullFrame->GetXaxis()->SetTickSize(0.03);
   pullFrame->Draw() ;
   
   double chisq = 0;
@@ -249,14 +289,16 @@ void doSys_BkgVar(
   TLine *l1 = new TLine(massLow,0,massHigh,0);
   l1->SetLineStyle(9);
   l1->Draw("same");
-  drawText(Form("chi^{2}/ndf : %.3f / %d ",chisq,ndf ),0.15,0.95,1,12);
-
-  TPad *pad3 = new TPad("pad3", "pad3", 0.65, 0.55, 0.85, 0.92);
+  drawText(Form("chi^{2}/ndf : %.3f / %d ",chisq,ndf ),0.12,0.87,1,10);
+/*
+  TPad *pad3 = new TPad("pad3", "pad3", 0.685, 0.42, 0.885, 0.77);
   pad3->SetBottomMargin(0);
-  c1->cd();  
-  pad3->Draw(); 
+  pad3->SetTopMargin(0);
+  pad3->SetLeftMargin(0);
+  pad3->SetRightMargin(0);
+  pad3->SetFillColorAlpha(kWhite,1.00);
   pad3->cd();
-
+*/
   RooPlot* legFrame = ws->var("mass")->frame(Name("Fit Results"), Title("Fit Results"));
   
   //// Show floating parameters only! (not observables)
@@ -265,16 +307,19 @@ void doSys_BkgVar(
   RooArgList paramList = fitRes2->floatParsFinal();
   paramList.Print("v");
   //ws->pdf("model")->paramOn(legFrame,Layout(0,.95, .97));
-  ws->pdf("model")->paramOn(legFrame,Layout(0,.95, .97),Parameters(paramList));
+  ws->pdf("model")->paramOn(legFrame,Layout(0.71,.9,0.77),Parameters(paramList));
   legFrame->getAttText()->SetTextAlign(11);
-  legFrame->getAttText()->SetTextSize(0.09);
-  
+  legFrame->getAttText()->SetTextSize(0.02);
+  legFrame->getAttFill()->SetFillStyle(0);
+
+
   TPaveText* hh = (TPaveText*)legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()));
-  hh->SetY1(0.01); hh->SetY2(0.95);
+  hh->SetY1(0.37); hh->SetY2(0.71);
+  pad1->cd();
   hh->Draw();
+  pad1->Update();
   //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
-  c1->SaveAs(Form("Sys_BkgVar_4thorder_fitresults_upsilon_%sCB_%s.png",SignalCB.Data(),kineLabel.Data()));
   
   TH1D* outh = new TH1D("fitResults","fit result",20,0,20);
 
@@ -302,13 +347,26 @@ void doSys_BkgVar(
   cout << "2S signal    =  " << outh->GetBinContent(2) << " +/- " << outh->GetBinError(2) << endl;
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
 
+  setTDRStyle();
+  writeExtraText = true;
+  extraText = "Preliminary";
 
-  TFile* outf = new TFile(Form("Sys_BkgVar_4thorder_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()),"recreate");
+  if(collId == kPPDATA) CMS_lumi(pad1, 104 ,33); 
+  else if(collId == kAADATA && cLow < 60) CMS_lumi(pad1, 105 ,33); 
+  else if(collId == kAADATA && cLow>=60 && cLow<120) CMS_lumi(pad1, 1051 ,33); 
+  else if(collId == kAADATA && cLow>=60 && cLow>=120) CMS_lumi(pad1, 10512 ,33); 
+  pad1->Update();
+
+  c1->cd();
+  pad1->Draw();
+  pad2->Update();
+  pad2->Draw();
+
+  TFile* outf = new TFile(Form("Sys_BkgVar_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
+  c1->SaveAs(Form("Sys_BkgVar_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
   c1->Write();
   ws->Write();
   outf->Close();
-
-
 } 
  
