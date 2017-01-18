@@ -259,6 +259,52 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff5sys->Write();  //eff5sysVar->Write(); eff5binned->Write(); eff5sta->Write(); eff5muid->Write(); eff5stat->Write(); eff5ptw->Write();
   eff6sys->Write();  //eff6sysVar->Write(); eff6binned->Write(); eff6sta->Write(); eff6muid->Write(); eff6stat->Write(); eff6ptw->Write();
   eff7sys->Write();  //eff7sysVar->Write(); eff7binned->Write(); eff7sta->Write(); eff7muid->Write(); eff7stat->Write(); eff7ptw->Write();
+  
+  //Print the results for AN table
+  /* 
+     TH1D* eff1 = (TH1D*)f1->Get("hptEffPP");
+     TH1D* eff2 = (TH1D*)f1->Get("hptEffAA");
+     TH1D* eff3 = (TH1D*)f1->Get("hrapEffPP");
+     TH1D* eff4 = (TH1D*)f1->Get("hrapEffAA");
+     TH1D* eff5 = (TH1D*)f1->Get("hcentintEffPP");
+     TH1D* eff6 = (TH1D*)f1->Get("hcentintEffAA");
+     TH1D* eff7 = (TH1D*)f1->Get("hcentEffAA");
+  */
+  
+  int nPtBins=0;
+  double* ptBin;
+  int nCentBins=0;
+  double* centBin;
+  int nYBins=0;
+  double *yBin;
+  if ( state == 1 ) {
+    nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nYBins = nYBins1S;  yBin = yBin1S;
+    nCentBins = nCentBins1s;  centBin = centBin1s;
+  }
+  else if ( state == 2 ) {
+    nPtBins = nPtBins2s;    ptBin = ptBin2s;
+    nCentBins = nCentBins2s;  centBin = centBin2s;
+    nYBins = nYBins2S;  yBin = yBin2S;
+  }
+  else if ( state == 3 ) {
+    nPtBins = nPtBins3s;    ptBin = ptBin3s;
+    nCentBins = nCentBins3s;  centBin = centBin3s;
+    nYBins = nYBins3S;  yBin = yBin3S;
+  }
+
+  for ( int ii = 1 ; ii<= nPtBins ; ii++)   {
+    if ( state == 1 ) {
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc &" <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int
+	(eff2->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+    }
+    if ( state == 2 ) {
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<	int(eff2->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+    }
+    if ( state == 3 ) {
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff2->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+    }
+  }
 
 
 }
