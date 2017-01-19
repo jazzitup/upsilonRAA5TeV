@@ -448,13 +448,13 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   // Print the results for the table in for AN
   for ( int ii = 1 ; ii<= nCentBins ; ii++)   {
     if ( state == 1 ) {  
-      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% $ &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+      cout << "$" << centBin[ii-1]/2 << "\\% -- " << centBin[ii]/2 << "\\% $ &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
     }
     if ( state == 2 ) {  
-      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% $ & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+      cout << "$" << centBin[ii-1]/2 << "\\% -- " << centBin[ii]/2 << "\\% $ & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
     }    
     if ( state == 3 ) {  
-      cout << "$" << centBin[ii-1] << "\\% -- " << centBin[ii] << "\\% $ & & & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+      cout << "$" << centBin[ii-1]/2 << "\\% -- " << centBin[ii]/2 << "\\% $ & & & & &   & " <<  int(hcentEffAA->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
     }    
   }
 
