@@ -290,14 +290,14 @@ void getEffSys(int state =1, int Nsamples=100) {
 
   for ( int ii = 1 ; ii<= nPtBins ; ii++)   {
     if ( state == 1 ) {
-      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc &" <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int
-	(eff2->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc &" <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << "\\% & " <<  int
+	(eff2->GetBinContent(ii) *1000) / 1000. << "\\% & & & &   \\\\ " << endl;
     }
     if ( state == 2 ) {
-      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<	int(eff2->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << "\\% & " <<	int(eff2->GetBinContent(ii) *1000) / 1000. << "\\% & &   \\\\ " << endl;
     }
     if ( state == 3 ) {
-      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff2->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+      cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << " $ \\GeVc & & & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << "\\% & " <<  int(eff2->GetBinContent(ii) *1000) / 1000. << "\\% \\\\ " << endl;
     }
   }
 
@@ -307,14 +307,14 @@ void getEffSys(int state =1, int Nsamples=100) {
 
   for ( int ii = 1 ; ii<= nYBins ; ii++)   {
     if ( state == 1 ) {
-      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ &" <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff4sys->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ &" <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << "\\% & " <<  int(eff4sys->GetBinContent(ii) *1000) / 1000. << "\\% & & & &   \\\\ " << endl;
     }
     if ( state == 2 ) {
-      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & " <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff4sys->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & " <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << "\\% & " <<  int(eff4sys->GetBinContent(ii) *1000) / 1000. << "\\% & &   \\\\ " << endl;
     }
     if ( state == 3 ) {
-      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & & & " <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int
-	(eff4sys->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & & & " <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << "\\% & " <<  int
+	(eff4sys->GetBinContent(ii) *1000) / 1000. << "\\% \\\\ " << endl;
     }
   }
 
@@ -326,19 +326,19 @@ void getEffSys(int state =1, int Nsamples=100) {
   // Print the results for the table in for AN
   for ( int ii = 1 ; ii<= nCentBins ; ii++)   {
     if ( state == 1 ) {
-      cout << "$" << centBin[ii-1]/2 << "\\% - " << centBin[ii]/2 << "\\% $ &   & " <<  int(eff7sys->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+      cout << "$" << centBin[ii-1]/2 << "\\% - " << centBin[ii]/2 << "\\% $ &   & " <<  int(eff7sys->GetBinContent(ii) *10000) / 100. << "\\% & & & &   \\\\ " << endl;
     }
     if ( state == 2 ) {
-      cout << "$" << centBin[ii-1]/2 << "\\% - " << centBin[ii]/2 << "\\% $ & & &   & " <<  int(eff7sys->GetBinContent(ii) *1000) / 1000. << " &&   \\\\ " << endl;
+      cout << "$" << centBin[ii-1]/2 << "\\% - " << centBin[ii]/2 << "\\% $ & & &   & " <<  int(eff7sys->GetBinContent(ii) *10000) / 100. << "\\% &&   \\\\ " << endl;
     }
     if ( state == 3 ) {
-      cout << "$" << centBin[ii-1]/2 << "\\% - " << centBin[ii]/2 << "\\% $ & & & & &   & " <<  int(eff7sys->GetBinContent(ii) *1000) / 1000. << 
-	" \\\\ " << endl;
+      cout << "$" << centBin[ii-1]/2 << "\\% - " << centBin[ii]/2 << "\\% $ & & & & &   & " <<  int(eff7sys->GetBinContent(ii) *10000) / 100. << 
+	"\\% \\\\ " << endl;
     }
   }
 
   // Integrated bin:
-  cout << " pp = " << int(eff5sys->GetBinContent(1)*1000)/1000. << ",  PbPb = " << int(eff6sys->GetBinContent(1)*1000)/1000. << endl;
+  cout << " pp = " << int(eff5sys->GetBinContent(1)*1000)/10. << "\\%,  PbPb = " << int(eff6sys->GetBinContent(1)*1000)/10. << "\\%" <<endl;
 
 
 
