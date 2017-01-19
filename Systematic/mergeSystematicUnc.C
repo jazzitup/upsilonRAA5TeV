@@ -272,8 +272,27 @@ void mergeSixInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5,
   } 
 
   TCanvas* c0 = new TCanvas("c_mergedSys","",400,400);
-  TH1D* hnew = (TH1D*)a0->Clone("htemp");
-  a0->SetFillColor(
+  TH1D* hsigMerged = (TH1D*)h3->Clone("sigMerged");
+  mergeTwoInQuad( hsigMerged, h3, h5);
+
+  h0->SetAxisRange(0,0.4,"Y");
+  h0->DrawCopy("hist");
+  handsomeTH1(h1,        2); h1->SetLineWidth(2); h1->DrawCopy("hist same");
+  handsomeTH1(h2,        3); h2->SetLineWidth(2); h2->DrawCopy("hist same");
+  handsomeTH1(hsigMerged,4); hsigMerged->SetLineWidth(2); hsigMerged->DrawCopy("hist same");
+  handsomeTH1(h4,6);         h4->SetLineWidth(2); h4->DrawCopy("hist same");
+  handsomeTH1(h6,8);         h6->SetLineWidth(2); h6->DrawCopy("hist same");
+  
+  TLegend *leg1 = new TLegend(0.55,0.6, 0.85,0.9,NULL,"brNDC");
+  easyLeg(leg1,"Uncertainty");
+  leg1->AddEntry(h0,"Total","l");
+  leg1->AddEntry(h1,"efficiency","l");
+  leg1->AddEntry(h2,"Acceptance","l");
+  leg1->AddEntry(hsigMerged,"Signal PDF","l");
+  leg1->AddEntry(h4,"Background PDF","l");
+  leg1->AddEntry(h6,"TAA Uncertainty","l");
+  leg1->Draw();
+  c0->SaveAs(Form("pdfFiles/%s.pdf", h0->GetName() ) );
   // 6 : TAA uncertainty
   // 5 : CB+Gaus PDF  
   // 4 : background PDF
