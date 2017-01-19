@@ -270,6 +270,18 @@ void mergeSixInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5,
     float a0 = sqrt( a1*a1 + a2*a2 + a3*a3 + a4*a4 + a5*a5 + a6*a6);
     h0->SetBinContent( i, a0);
   } 
+
+  TCanvas* c0 = new TCanvas("c_mergedSys","",400,400);
+  TH1D* hnew = (TH1D*)a0->Clone("htemp");
+  a0->SetFillColor(
+  // 6 : TAA uncertainty
+  // 5 : CB+Gaus PDF  
+  // 4 : background PDF
+  // 3 : signal PDF
+  // 2 : acceptance
+  // 1 : efficiency
+
+  
 }
 
 void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5) {
