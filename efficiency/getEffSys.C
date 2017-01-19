@@ -261,16 +261,6 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff7sys->Write();  //eff7sysVar->Write(); eff7binned->Write(); eff7sta->Write(); eff7muid->Write(); eff7stat->Write(); eff7ptw->Write();
   
   //Print the results for AN table
-  /* 
-     TH1D* eff1 = (TH1D*)f1->Get("hptEffPP");
-     TH1D* eff2 = (TH1D*)f1->Get("hptEffAA");
-     TH1D* eff3 = (TH1D*)f1->Get("hrapEffPP");
-     TH1D* eff4 = (TH1D*)f1->Get("hrapEffAA");
-     TH1D* eff5 = (TH1D*)f1->Get("hcentintEffPP");
-     TH1D* eff6 = (TH1D*)f1->Get("hcentintEffAA");
-     TH1D* eff7 = (TH1D*)f1->Get("hcentEffAA");
-  */
-  
   int nPtBins=0;
   double* ptBin;
   int nCentBins=0;
@@ -292,6 +282,11 @@ void getEffSys(int state =1, int Nsamples=100) {
     nCentBins = nCentBins3s;  centBin = centBin3s;
     nYBins = nYBins3S;  yBin = yBin3S;
   }
+  
+  //  pt dependence
+  //  TH1D* eff1 = (TH1D*)f1->Get("hptEffPP");
+  //  TH1D* eff2 = (TH1D*)f1->Get("hptEffAA");
+
 
   for ( int ii = 1 ; ii<= nPtBins ; ii++)   {
     if ( state == 1 ) {
@@ -305,6 +300,47 @@ void getEffSys(int state =1, int Nsamples=100) {
       cout << "$" << ptBin[ii-1] << " < \\pt < " << ptBin[ii] << "$ \\GeVc & & & & & " <<  int(eff1sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff2->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
     }
   }
+
+  // rap dependence 
+  //  TH1D* eff3 = (TH1D*)f1->Get("hrapEffPP");
+  //  TH1D* eff4 = (TH1D*)f1->Get("hrapEffAA");
+
+  for ( int ii = 1 ; ii<= nYBins ; ii++)   {
+    if ( state == 1 ) {
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ &" <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff4sys->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+    }
+    if ( state == 2 ) {
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & " <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int(eff4sys->GetBinContent(ii) *1000) / 1000. << " & &   \\\\ " << endl;
+    }
+    if ( state == 3 ) {
+      cout << "$" << yBin[ii-1] << " < |y| < " << yBin[ii] << "$ & & & & & " <<  int(eff3sys->GetBinContent(ii) *1000) / 1000. << " & " <<  int
+	(eff4sys->GetBinContent(ii) *1000) / 1000. << " \\\\ " << endl;
+    }
+  }
+
+  // centrality dependence 
+  //  TH1D* eff5 = (TH1D*)f1->Get("hcentintEffPP");
+  //  TH1D* eff6 = (TH1D*)f1->Get("hcentintEffAA");
+  //  TH1D* eff7 = (TH1D*)f1->Get("hcentEffAA");
+
+  // Print the results for the table in for AN
+  for ( int ii = 1 ; ii<= nCentBins ; ii++)   {
+    if ( state == 1 ) {
+      cout << "$" << centBin[ii-1] << "\\% - " << centBin[ii] << "\\% $ &   & " <<  int(eff7sys->GetBinContent(ii) *1000) / 1000. << " & & & &   \\\\ " << endl;
+    }
+    if ( state == 2 ) {
+      cout << "$" << centBin[ii-1] << "\\% - " << centBin[ii] << "\\% $ & & &   & " <<  int(eff7sys->GetBinContent(ii) *1000) / 1000. << " &&   \\\\ " << endl;
+    }
+    if ( state == 3 ) {
+      cout << "$" << centBin[ii-1] << "\\% - " << centBin[ii] << "\\% $ & & & & &   & " <<  int(eff7sys->GetBinContent(ii) *1000) / 1000. << 
+	" \\\\ " << endl;
+    }
+  }
+
+  // Integrated bin:
+  cout << " pp = " << int(eff5sys->GetBinContent(1)*1000)/1000. << ",  PbPb = " << int(eff6sys->GetBinContent(1)*1000)/1000. << endl;
+
+
 
 
 }
