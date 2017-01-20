@@ -82,7 +82,7 @@ void getSpectra(int state = 1 ) {
   // ~*~*~*~*~* Acceptance ~*~*~*~*~*~*
   // ##################################
 
-  TFile* infacc = new TFile("acceptance/acceptance.root");
+  TFile* infacc = new TFile("acceptance/acceptance_wgt_final_20170106.root");
   hrapAccAA  = (TH1D*)infacc->Get(Form("hrapAccAA%dS",state));
   hrapAccPP  = (TH1D*)infacc->Get(Form("hrapAccPP%dS",state));
   hptAccAA  = (TH1D*) infacc->Get(Form("hptAccAA%dS",state));
@@ -264,6 +264,7 @@ void getSpectra(int state = 1 ) {
   // d_sigma/dpT and d_sigma/dy
   TH1ScaleByWidth(hcsAA_pt);
   TH1ScaleByWidth(hcsPP_pt);
+  cout << "noproblem" << endl;
   TH1ScaleByWidth(hcsAA_rap);
   TH1ScaleByWidth(hcsPP_rap);
 
@@ -277,7 +278,8 @@ void getSpectra(int state = 1 ) {
   hcsAA_pt->SetAxisRange(  hcsAA_pt->GetBinContent(nPtBins) * 0.1,  hcsPP_pt->GetBinContent(1) * 10, "Y");
   hcsAA_pt->Draw();
   hcsPP_pt->Draw("same");
-  gPad->SetLogy();
+//  gPad->SetLogy();
+  cout << "noproblem" << endl;
   
   TLegend* legCS = new TLegend(0.5046176,0.65,0.9,0.9,NULL,"brNDC");
   easyLeg(legCS,(Form("#Upsilon(%dS),  |y| < 2.4",state)) );
@@ -544,7 +546,8 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
 		float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  TFile* inf = new TFile(Form("/home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/NomPlot/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  //TFile* inf = new TFile(Form("/home/samba/UpsilonAnalysis/fitResultFiles/mcFit_MuPt4_2016_11_04/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
   ret.val = fitResults->GetBinContent(state);
@@ -565,10 +568,12 @@ double getScale(int fTAA, double* TAA, double* centBin, int nCentBins)
   double flumi_;
   if(fTAA == nCentBins+1) flumi_ = 368;
   else if(centBin[fTAA-1]>=60 && centBin[fTAA-1]<120 && fTAA !=nCentBins+1) flumi_ = 464;
-  else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 368;
+  else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 464;
   //else if(centBin[fTAA-1]>=120 && fTAA!=nCentBins+1) flumi_ = 334.82249848;
   else if(centBin[fTAA-1]<60 && fTAA !=nCentBins+1) flumi_ = 368;
   double nMBColl = NumberOfMBColl;
+  if(centBin[fTAA-1]<60 && fTAA !=nCentBins+1)  nMBColl = NumberOfMBColl;
+  else if(centBin[fTAA-1]>=60 && fTAA !=nCentBins+1) nMBColl = NumberOfMBColl1;
   double scaleFactor;
   if(fTAA == nCentBins+1) scaleFactor = 28000000000000./(nMBColl*TAA[fTAA-1]*1000);
   else scaleFactor = 28000000000000./(nMBColl*(centBin[fTAA]-centBin[fTAA-1])/200.*TAA[fTAA-1]*1000);

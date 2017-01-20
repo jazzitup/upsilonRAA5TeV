@@ -15,7 +15,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
 //  double relsys = 0.1;
 
   double exsys_1s[6] =  {0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
-  double exsys_2s[2] =  {0.6, 0.6};
+  double exsys_2s[3] =  {0.4, 0.4,0.4};
   double exsys_3s[2] =  {0.6, 0.6};
 
   ////////////////////////////////////////////////////////////////
@@ -72,9 +72,9 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   static const int n3s = 2;
   double boxw = 0.05; // for syst. box (vs cent)
   double lower68[n3s] = {0.,0.};
-  double upper68[n3s] = {0.053148931,0.063878212};
+  double upper68[n3s] = {0.050402958,0.060631106};
   double lower95[n3s] = {0., 0.};
-  double upper95[n3s] = {0.09371093,0.11409201};
+  double upper95[n3s] = {0.088932491,0.108333619};
   if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
 
   //// --- vs centrality
@@ -173,7 +173,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
   globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
- 
+  
   TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
   
   TGraphErrors *gRAA_1S_strickland[3]; 
@@ -221,7 +221,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   globalUncBox -> SetFillColorAlpha(kGray+2,0.6);
   globalUncBox -> SetLineWidth(1);
   globalUncBox -> Draw("l same");
-
+  
   CMS_lumi( c1, iPeriod, iPos );
 
 	c1->Update();

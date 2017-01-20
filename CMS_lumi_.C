@@ -1,8 +1,7 @@
-#include "CMS_lumi.h"
-#include <iostream>
+#include "CMS_lumi_.h"
 
 void 
-CMS_lumi( TPad* pad, int iPeriod, int iPosX )
+CMS_lumi_( TPad* pad, int iPeriod, int iPosX, TString label )
 {            
   bool outOfFrame    = false;
   if( iPosX/10==0 ) 
@@ -17,7 +16,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   if( iPosX/10==1 ) alignX_=1;
   if( iPosX/10==2 ) alignX_=2;
   if( iPosX/10==3 ) alignX_=3;
-  //if( iPosX == 0  ) relPosX = 0.12;
+  if( iPosX == 0  ) relPosX = 0.12;
   int align_ = 10*alignX_ + alignY_;
 
   float H = pad->GetWh();
@@ -30,53 +29,96 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 
   pad->cd();
 
-  TString lumiText;
+  TString lumiText, lumiText2;
   if( iPeriod==1 )
     {
-      lumiText += "pp ";
-      lumiText += lumi_pp502TeV;
-      lumiText += " (5.02 TeV)";
+      lumiText += lumi_7TeV;
+      lumiText += " (7 TeV)";
     }
-  else if( iPeriod==2 )
+  else if ( iPeriod==2 )
     {
-      lumiText += "PbPb ";
-      lumiText += lumi_PbPb502TeV;
-      lumiText += " (5.02 TeV)";
+      lumiText += lumi_8TeV;
+      lumiText += " (8 TeV)";
     }
-  else if( iPeriod==21 )
+  else if( iPeriod==3 ) 
     {
-      lumiText += "PbPb ";
-      lumiText += lumi_PbPb502TeV_1;
-      lumiText += " (5.02 TeV)";
+      lumiText = lumi_8TeV; 
+      lumiText += " (8 TeV)";
+      lumiText += " + ";
+      lumiText += lumi_7TeV;
+      lumiText += " (7 TeV)";
     }
-  else if( iPeriod==3 )
+  else if ( iPeriod==4 )
     {
-      lumiText += "pPb ";
-      lumiText += lumi_pPb502TeV;
-      lumiText += " (5.02 TeV)";
+      lumiText += lumi_13TeV;
+      lumiText += " (13 TeV)";
     }
-  else if( iPeriod==100 )
+  else if ( iPeriod==7 )
+    { 
+      if( outOfFrame ) lumiText += "#scale[0.85]{";
+      lumiText += lumi_13TeV; 
+      lumiText += " (13 TeV)";
+      lumiText += " + ";
+      lumiText += lumi_8TeV; 
+      lumiText += " (8 TeV)";
+      lumiText += " + ";
+      lumiText += lumi_7TeV;
+      lumiText += " (7 TeV)";
+      if( outOfFrame) lumiText += "}";
+    }
+  else if ( iPeriod==12 )
     {
-      lumiText += "PbPb ";
-      lumiText += lumi_PbPb502TeVCent;
-      lumiText += ", pp ";
-      lumiText += lumi_pp502TeV;
-      lumiText += " (5.02 TeV)";
+      lumiText += "8 TeV";
     }
-  else if ( iPeriod==101 )
+  else if ( iPeriod==99 )
     {
-      lumiText += "PbPb ";
-      lumiText += lumi_PbPb502TeV;
-      lumiText += ", pp ";
-      lumiText += lumi_pp502TeV;
-      lumiText += " (5.02 TeV)";
+      lumiText += lumi_5TeV;
+      // lumiText += " (#sqrt{s_{NN}} = 5.02 TeV)";
+      lumiText2 += " #sqrt{s_{NN}} = 5.02 TeV";
     }
-  else if ( iPeriod==0 )
+  else if (iPeriod==101)
     {
-      lumiText += lumi_sqrtS;
+      lumiText += lumi_PbPb2011;
+      lumiText2 += " #sqrt{s_{NN}} = 2.76 TeV";
+      // lumiText += " (2.76 TeV)";
     }
-   
-  std::cout << lumiText << endl;
+  else if (iPeriod==102)
+    {
+      lumiText += lumi_pp2013;
+      lumiText2 += " #sqrt{s} = 2.76 TeV";
+      // lumiText += " (2.76 TeV)";
+    }
+  else if (iPeriod==103)
+    {
+      lumiText += lumi_PbPb2011;
+      lumiText += ", ";
+      lumiText += lumi_pp2013;
+      lumiText2 += " #sqrt{s_{NN}} = 2.76 TeV";
+      // lumiText += " (2.76 TeV)";
+    }
+  else if (iPeriod==104)
+    {
+      lumiText += label;
+      lumiText2 += "pp 28.0 pb^{-1} (5.02 TeV)";
+    }
+  else if (iPeriod==105)
+    {
+      lumiText += label;
+      lumiText2 += "PbPb 351 #mub^{-1} (5.02 TeV)";
+    }
+
+  else if (iPeriod==106)
+    {
+      lumiText += label;
+      lumiText2 += "PbPb 351/464 #mub^{-1}, pp 28.0 pb^{-1} (5.02 TeV)";
+    }
+  else if (iPeriod==107)
+    {
+      lumiText += label;
+      lumiText2 += "PbPb 351 #mub^{-1}, pp 28.0 pb^{-1} (5.02 TeV)";
+    }
+  
+  cout << lumiText << endl;
 
   TLatex latex;
   latex.SetNDC();
@@ -88,7 +130,10 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   latex.SetTextFont(42);
   latex.SetTextAlign(31); 
   latex.SetTextSize(lumiTextSize*t);    
-  latex.DrawLatex(1-r,1-t+lumiTextOffset*t,lumiText);
+  latex.DrawLatex(1-r,1-t+lumiTextOffset*t,lumiText2);
+  // latex.DrawLatex(1-r,1-t+lumiTextOffset*t,lumiText);
+  latex.SetTextAlign(11); 
+  latex.DrawLatex(l,1-t+lumiTextOffset*t,lumiText);
 
   if( outOfFrame )
     {
@@ -114,6 +159,9 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
       posX_ =  1-r - relPosX*(1-l-r);
     }
   float posY_ = 1-t - relPosY*(1-t-b);
+  if (pad->GetTickx()) posX_ -= cmsTextOffset;
+  cout << pad->GetTickx() << endl;
+  if (pad->GetTicky()) posY_ -= cmsTextOffset;
   if( !outOfFrame )
     {
       if( drawLogo )
@@ -137,8 +185,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 	  latex.SetTextFont(cmsTextFont);
 	  latex.SetTextSize(cmsTextSize*t);
 	  latex.SetTextAlign(align_);
-	  posX_ -= 0.01; posY_-=0.02; // KYO
-    latex.DrawLatex(posX_, posY_, cmsText);
+	  latex.DrawLatex(posX_, posY_, cmsText);
 	  if( writeExtraText ) 
 	    {
 	      latex.SetTextFont(extraTextFont);

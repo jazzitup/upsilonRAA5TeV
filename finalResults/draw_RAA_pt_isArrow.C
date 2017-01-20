@@ -163,12 +163,12 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
   }
   
   dashedLine(0.,1.,xmax,1.,1,1);
-  TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
+  TLegend *leg= new TLegend(0.57, 0.62, 0.785, 0.74);
   SetLegendStyle(leg);
-  TLegend *leg_up= new TLegend(0.75, 0.44, 0.95, 0.50);
+  TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
   SetLegendStyle(leg_up);
 
-  TArrow *arrLeg = new TArrow(9.5,0.68,9.5,0.73,0.02,"<-|");
+  TArrow *arrLeg = new TArrow(16.,0.604,16.,0.654,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
 
@@ -187,7 +187,7 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
     ent->SetFillStyle(1001);
     ent=leg_up->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
     ent->SetLineColor(kWhite);
-    leg_up->SetTextSize(0.028);
+//    leg_up->SetTextSize(0.03);
     leg->Draw("same");
     leg_up->Draw("same");
     arrLeg->Draw();
@@ -195,11 +195,12 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
 
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_init = 0.895; double sz_step = 0.0535;
   globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
+  globtex->DrawLatex(0.464, sz_init+0.005, "|#eta^{#mu}| < 2.4");
+  globtex->DrawLatex(0.464, sz_init-sz_step*1+0.005, "Cent. 0-100%");
   
   //Global Unc.
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);

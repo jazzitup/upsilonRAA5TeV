@@ -21,7 +21,7 @@ float extraTextFont = 52;  // default is helvetica-italics
 float lumiTextSize     = 0.6*1.5; // KYO
 float lumiTextOffset   = 0.2;
 //float cmsTextSize      = 0.75;
-float cmsTextSize      = 0.75*1.5; // KYO
+float cmsTextSize      = 0.75*1.5*0.6; // KYO
 float cmsTextOffset    = 0.1;  // only used in outOfFrame version
 
 float relPosX    = 0.045;

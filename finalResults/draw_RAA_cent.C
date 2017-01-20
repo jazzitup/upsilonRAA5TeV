@@ -62,7 +62,7 @@ void draw_RAA_cent(bool isArrow =true)
       gRAA[is]->GetPoint(ipt, pxtmp, pytmp);
       extmp=gRAA[is]->GetErrorX(ipt);
       eytmp=gRAA[is]->GetErrorY(ipt);
-      relsys=hSys[is]->GetBinContent(ipt+1);
+      relsys=hSys[is]->GetBinContent(npoint[is]-ipt);
       cout << ipt <<"th bin RAA value = " << pytmp << endl;
       cout << ipt <<"th bin stat. = " << eytmp << endl;
       //cout << ipt <<"th bin rel. syst. = " << relsys << endl;
@@ -106,8 +106,8 @@ void draw_RAA_cent(bool isArrow =true)
   static const int n3s = 2;
   double lower68[n3s] = {0,0.010274277};
   double upper68[n3s] = {0.026982415,0.037286395};
-  double lower95[n3s] = {0., 0.};
-  double upper95[n3s] = {0.054552485,0.001150934};
+  double lower95[n3s] = {0., 0.001150934};
+  double upper95[n3s] = {0.054552485,0.051143323};
   static const int n3s_int = 1;
   double lower68_int[n3s_int] = {0.001165011};
   double upper68_int[n3s_int] = {0.048811869};
@@ -172,7 +172,7 @@ void draw_RAA_cent(bool isArrow =true)
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.034);
   
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
@@ -224,9 +224,10 @@ void draw_RAA_cent(bool isArrow =true)
   
   //// legend
   //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  TLegend *leg= new TLegend(0.65, 0.50, 0.85, 0.70);
+  TLegend *leg= new TLegend(0.65, 0.51, 0.85, 0.76);
   SetLegendStyle(leg);
-  TArrow *arrLeg = new TArrow(255.,0.6,255.,0.65,0.025,"<-|");
+  leg->SetTextSize(0.033);
+  TArrow *arrLeg = new TArrow(255.,0.62,255.,0.67,0.025,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
   
@@ -249,10 +250,29 @@ void draw_RAA_cent(bool isArrow =true)
   leg->Draw("same");
   
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_init = 0.892; double sz_step = 0.0558;
   globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step*2, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
+  globtex->DrawLatex(0.46+0.04, sz_init-sz_step+0.002, "|y|^{#mu#mu} < 2.4");
+
+  TLatex* centtex = new TLatex();
+  centtex->SetNDC();
+  centtex->SetTextAlign(12); //left-center
+  centtex->SetTextFont(42);
+  centtex->SetTextSize(0.029);
+
+  centtex->DrawLatex(0.908,0.37,"0-5%");
+  centtex->DrawLatex(0.802,0.37,"5-10%");
+  centtex->DrawLatex(0.666,0.37,"10-20%");
+  centtex->DrawLatex(0.518,0.421,"20-30%");
+  centtex->DrawLatex(0.403,0.465,"30-40%");
+  centtex->DrawLatex(0.318,0.495,"40-50%");
+  centtex->DrawLatex(0.258,0.555,"50-60%");
+  centtex->DrawLatex(0.242,0.698,"60-70%");
+  centtex->DrawLatex(0.181,0.781,"70-100%");
+
+
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
 
   //Global Unc.
