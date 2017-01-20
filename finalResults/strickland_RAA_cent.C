@@ -62,7 +62,7 @@ void strickland_RAA_cent(bool isArrow =true)
       gRAA[is]->GetPoint(ipt, pxtmp, pytmp);
       extmp=gRAA[is]->GetErrorX(ipt);
       eytmp=gRAA[is]->GetErrorY(ipt);
-      relsys=hSys[is]->GetBinContent(ipt+1);
+      relsys=hSys[is]->GetBinContent(npoint[is]-ipt);
       cout << ipt <<"th bin RAA value = " << pytmp << endl;
       cout << ipt <<"th bin stat. = " << eytmp << endl;
       //cout << ipt <<"th bin rel. syst. = " << relsys << endl;
@@ -103,17 +103,27 @@ void strickland_RAA_cent(bool isArrow =true)
   ////////////////////////////////////////////////////////////////
   //// 3S upper limit (arrow)
   int ulstate = 2; //3S
-  static const int n3s = 4;
-  double lower68[n3s] = {0.010828498,0,0.007411043,0.001294704};
-  double upper68[n3s] = {0.050909307,0.005736568,0.031998131,0.013533234};
-  double lower95[n3s] = {0., 0., 0., 0.};
-  double upper95[n3s] = {0.071863064,0.024288601,0.044854172,0.020996828};
+  static const int n3s = 2;
+  double lower68[n3s] = {0,0.010274277};
+  double upper68[n3s] = {0.026982415,0.037286395};
+  double lower95[n3s] = {0., 0.001150934};
+  double upper95[n3s] = {0.054552485,0.051143323};
   static const int n3s_int = 1;
-  double lower68_int[n3s_int] = {0.001200406};
-  double upper68_int[n3s_int] = {0.051328471};
+  double lower68_int[n3s_int] = {0.001165011};
+  double upper68_int[n3s_int] = {0.048811869};
   double lower95_int[n3s_int] = {0.};
-  double upper95_int[n3s_int] = {0.083117666};
- 
+  double upper95_int[n3s_int] = {0.079011206};
+  /*
+  double lower68[n3s] = {0., 0., 0.0183, 0.};
+  double upper68[n3s] = {0.154250585, 0.01689862101, 0.0943 , 0.03990571614};
+  double lower95[n3s] = {0., 0., 0., 0.};
+  double upper95[n3s] = {0.22041872, 0.07136456236, 0.1333, 0.06203828951};
+  static const int n3s_int = 1;
+  double lower68_int[n3s_int] = {0.};
+  double upper68_int[n3s_int] = {0.1536360214};
+  double lower95_int[n3s_int] = {0.};
+  double upper95_int[n3s_int] = {0.2477551813};
+ */
   if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
   if (n3s_int != npoint_int[ulstate]) {cout<<"ERROR!! # of bins for UL (int) is wrong!!"<<endl;return;} 
 
@@ -139,7 +149,7 @@ void strickland_RAA_cent(bool isArrow =true)
     pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
     gRAA_int[ulstate]->GetPoint(ipt, pxtmp, pytmp);
     box68per_int[ipt] = new TBox(pxtmp-boxw_int,lower68_int[ipt],pxtmp+boxw_int,upper68_int[ipt]);
-    arr95per_int[ipt] = new TArrow(pxtmp,lower95_int[ipt],pxtmp,upper95_int[ipt],0.027,"<-|"); //95%
+    arr95per_int[ipt] = new TArrow(pxtmp,lower95_int[ipt],pxtmp,upper95_int[ipt],0.02,"<-|"); //95%
     box68per_int[ipt]->SetLineColor(kGreen+2);
     box68per_int[ipt]->SetFillColorAlpha(kGreen-10,0.5);
     box68per_int[ipt]->SetLineWidth(1);
@@ -244,7 +254,6 @@ void strickland_RAA_cent(bool isArrow =true)
   globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
   globtex->DrawLatex(0.22+0.04, sz_init-sz_step*2, "|y|^{#mu#mu} < 2.4");
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
-
   TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
   
   TGraphErrors *gRAA_1S_strickland[3]; 
@@ -282,6 +291,7 @@ void strickland_RAA_cent(bool isArrow =true)
 
   leg_strick->Draw("same");
 
+
   //Global Unc.
   TH1D* hSys_glb[nState];
   double sys_global_pp[nState];
@@ -289,14 +299,13 @@ void strickland_RAA_cent(bool isArrow =true)
   for(int is=0; is<nState; is++){
     hSys_glb[is] = (TH1D*) fInSys[is]->Get("hintPP_merged");
     sys_global_pp[is] = hSys_glb[is]->GetBinContent(1);
-    sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + sys_global_pp[is]*sys_global_pp[is]);
   } 
   
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
   double sys_global_y = sys_global_val; 
   double sys_global_x = 15;
-  double sys_pp_1S = sys_global_pp[1];
-  double sys_pp_2S = sys_global_pp[2];
+  double sys_pp_1S = sys_global_pp[0];
+  double sys_pp_2S = sys_global_pp[1];
  
   TBox *globalUncBox = new TBox(xmax-sys_global_x*3,1-sys_global_y,xmax-sys_global_x*2,1+sys_global_y);
   globalUncBox -> SetFillColorAlpha(kGray+2,0);
@@ -304,11 +313,11 @@ void strickland_RAA_cent(bool isArrow =true)
   globalUncBox -> SetLineWidth(2);
   globalUncBox -> Draw("l same");
 
-  TBox *ppRefUncBox1S = new TBox(xmax-sys_global_x*2,1-sys_global_pp[1],xmax-sys_global_x,1+sys_global_pp[1]);
+  TBox *ppRefUncBox1S = new TBox(xmax-sys_global_x*2,1-sys_pp_1S,xmax-sys_global_x+1,1+sys_pp_1S);
   ppRefUncBox1S -> SetFillColor(kPink-6);
   ppRefUncBox1S -> Draw("same");
 
-  TBox *ppRefUncBox2S = new TBox(xmax-sys_global_x,1-sys_global_pp[2],xmax,1+sys_global_pp[2]);
+  TBox *ppRefUncBox2S = new TBox(xmax-sys_global_x,1-sys_pp_2S,xmax,1+sys_pp_2S);
   ppRefUncBox2S -> SetFillColor(kBlue-3);
   ppRefUncBox2S -> Draw("same");
 
@@ -359,10 +368,6 @@ void strickland_RAA_cent(bool isArrow =true)
 	c1->Update();
   c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
   c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.png",(int)isArrow));
-
-  
-
-
 
 /*
 	///////////////////////////////////////////////////////////////////

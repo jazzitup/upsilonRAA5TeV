@@ -43,6 +43,12 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
       lumiText += lumi_PbPb502TeV;
       lumiText += " (5.02 TeV)";
     }
+  else if( iPeriod==21 )
+    {
+      lumiText += "PbPb ";
+      lumiText += lumi_PbPb502TeV_1;
+      lumiText += " (5.02 TeV)";
+    }
   else if( iPeriod==3 )
     {
       lumiText += "pPb ";

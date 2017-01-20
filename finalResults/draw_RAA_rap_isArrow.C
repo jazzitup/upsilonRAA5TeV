@@ -126,6 +126,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
       for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
         box68per[ipt]->Draw("l"); 
       }
+      gRAA_sys[is]->Draw("5");
     }
     else { gRAA_sys[is]->Draw("5"); }
 	}
@@ -135,15 +136,19 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
       for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
         arr95per[ipt]->Draw();
       }
+      gRAA[is]->Draw("P");
     }
     else { gRAA[is]->Draw("P"); }
 	}
   dashedLine(0.,1.,xmax,1.,1,1);
   
   //// legend
-  TLegend *leg= new TLegend(0.65, 0.45, 0.85, 0.70);
+  TLegend *leg= new TLegend(0.57, 0.52, 0.685, 0.74);
   SetLegendStyle(leg);
-  TArrow *arrLeg = new TArrow(1.52,0.51,1.52,0.58,0.023,"<-|");
+  TLegend *leg_up= new TLegend(0.57, 0.4185, 0.515, 0.625);
+  SetLegendStyle(leg_up);
+
+  TArrow *arrLeg = new TArrow(1.25,0.634,1.25,0.684,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
   
@@ -158,21 +163,23 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
     leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
     TLegendEntry *ent=leg->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
     ent->SetLineColor(kGreen+2);
-    ent->SetFillColorAlpha(kGreen-10,0.5);
+    ent->SetFillColorAlpha(kGreen-6,0.5);
     ent->SetFillStyle(1001);
     ent=leg->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
     ent->SetLineColor(kWhite);
     leg->Draw("same");
+    leg_up->Draw("same");
     arrLeg->Draw();
   }
 
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_init = 0.895; double sz_step = 0.0535;
   globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
+  globtex->DrawLatex(0.464, sz_init+0.005, "|#eta^{#mu}| < 2.4");
+  globtex->DrawLatex(0.464, sz_init-sz_step*1+0.005, "Cent. 0-100%");
   
   //Global Unc.
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
