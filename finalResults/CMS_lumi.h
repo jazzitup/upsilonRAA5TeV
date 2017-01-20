@@ -33,8 +33,9 @@ float extraOverCmsTextSize  = 0.76;
 
 TString lumi_pp502TeV  = "28.0 pb^{-1}";
 TString lumi_pPb502TeV  = "34.6 nb^{-1}";
-TString lumi_PbPb502TeV  = "351 #mub^{-1}";
-TString lumi_PbPb502TeVCent  = "351/464 #mub^{-1}";
+TString lumi_PbPb502TeV  = "368 #mub^{-1}";
+TString lumi_PbPb502TeV_1  = "464 #mub^{-1}";
+TString lumi_PbPb502TeVCent  = "368/464 #mub^{-1}";
 TString lumi_sqrtS = "";
 
 bool drawLogo      = false;
