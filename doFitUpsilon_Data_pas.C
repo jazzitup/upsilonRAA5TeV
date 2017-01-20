@@ -12,13 +12,14 @@
 #include "TFile.h"
 #include "cutsAndBin.h"
 #include "PsetCollection.h"
-#include "CMS_lumi_.C"
-#include "tdrstyle_.C"
+#include "CMS_lumi.C"
+#include "tdrstyle.C"
+#include "SONGKYO.h"
 
 using namespace std;
 using namespace RooFit;
 void doFitUpsilon_Data_pas( 
-       int collId = kAADATA,  
+       int collId = kPPDATA,  
        float ptLow=0, float ptHigh=2, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
@@ -44,9 +45,9 @@ void doFitUpsilon_Data_pas(
   int   nMassBin  = 60;
   //int   nMassBin  = (massHigh-massLow)*10;
   TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  if      ( collId == kPPDATA) f1 = new TFile("../skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("../skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("../skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
   else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
   else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
@@ -75,6 +76,7 @@ void doFitUpsilon_Data_pas(
   c1->cd();
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.16, 0.98, 1.0);
   pad1->SetTicks(1,1);
+  c1->SetLeftMargin(1.3);
   pad1->Draw(); pad1->cd();
   
   RooPlot* myPlot = ws->var("mass")->frame(nMassBin); // bins
@@ -237,8 +239,9 @@ void doFitUpsilon_Data_pas(
 
   myPlot2->SetFillStyle(4000);
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
-  myPlot2->GetYaxis()->SetTitleOffset(1.45);
+  myPlot2->GetYaxis()->SetTitleOffset(1.25);
   myPlot2->GetYaxis()->CenterTitle();
+  myPlot2->GetYaxis()->SetTitleSize(0.045);
   myPlot2->GetXaxis()->SetLabelSize(0);
   myPlot2->GetXaxis()->SetRangeUser(8,14);
   myPlot2->GetXaxis()->SetTitleSize(0);
@@ -248,15 +251,16 @@ void doFitUpsilon_Data_pas(
   cout << " *** NLL : " << theNLL << endl;
   TString perc = "%";
 
-  float pos_text_x = 0.34;
+  float pos_text_x = 0.35;
   float pos_text_y = 0.78;
   float pos_y_diff = 0.056;
   float text_size = 15;
   int text_color = 1;
-  if(ptLow==0 && ptHigh == 2.5) drawText(Form("%.f < p_{T}^{#mu#mu} < %.1f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  if(ptLow==0) drawText(Form("p_{T}^{#mu#mu} < %.f GeV/c",ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
   else if(ptLow == 2.5 && ptHigh==5) drawText(Form("%.1f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
   else drawText(Form("%.f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
-  drawText(Form("%.1f < |#eta^{#mu#mu}| < %.1f",yLow,yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
+  if(yLow==0) drawText(Form("|y^{#mu#mu}| < %.1f",yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
+  else if(yLow!=0) drawText(Form("%.1f < |y^{#mu#mu}| < %.1f",yLow,yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
   if(collId != kPPDATA && collId != kPPMCUps1S && collId != kPPMCUps2S) 
   {
       drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
@@ -265,9 +269,8 @@ void doFitUpsilon_Data_pas(
   else drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
 //  drawText(Form("Signal Function : %s CB", SignalCB.Data() ), 0.55,0.54,1,14);
 
-  TLegend* fitleg = new TLegend(0.68,0.48,0.88,0.7); fitleg->SetTextSize(13);
+  TLegend* fitleg = new TLegend(0.65,0.42,0.88,0.7); fitleg->SetTextSize(20);
   fitleg->SetTextFont(43);
-  fitleg->SetHeader("PbPb");
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"total fit","l");
@@ -282,6 +285,8 @@ void doFitUpsilon_Data_pas(
   pad2->SetBottomMargin(0.5); 
   pad2->SetTicks(1,1);
   pad2->cd();
+  pad1->SetLeftMargin(5.2);
+  pad2->SetLeftMargin(5.2);
   
   RooHist* hpull = myPlot2->pullHist("dataHist","modelHist");
   hpull->SetMarkerSize(0.8);
@@ -290,23 +295,23 @@ void doFitUpsilon_Data_pas(
   pullFrame->SetTitleSize(0);
   pullFrame->GetYaxis()->SetTitleOffset(0.26) ;
   pullFrame->GetYaxis()->SetTitle("Pull") ;
-  pullFrame->GetYaxis()->SetTitleSize(0.13) ;
-  pullFrame->GetYaxis()->SetLabelSize(0.07) ;
+  pullFrame->GetYaxis()->SetTitleSize(0.14) ;
+  pullFrame->GetYaxis()->SetLabelSize(0.13) ;
   pullFrame->GetYaxis()->SetRangeUser(-4.5,4.5) ;
 //  pullFrame->GetYaxis()->SetLimits(-6,6) ;
   pullFrame->GetYaxis()->CenterTitle();
 
   pullFrame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
-  pullFrame->GetXaxis()->SetTitleOffset(1.12) ;
-  pullFrame->GetXaxis()->SetLabelOffset(0.03) ;
-  pullFrame->GetXaxis()->SetLabelSize(0.160) ;
-  pullFrame->GetXaxis()->SetTitleSize(0.182) ;
+  pullFrame->GetXaxis()->SetTitleOffset(1.14) ;
+  pullFrame->GetXaxis()->SetLabelOffset(0.04) ;
+  pullFrame->GetXaxis()->SetLabelSize(0.180) ;
+  pullFrame->GetXaxis()->SetTitleSize(0.196) ;
   pullFrame->GetXaxis()->CenterTitle();
  // pullFrame->GetXaxis()->SetTitleFont(43);
  // pullFrame->GetYaxis()->SetTitleFont(43);
   
   pullFrame->GetYaxis()->SetTickSize(0.02);
-  pullFrame->GetYaxis()->SetNdivisions(15,4,0);
+  pullFrame->GetYaxis()->SetNdivisions(10,4,0);
   pullFrame->GetXaxis()->SetTickSize(0.03);
   pullFrame->Draw() ;
   
@@ -357,6 +362,7 @@ void doFitUpsilon_Data_pas(
   
   //hh->Draw();
   pad1->Update();
+  pad2->Update();
   //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
   
@@ -392,20 +398,17 @@ void doFitUpsilon_Data_pas(
 
   TString label;
   label="";
-  if(collId == kPPDATA) CMS_lumi_(pad1, 104 ,33, label); 
-  else if(collId == kAADATA && cLow < 60) CMS_lumi_(pad1, 105 ,33, label); 
-  else if(collId == kAADATA && cLow>=60) CMS_lumi_(pad1, 1051 ,33); 
+  if(collId == kPPDATA) CMS_lumi(pad1, 1 ,33); 
+  else if(collId == kAADATA && cLow < 60) CMS_lumi(pad1, 2 ,33); 
+  else if(collId == kAADATA && cLow>=60) CMS_lumi(pad1, 21 ,33); 
   pad1->Update();
+  pad2->Update();
 
   c1->cd();
-  pad1->Update();
-  pad2->Update();
   pad1->Draw();
   pad2->Draw();
-
-  pad1->Update();
-  pad2->Update();
-  c1->Update();
+  pad1->SetLeftMargin(1.2);
+  pad2->SetLeftMargin(1.2);
 
   TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
