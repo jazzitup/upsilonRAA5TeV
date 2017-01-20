@@ -88,11 +88,13 @@ void doFitUpsilon_Data_pas_free(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
 
-  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.02, 0.3);
   RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
   RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
 
-  RooRealVar sigma1s_2("sigma1s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
+
+  RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
@@ -114,6 +116,7 @@ void doFitUpsilon_Data_pas_free(
   RooFormulaVar f2s("f2s","1.0*@0",RooArgList(*f1s) );
   RooFormulaVar f3s("f3s","1.0*@0",RooArgList(*f1s) );
 
+
   // Fix the parameters 
   if ( initPset.n1s_1 == -1 )
     {
@@ -131,6 +134,7 @@ void doFitUpsilon_Data_pas_free(
     alpha1s_1.setVal(initPset.alpha1s_1);
     sigma1s_1.setVal(initPset.sigma1s_1);
     f1s->setVal(initPset.f1s); 
+    x1s->setVal(initPset.x1s);
   } 
   
   RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
@@ -248,7 +252,11 @@ void doFitUpsilon_Data_pas_free(
 
   TLegend* fitleg = new TLegend(0.68,0.48,0.88,0.7); fitleg->SetTextSize(13);
   fitleg->SetTextFont(43);
-  fitleg->SetHeader("PbPb");
+  if ( collId == kPPDATA ) 
+    fitleg->SetHeader("pp");
+  else if ( collId == kAADATA ) 
+    fitleg->SetHeader("PbPb");
+
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"total fit","l");
@@ -390,7 +398,7 @@ void doFitUpsilon_Data_pas_free(
 
   TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
-  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
+  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s_freeSigPDF.pdf",kineLabel.Data()));
   c1->Write();
   ws->Write();
 //  outf->Close();
