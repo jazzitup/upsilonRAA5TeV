@@ -19,12 +19,11 @@ using namespace std;
 using namespace RooFit;
 void doFitUpsilon_Data_pas_free( 
        int collId = kPPDATA,  
-       float ptLow=0, float ptHigh=30, 
+       float ptLow=0, float ptHigh=2, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
-       float muPtCut=4.0,
-       bool fixParameters=0
-			) 
+       float muPtCut=4.0)
+       //       bool fixParameters=1
 {
   float dphiEp2Low = 0 ;
   float dphiEp2High = 100 ;
@@ -70,9 +69,6 @@ void doFitUpsilon_Data_pas_free(
   ws->import(*reducedDS);
   ws->var("mass")->setRange(massLow, massHigh);
   ws->var("mass")->Print();
-  
-  PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
-  initPset.SetMCSgl();
 
   TCanvas* c1 =  new TCanvas("canvas2","My plots",4,45,550,520);
   c1->cd();
@@ -89,47 +85,66 @@ void doFitUpsilon_Data_pas_free(
   RooFormulaVar mean2s("mean2s","m_{#Upsilon(1S)}*mRatio21", RooArgSet(mean1s,mRatio21) );
   RooFormulaVar mean3s("mean3s","m_{#Upsilon(1S)}*mRatio31", RooArgSet(mean1s,mRatio31) );
           
+  PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
+  initPset.SetMCSgl();
+
+  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
+  RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
+
+  RooRealVar sigma1s_2("sigma1s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
+  RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
   RooRealVar alpha1s_1("alpha1s_1","tail shift", 2. , 1.2, 4.);
-  RooRealVar alpha2s_1("alpha2s_1","tail shift", 2. , 1.2, 4.);  
-  RooRealVar alpha3s_1("alpha3s_1","tail shift", 2. , 1.2, 4.);
-  RooRealVar alpha1s_2("alpha1s_2","tail shift", 2. , 1.2, 4.);
-  RooRealVar alpha2s_2("alpha2s_2","tail shift", 2. , 1.2, 4.);  
-  RooRealVar alpha3s_2("alpha3s_2","tail shift", 2. , 1.2, 4.);
-  
-  RooRealVar n1s_1("n1s_1","power order", 2. , 1.1, 3.65);
-  RooRealVar n2s_1("n2s_1","power order", 3. , 1.2, 4.);
-  RooRealVar n3s_1("n3s_1","power order", 2. , 1.2, 3.8);
-  RooRealVar n1s_2("n1s_2","power order", 2. , 1.2, 3.8);
-  RooRealVar n2s_2("n2s_2","power order", 2. , 1.2, 4.);
-  RooRealVar n3s_2("n3s_2","power order", 2. , 1.2, 4.);
+  RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
+
+  RooRealVar n1s_1("n1s_1","power order", 2. , 1.1, 3.8);
+  RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n2s_2("n2s_2","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n3s_2("n3s_2","1.0*@0",RooArgList(n1s_1) );
+
   RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f2s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f3s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar X_("X","X",0.5,0,2.05);
+  RooFormulaVar f2s("f2s","1.0*@0",RooArgList(*f1s) );
+  RooFormulaVar f3s("f3s","1.0*@0",RooArgList(*f1s) );
 
-  RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooFormulaVar sigma1s_2("sigma1s_2","sigma1s_1*X",RooArgSet(sigma1s_1,X_) );
-cout << "asdasdas" << endl;
-  RooFormulaVar sigma2s_1("sigma2s_1","sigma1s_1*mRatio21",RooArgSet(sigma1s_1,mRatio21) );
-cout << "asdasdas" << endl;
-  RooFormulaVar sigma2s_2("sigma2s_2","sigma1s_1*mRatio21*X",RooArgSet(sigma1s_1,mRatio21,X_) );
-cout << "asdasdas" << endl;
-  RooFormulaVar sigma3s_1("sigma3s_1","sigma1s_1*mRatio31",RooArgSet(sigma1s_1,mRatio31) );
-cout << "asdasdas" << endl;
-  RooFormulaVar sigma3s_2("sigma3s_1","sigma1s_1*mRatio31*X",RooArgSet(sigma1s_1,mRatio31,X_) );
-cout << "asdasdas" << endl;
-
+  // Fix the parameters 
+  if ( initPset.n1s_1 == -1 )
+    {
+      cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
+      cout << "No Param. set for " << kineLabel << ","<<endl;
+      cout << "Fitting macro is stopped!" << endl << endl << endl;
+      return;
+    }
+  else { 
+    cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    cout << endl << "Setting the initial  parameters..." << endl << endl;
+    cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
+    n1s_1.setVal(initPset.n1s_1);  
+    alpha1s_1.setVal(initPset.alpha1s_1);
+    sigma1s_1.setVal(initPset.sigma1s_1);
+    f1s->setVal(initPset.f1s); 
+  } 
+  
   RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
-  RooCBShape* cb2s_1 = new RooCBShape("cball2s_1", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_1, alpha1s_1, n1s_1);
-  RooCBShape* cb3s_1 = new RooCBShape("cball3s_1", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_1, alpha1s_1, n1s_1);
-  RooCBShape* cb1s_2 = new RooCBShape("cball1s_2", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_2, alpha1s_1, n1s_1);
-  RooCBShape* cb2s_2 = new RooCBShape("cball2s_2", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_2, alpha1s_1, n1s_1);
-  RooCBShape* cb3s_2 = new RooCBShape("cball3s_2", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_2, alpha1s_1, n1s_1);
+  cout << " n1s_1.getVal() = " << n1s_1.getVal() << endl;
+  RooCBShape* cb2s_1 = new RooCBShape("cball2s_1", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_1, alpha2s_1, n2s_1);
+  RooCBShape* cb3s_1 = new RooCBShape("cball3s_1", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_1, alpha3s_1, n3s_1);
+  RooCBShape* cb1s_2 = new RooCBShape("cball1s_2", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_2, alpha1s_2, n1s_2);
+  RooCBShape* cb2s_2 = new RooCBShape("cball2s_2", "cystal Ball", *(ws->var("mass")), mean2s, sigma2s_2, alpha2s_2, n2s_2);
+  RooCBShape* cb3s_2 = new RooCBShape("cball3s_2", "cystal Ball", *(ws->var("mass")), mean3s, sigma3s_2, alpha3s_2, n3s_2);
 
   RooAddPdf*  cb1s = new RooAddPdf("cb1s","Signal 1S",RooArgList(*cb1s_1,*cb1s_2), RooArgList(*f1s) );
   RooAddPdf*  cb2s = new RooAddPdf("cb2s","Signal 2S",RooArgList(*cb2s_1,*cb2s_2), RooArgList(*f1s) );
   RooAddPdf*  cb3s = new RooAddPdf("cb3s","Signal 3S",RooArgList(*cb3s_1,*cb3s_2), RooArgList(*f1s) );
+
 
   
 
@@ -233,7 +248,7 @@ cout << "asdasdas" << endl;
 
   TLegend* fitleg = new TLegend(0.68,0.48,0.88,0.7); fitleg->SetTextSize(13);
   fitleg->SetTextFont(43);
-  fitleg->SetHeader("pp");
+  fitleg->SetHeader("PbPb");
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"total fit","l");
@@ -254,9 +269,9 @@ cout << "asdasdas" << endl;
   RooPlot* pullFrame = ws->var("mass")->frame(Title("Pull Distribution")) ;
   pullFrame->addPlotable(hpull,"P") ;
   pullFrame->SetTitleSize(0);
-  pullFrame->GetYaxis()->SetTitleOffset(0.25) ;
+  pullFrame->GetYaxis()->SetTitleOffset(0.26) ;
   pullFrame->GetYaxis()->SetTitle("Pull") ;
-  pullFrame->GetYaxis()->SetTitleSize(0.11) ;
+  pullFrame->GetYaxis()->SetTitleSize(0.13) ;
   pullFrame->GetYaxis()->SetLabelSize(0.07) ;
   pullFrame->GetYaxis()->SetRangeUser(-4.5,4.5) ;
 //  pullFrame->GetYaxis()->SetLimits(-6,6) ;
@@ -359,7 +374,7 @@ cout << "asdasdas" << endl;
   TString label;
   label="";
   if(collId == kPPDATA) CMS_lumi_(pad1, 104 ,33, label); 
-  else if(collId == kAADATA && cLow < 60) CMS_lumi_(pad1, 105 ,33); 
+  else if(collId == kAADATA && cLow < 60) CMS_lumi_(pad1, 105 ,33, label); 
   else if(collId == kAADATA && cLow>=60) CMS_lumi_(pad1, 1051 ,33); 
   pad1->Update();
 
@@ -373,9 +388,9 @@ cout << "asdasdas" << endl;
   pad2->Update();
   c1->Update();
 
-  TFile* outf = new TFile(Form("Free_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
+  TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
-  c1->SaveAs(Form("Free_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
+  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
   c1->Write();
   ws->Write();
 //  outf->Close();
