@@ -279,9 +279,13 @@ void draw_RAA_cent(bool isArrow =true)
   TH1D* hSys_glb[nState];
   double sys_global_pp[nState];
   double sys_global_val;
+  double accept_sys;
   for(int is=0; is<nState; is++){
     hSys_glb[is] = (TH1D*) fInSys[is]->Get("hintPP_merged");
-    sys_global_pp[is] = hSys_glb[is]->GetBinContent(1);
+    if(is==0) accept_sys = 0.029;
+    else if(is==1) accept_sys = 0.036;
+    else if(is==2) accept_sys = 0.021;
+    sys_global_pp[is] = TMath::Sqrt(hSys_glb[is]->GetBinContent(1)*hSys_glb[is]->GetBinContent(1)+accept_sys*accept_sys);
   } 
   
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);

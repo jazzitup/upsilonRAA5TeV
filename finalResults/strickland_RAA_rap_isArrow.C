@@ -86,8 +86,8 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
     gRAA[ulstate]->GetPoint(ipt, pxtmp, pytmp);
     box68per[ipt] = new TBox(pxtmp-boxw,lower68[ipt],pxtmp+boxw,upper68[ipt]);
     arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%
-    box68per[ipt]->SetLineColor(kGreen+2);
-    box68per[ipt]->SetFillColorAlpha(kGreen-10,0.5);
+    box68per[ipt]->SetLineColor(kGreen+3);
+    box68per[ipt]->SetFillColorAlpha(kGreen-6,0.5);
     box68per[ipt]->SetLineWidth(1);
     arr95per[ipt]->SetLineColor(kGreen+2);
     arr95per[ipt]->SetLineWidth(2);
@@ -116,18 +116,41 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   gRAA_sys[0]->SetMaximum(1.3);
   /// for rap
   gRAA_sys[0]->GetXaxis()->SetNdivisions(505);
+  if (isArrow == true){
+        gRAA_sys[2]->SetPoint(0,-10,-10);
+        gRAA_sys[2]->SetPointError(0,0,0);
+        gRAA_sys[2]->SetPoint(1,-11,-11);
+        gRAA_sys[2]->SetPointError(1,0,0);
+        gRAA_sys[2]->SetPoint(2,-12,-12);
+        gRAA_sys[2]->SetPointError(2,0,0);
+        gRAA[2]->SetPoint(0,-10,-10);
+        gRAA[2]->SetPointError(0,0,0);
+        gRAA[2]->SetPoint(1,-11,-11);
+        gRAA[2]->SetPointError(1,0,0);
+        gRAA[2]->SetPoint(2,-12,-12);
+        gRAA[2]->SetPointError(2,0,0);
+        gRAA_sys[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
+        gRAA_sys[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
+        gRAA_sys[2]->SetMinimum(0.0);
+        gRAA_sys[2]->SetMaximum(1.3);
+        gRAA[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
+        gRAA[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
+        gRAA[2]->SetMinimum(0.0);
+        gRAA[2]->SetMaximum(1.3);
+      }
  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
   //// syst
   for (int is=0; is<nState; is++){
-    if ( is==0) { gRAA_sys[is]->Draw("A5"); }
-    else if (is==ulstate && isArrow==true) { 
+    if ( is==0) {gRAA_sys[is]->Draw("A5");}
+    else if (is==ulstate && isArrow==true) {
       for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
         box68per[ipt]->Draw("l"); 
       }
+      gRAA_sys[is]->Draw("5");
     }
-    else { gRAA_sys[is]->Draw("5"); }
+    else { gRAA_sys[is]->Draw("5");}
 	}
   //// point
   for (int is=0; is<nState; is++){
@@ -135,45 +158,52 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
       for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
         arr95per[ipt]->Draw();
       }
+      gRAA[is]->Draw("P");
     }
-    else { gRAA[is]->Draw("P"); }
+    else { gRAA[is]->Draw("P");}
 	}
   dashedLine(0.,1.,xmax,1.,1,1);
   
   //// legend
-  TLegend *leg= new TLegend(0.65, 0.45, 0.85, 0.70);
+  TLegend *leg= new TLegend(0.57, 0.62, 0.785, 0.74);
   SetLegendStyle(leg);
-  TArrow *arrLeg = new TArrow(1.52,0.51,1.52,0.58,0.023,"<-|");
+  TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
+  SetLegendStyle(leg_up);
+
+  TArrow *arrLeg = new TArrow(1.285,0.604,1.285,0.654,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
-  
+
   if (isArrow==false) { 
     for (int is=0; is<nState; is++){
       leg -> AddEntry(gRAA[is],Form(" #Upsilon(%dS)",is+1),"lp");
-      leg->Draw();
     }
   }
   else {
     leg -> AddEntry(gRAA[0]," #Upsilon(1S)","lp");
     leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
-    TLegendEntry *ent=leg->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
-    ent->SetLineColor(kGreen+2);
-    ent->SetFillColorAlpha(kGreen-10,0.5);
+//    leg -> AddEntry(gRAA[2]," #Upsilon(3S)","lp");
+    TLegendEntry *ent=leg_up->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
+    ent->SetLineColor(kGreen+3);
+    ent->SetFillColorAlpha(kGreen-6,0.5);
     ent->SetFillStyle(1001);
-    ent=leg->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
+    ent=leg_up->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
     ent->SetLineColor(kWhite);
+//    leg_up->SetTextSize(0.03);
     leg->Draw("same");
+    leg_up->Draw("same");
     arrLeg->Draw();
   }
 
-
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_init = 0.895; double sz_step = 0.0535;
   globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
-  
+  globtex->DrawLatex(0.464, sz_init+0.005, "|#eta^{#mu}| < 2.4");
+  globtex->DrawLatex(0.464, sz_init-sz_step*1+0.005, "Cent. 0-100%");
+ 
+
   TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
   
   TGraphErrors *gRAA_1S_strickland[3]; 
@@ -210,6 +240,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   leg_strick->AddEntry(gRAA_1S_strickland[2],"4#pi#eta/s=3","l");
 
   leg_strick->Draw("same");
+
 
   //Global Unc.
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
