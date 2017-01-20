@@ -163,12 +163,12 @@ void draw_RAA_pt_isArrow(bool isArrow=true)
   }
   
   dashedLine(0.,1.,xmax,1.,1,1);
-  TLegend *leg= new TLegend(0.57, 0.625, 0.78, 0.74);
+  TLegend *leg= new TLegend(0.57, 0.62, 0.785, 0.74);
   SetLegendStyle(leg);
-  TLegend *leg_up= new TLegend(0.57, 0.519, 0.78, 0.625);
+  TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
   SetLegendStyle(leg_up);
 
-  TArrow *arrLeg = new TArrow(16.,0.634,16.,0.684,0.02,"<-|");
+  TArrow *arrLeg = new TArrow(16.,0.604,16.,0.654,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
 

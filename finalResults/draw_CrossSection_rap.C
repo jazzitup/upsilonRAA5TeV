@@ -9,7 +9,8 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   //int iPeriod; // 1: pp, 2: pPb, 3: PbPb, 100: RAA vs cent, 101: RAA vs pt or rap
   int iPos = 33;
   
-  const int nState = 3; // Y(1S), Y(2S), and Y(3S)
+  int nState = 2; // Y(1S), Y(2S), and Y(3S)
+  if(ppAA==1) nState=3;
   double xmax = 2.4;
 //  double relsys = 0.1;
 
@@ -103,8 +104,8 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   //// axis et. al
   gCrossSection_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
   gCrossSection_sys[0]->GetXaxis()->CenterTitle();
-  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("#frac{d#sigma}{dy} (nb)");
-  else gCrossSection_sys[0]->GetYaxis()->SetTitle("#frac{1}{T_{AA}} #frac{dN}{dy} (nb)");
+  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{d#sigma}{dy} (nb)");
+  else gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{1}{T_{AA}} #frac{dN}{dy} (nb)");
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
   gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
   gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);
@@ -131,9 +132,10 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   if (ppAA==1) sz_shift=0.6;
   else sz_shift=0.0;
   globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-//  globtex->DrawLatex(0.22, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "Centrality 0-100%");
+//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.48, sz_init-sz_shift+0.005, "|#eta^{#mu}| < 2.4");
+  if(ppAA==2) globtex->DrawLatex(0.48, sz_init-sz_shift-sz_step+0.005, "Cent. 0-100%");
   
   CMS_lumi( c1, ppAA, iPos );
 
