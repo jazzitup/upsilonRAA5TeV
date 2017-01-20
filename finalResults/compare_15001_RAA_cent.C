@@ -103,7 +103,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
     gRAA[1]->GetPoint(ipt, pxtmp, pytmp);
     extmp=gRAA[1]->GetErrorX(ipt);
     eytmp=gRAA[1]->GetErrorY(ipt);
-    relsys=hSys->GetBinContent(ipt+1);
+    relsys=hSys->GetBinContent(npoint-ipt);
     // 1) remove ex from gRAA
     gRAA[1]->SetPointError(ipt, 0, eytmp);
     // 2) set ey for gRAA_sys

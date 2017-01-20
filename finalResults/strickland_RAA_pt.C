@@ -1,8 +1,9 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
+#include "../cutsAndBin.h"
 
-void strickland_RAA_pt()
+void draw_RAA_pt_isArrow(bool isArrow=true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -13,9 +14,9 @@ void strickland_RAA_pt()
   double xmax = 30.0;
 //  double relsys = 0.1;
 
-  double exsys_1s[5] =  {1.25, 1.25, 1.5, 3.5, 7.5};
-  double exsys_2s[3] =  {2.5, 5., 7.5};
-  double exsys_3s[3] =  {2.5, 5., 7.5};
+  double exsys_1s[6] =  {1., 1., 1., 1.5, 1.5, 9.};
+  double exsys_2s[3] =  {2., 2.5, 10.5};
+  double exsys_3s[2] =  {3., 12.};
 
   ////////////////////////////////////////////////////////////////
   //// read input file : value & stat.
@@ -48,7 +49,7 @@ void strickland_RAA_pt()
     if (npoint[is] != gRAA[is]->GetN()) {cout << "Error!! data file and syst. file have different binnig!" << endl; return; }
     for (int ipt=0; ipt< npoint[is] ; ipt++) { //bin by bin
       pxtmp=0; pytmp=0; extmp=0; eytmp=0; relsys=0;
-      gRAA[is]->GetPoint(ipt, pxtmp, pytmp);
+      gRAA[is]->GetPoint(ipt, pxtmp, pytmp); 
       extmp=gRAA[is]->GetErrorX(ipt);
       eytmp=gRAA[is]->GetErrorY(ipt);
       relsys=hSys[is]->GetBinContent(ipt+1);
@@ -67,6 +68,30 @@ void strickland_RAA_pt()
   }
  
   ////////////////////////////////////////////////////////////////
+  int ulstate = 2; //3S
+  static const int n3s = 2;
+  double boxw = 0.6; // for syst. box (vs cent)
+  double lower68[n3s] = {0.,0.};
+  double upper68[n3s] = {0.077425873,0.037306442};
+  double lower95[n3s] = {0., 0};
+  double upper95[n3s] = {0.125605752,0.076217074};
+  if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
+
+  //// --- vs centrality
+  TBox *box68per[n3s];
+  TArrow *arr95per[n3s];
+  for (int ipt=0; ipt< n3s ; ipt++) { //bin by bin
+    pxtmp=0; pytmp=0; extmp=0; eytmp=0; 
+    //lower68=0; upper68=0; lower95=0; upper95=0; 
+    gRAA[ulstate]->GetPoint(ipt, pxtmp, pytmp);
+    box68per[ipt] = new TBox(pxtmp-boxw,lower68[ipt],pxtmp+boxw,upper68[ipt]);
+    arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%
+    box68per[ipt]->SetLineColor(kGreen+3);
+    box68per[ipt]->SetFillColorAlpha(kGreen-6,0.5);
+    box68per[ipt]->SetLineWidth(1);
+    arr95per[ipt]->SetLineColor(kGreen+2);
+    arr95per[ipt]->SetLineWidth(2);
+  }
 
   //// graph style 
   for (int is=0; is<nState; is++){
@@ -82,12 +107,6 @@ void strickland_RAA_pt()
   globtex->SetTextSize(0.038);
   
   //// legend
-  TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  SetLegendStyle(leg);
-  for (int is=0; is<nState; is++){
-    leg -> AddEntry(gRAA[is],Form("#Upsilon(%dS)",is+1),"lp");
-  }
-
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gRAA_sys[0]->GetXaxis()->CenterTitle();
@@ -96,16 +115,84 @@ void strickland_RAA_pt()
   gRAA_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gRAA_sys[0]->SetMinimum(0.0);
   gRAA_sys[0]->SetMaximum(1.3);
- 
+
+
+  if (isArrow == true){
+        gRAA_sys[2]->SetPoint(0,-10,-10);
+        gRAA_sys[2]->SetPointError(0,0,0);
+        gRAA_sys[2]->SetPoint(1,-11,-11);
+        gRAA_sys[2]->SetPointError(1,0,0);
+        gRAA_sys[2]->SetPoint(2,-12,-12);
+        gRAA_sys[2]->SetPointError(2,0,0);
+        gRAA[2]->SetPoint(0,-10,-10);
+        gRAA[2]->SetPointError(0,0,0);
+        gRAA[2]->SetPoint(1,-11,-11);
+        gRAA[2]->SetPointError(1,0,0);
+        gRAA[2]->SetPoint(2,-12,-12);
+        gRAA[2]->SetPointError(2,0,0);
+        gRAA_sys[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
+        gRAA_sys[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
+        gRAA_sys[2]->SetMinimum(0.0);
+        gRAA_sys[2]->SetMaximum(1.3);
+        gRAA[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
+        gRAA[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
+        gRAA[2]->SetMinimum(0.0);
+        gRAA[2]->SetMaximum(1.3);
+      }
+  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
   for (int is=0; is<nState; is++){
-    if ( is==0) gRAA_sys[is]->Draw("A5");
-    else gRAA_sys[is]->Draw("5");
-    gRAA[is]->Draw("P");
-	}
+    if ( is==0) {gRAA_sys[is]->Draw("A5");}
+    else if(is==ulstate && isArrow==true) {
+      for(int ipt=0;ipt<n3s;ipt++){
+        box68per[ipt]->Draw("l");
+      }
+      gRAA_sys[is]->Draw("5");
+    }
+    else {gRAA_sys[is]->Draw("5");}
+  }
+  for(int is=0;is<nState;is++){
+    if(is==ulstate && isArrow==true) {
+      for(int ipt=0;ipt<n3s;ipt++) {
+        arr95per[ipt]->Draw();
+      }
+      gRAA[is]->Draw("P");
+    }
+    else {gRAA[is]->Draw("P");}
+  }
+  
   dashedLine(0.,1.,xmax,1.,1,1);
-  leg->Draw();
+  TLegend *leg= new TLegend(0.57, 0.55, 0.78, 0.75);
+  SetLegendStyle(leg);
+  TLegend *leg_up= new TLegend(0.57, 0.45, 0.78, 0.55);
+  SetLegendStyle(leg_up);
+
+  TArrow *arrLeg = new TArrow(16.,0.51,16.,0.56,0.02,"<-|");
+  arrLeg->SetLineColor(kGreen+2);
+  arrLeg->SetLineWidth(2);
+
+  if (isArrow==false) { 
+    for (int is=0; is<nState; is++){
+      leg -> AddEntry(gRAA[is],Form(" #Upsilon(%dS)",is+1),"lp");
+    }
+  }
+  else {
+    leg -> AddEntry(gRAA[0]," #Upsilon(1S)","lp");
+    leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
+//    leg -> AddEntry(gRAA[2]," #Upsilon(3S)","lp");
+    TLegendEntry *ent=leg_up->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
+    ent->SetLineColor(kGreen+3);
+    ent->SetFillColorAlpha(kGreen-6,0.5);
+    ent->SetFillStyle(1001);
+    ent=leg_up->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
+    ent->SetLineColor(kWhite);
+//    leg_up->SetTextSize(0.03);
+    leg->Draw("same");
+    leg_up->Draw("same");
+    arrLeg->Draw();
+  }
+
 
   //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
@@ -113,60 +200,23 @@ void strickland_RAA_pt()
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
   globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
-
-  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
   
-  TGraphErrors *gRAA_1S_strickland[3]; 
-  TGraphErrors *gRAA_2S_strickland[3]; 
-  
-  for(int i=0;i<3;i++)
-  {
-    gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_pt_1S_%d",i));
-    gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_pt_2S_%d",i));
-    gRAA_1S_strickland[i] -> SetLineWidth(2.5);
-    gRAA_2S_strickland[i] -> SetLineWidth(3.0);
-  }
-  gRAA_1S_strickland[0]->SetLineColor(kOrange+9);
-  gRAA_1S_strickland[1]->SetLineColor(kBlack);
-  gRAA_1S_strickland[2]->SetLineColor(kBlue+1);
-  
-  gRAA_2S_strickland[0]->SetLineColor(kOrange+9);
-  gRAA_2S_strickland[1]->SetLineColor(kBlack);
-  gRAA_2S_strickland[2]->SetLineColor(kBlue+1);
-
-  gRAA_2S_strickland[0]->SetLineStyle(2);
-  gRAA_2S_strickland[1]->SetLineStyle(2);
-  gRAA_2S_strickland[2]->SetLineStyle(2);
-
-  for(int i=0;i<3;i++){
-    gRAA_1S_strickland[i]->Draw("same");
-    gRAA_2S_strickland[i]->Draw("same");
-  }
-   
-  TLegend *leg_strick= new TLegend(0.4, 0.50, 0.6, 0.70);
-  SetLegendStyle(leg_strick);
-  leg_strick->AddEntry(gRAA_1S_strickland[0],"4#pi#eta/s=1","l");
-  leg_strick->AddEntry(gRAA_1S_strickland[1],"4#pi#eta/s=2","l");
-  leg_strick->AddEntry(gRAA_1S_strickland[2],"4#pi#eta/s=3","l");
-
-  leg_strick->Draw("same");
-
   //Global Unc.
-  double sys_global_val = lumi_unc_pp;
+  double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
   //double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+lumi_unc_aa*lumi_unc_aa);
-  double sys_global_y = sys_global_val/2;
+  double sys_global_y = sys_global_val;
   double sys_global_x = 0.8;
   TBox *globalUncBox = new TBox(xmax-sys_global_x,1-sys_global_y,xmax,1+sys_global_y);
   globalUncBox -> SetLineColor(kBlack);
   globalUncBox -> SetFillColorAlpha(kGray+2,0.6);
   globalUncBox -> SetLineWidth(1);
   globalUncBox -> Draw("l same");
-
+  
   CMS_lumi( c1, iPeriod, iPos );
 
 	c1->Update();
-  c1->SaveAs("Strickland_RAA_vs_pt.pdf");
-  c1->SaveAs("Strickland_RAA_vs_pt.png");
+  c1->SaveAs(Form("RAA_vs_pt_isArrow%d.pdf",(int)isArrow));
+  c1->SaveAs(Form("RAA_vs_pt_isArrow%d.png",(int)isArrow));
 
 /*
 	///////////////////////////////////////////////////////////////////
