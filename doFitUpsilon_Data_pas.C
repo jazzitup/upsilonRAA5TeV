@@ -18,14 +18,13 @@
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data_pas( 
-       int collId = kPPDATA,  
-       float ptLow=0, float ptHigh=2, 
+void doFitUpsilon_Data_pas_free( 
+       int collId = kAADATA,  
+       float ptLow=12, float ptHigh=30, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
        float muPtCut=4.0,
-       bool fixParameters=1
-			) 
+       bool fixParameters=0  )
 {
   float dphiEp2Low = 0 ;
   float dphiEp2High = 100 ;
@@ -45,9 +44,9 @@ void doFitUpsilon_Data_pas(
   int   nMassBin  = 60;
   //int   nMassBin  = (massHigh-massLow)*10;
   TFile* f1;
-  if      ( collId == kPPDATA) f1 = new TFile("../skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
-  else if ( collId == kAADATA) f1 = new TFile("../skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
-  else if ( collId == kAADATAPeri) f1 = new TFile("../skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  if      ( collId == kPPDATA) f1 = new TFile("skimmedFiles/yskimPP_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_20164251755_3964bbec2f15f2cf9baa0676644690f40cee27c4.root");
+  else if ( collId == kAADATA) f1 = new TFile("skimmedFiles/yskimPbPb_L1DoubleMu0PD_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20164272229_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
+  else if ( collId == kAADATAPeri) f1 = new TFile("skimmedFiles/yskimPbPb_PeripheralPD_Trig-L1DoubleMu0Peripheral_OpSign_EP-OppositeHF_20164272252_95c28a5bdf107c32b9e54843b8c85939ffe1aa23.root");
   else if ( collId == kPPMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
   else if ( collId == kAAMCUps1S) f1 = new TFile("skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20163251233_2b58ba03c4751c9d10cb9d60303271ddd6e1ba3a.root");
  
@@ -76,9 +75,9 @@ void doFitUpsilon_Data_pas(
   c1->cd();
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.16, 0.98, 1.0);
   pad1->SetTicks(1,1);
-  c1->SetLeftMargin(1.3);
   pad1->Draw(); pad1->cd();
-  
+  c1->SetLeftMargin(1.3);
+
   RooPlot* myPlot = ws->var("mass")->frame(nMassBin); // bins
   //ws->data("reducedDS")->plotOn(myPlot,Name("dataHist"), Layout(0,1,0.95));
   ws->data("reducedDS")->plotOn(myPlot,Name("dataHist"));
@@ -91,68 +90,63 @@ void doFitUpsilon_Data_pas(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
 
-  RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma2s_1("sigma2s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma3s_1("sigma3s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma1s_2("sigma1s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma2s_2("sigma2s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
-  RooRealVar sigma3s_2("sigma3s_2","width/sigma of the signal gaussian mass PDF",0.05, 0.05, 0.3);
+  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.02, 0.3);
+  RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
+  RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
+
+  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
+
+  RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
+  RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
+  RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
   RooRealVar alpha1s_1("alpha1s_1","tail shift", 2. , 1.2, 4.);
-  RooRealVar alpha2s_1("alpha2s_1","tail shift", 2. , 1.2, 4.);  
-  RooRealVar alpha3s_1("alpha3s_1","tail shift", 2. , 1.2, 4.);
-  RooRealVar alpha1s_2("alpha1s_2","tail shift", 2. , 1.2, 4.);
-  RooRealVar alpha2s_2("alpha2s_2","tail shift", 2. , 1.2, 4.);  
-  RooRealVar alpha3s_2("alpha3s_2","tail shift", 2. , 1.2, 4.);
-  
-  RooRealVar n1s_1("n1s_1","power order", 2. , 1.1, 3.8);
-  RooRealVar n2s_1("n2s_1","power order", 3. , 1.2, 4.);
-  RooRealVar n3s_1("n3s_1","power order", 2. , 1.2, 3.8);
-  RooRealVar n1s_2("n1s_2","power order", 2. , 1.2, 3.8);
-  RooRealVar n2s_2("n2s_2","power order", 2. , 1.2, 4.);
-  RooRealVar n3s_2("n3s_2","power order", 2. , 1.2, 4.);
-  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f2s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f3s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
-  // Fix the parameters 
-  if (fixParameters) 
-  { 
-    if ( initPset.n1s_1 == -1 )
-      {
-	cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
-	cout << "No Param. set for " << kineLabel << ","<<endl;
-	cout << "Fitting macro is stopped!" << endl << endl << endl;
-	return;
-      }
-    else { 
-      cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
-      cout << endl << "Fixing the parameters..." << endl << endl;
-      cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
-      cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
-      n1s_1.setVal(initPset.n1s_1);  n1s_1.setConstant(); 
-      n2s_1.setVal(initPset.n2s_1);  n2s_1.setConstant();  
-      n3s_1.setVal(initPset.n3s_1);  n3s_1.setConstant();  
-      n1s_2.setVal(initPset.n1s_2);  n1s_2.setConstant(); 
-      n2s_2.setVal(initPset.n2s_2);  n2s_2.setConstant();  
-      n3s_2.setVal(initPset.n3s_2);  n3s_2.setConstant();  
-      alpha1s_1.setVal(initPset.alpha1s_1);  alpha1s_1.setConstant();  
-      alpha2s_1.setVal(initPset.alpha2s_1);  alpha2s_1.setConstant();  
-      alpha3s_1.setVal(initPset.alpha3s_1);  alpha3s_1.setConstant();  
-      alpha1s_2.setVal(initPset.alpha1s_2);  alpha1s_2.setConstant();  
-      alpha2s_2.setVal(initPset.alpha2s_2);  alpha2s_2.setConstant();  
-      alpha3s_2.setVal(initPset.alpha3s_2);  alpha3s_2.setConstant();  
-      sigma1s_1.setVal(initPset.sigma1s_1);  sigma1s_1.setConstant();  
-      sigma2s_1.setVal(initPset.sigma2s_1);  sigma2s_1.setConstant();  
-      sigma3s_1.setVal(initPset.sigma3s_1);  sigma3s_1.setConstant();  
-      sigma1s_2.setVal(initPset.sigma1s_2);  sigma1s_2.setConstant();  
-      sigma2s_2.setVal(initPset.sigma2s_2);  sigma2s_2.setConstant();  
-      sigma3s_2.setVal(initPset.sigma3s_2);  sigma3s_2.setConstant();  
-      f1s->setVal(initPset.f1s);  f1s->setConstant();  
-      f2s->setVal(initPset.f2s);  f2s->setConstant();  
-      f3s->setVal(initPset.f3s);  f3s->setConstant();  
-    } 
+  RooRealVar n1s_1("n1s_1","power order", 2. , 1.1, 3.8);
+  RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n2s_2("n2s_2","1.0*@0",RooArgList(n1s_1) );
+  RooFormulaVar n3s_2("n3s_2","1.0*@0",RooArgList(n1s_1) );
+
+  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  RooFormulaVar f2s("f2s","1.0*@0",RooArgList(*f1s) );
+  RooFormulaVar f3s("f3s","1.0*@0",RooArgList(*f1s) );
+
+
+  // Set initial parameters
+  if ( initPset.n1s_1 == -1 )
+    {
+      cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
+      cout << "No Param. set for " << kineLabel << ","<<endl;
+      cout << "Fitting macro is stopped!" << endl << endl << endl;
+      return;
+    }
+  else { 
+    cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    cout << endl << "Setting the initial  parameters..." << endl << endl;
+    cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
+    n1s_1.setVal(initPset.n1s_1);  
+    alpha1s_1.setVal(initPset.alpha1s_1);
+    sigma1s_1.setVal(initPset.sigma1s_1);
+    f1s->setVal(initPset.f1s); 
+    x1s->setVal(initPset.x1s);
+  } 
+  // Fix? 
+  if (fixParameters)   {
+    n1s_1.setConstant();
+    alpha1s_1.setConstant();
+    sigma1s_1.setConstant();
+    f1s->setConstant();
+    x1s->setConstant();
   }
+
   
   RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
   cout << " n1s_1.getVal() = " << n1s_1.getVal() << endl;
@@ -240,8 +234,8 @@ void doFitUpsilon_Data_pas(
   myPlot2->SetFillStyle(4000);
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
   myPlot2->GetYaxis()->SetTitleOffset(1.25);
-  myPlot2->GetYaxis()->CenterTitle();
   myPlot2->GetYaxis()->SetTitleSize(0.045);
+  myPlot2->GetYaxis()->CenterTitle();
   myPlot2->GetXaxis()->SetLabelSize(0);
   myPlot2->GetXaxis()->SetRangeUser(8,14);
   myPlot2->GetXaxis()->SetTitleSize(0);
@@ -257,8 +251,8 @@ void doFitUpsilon_Data_pas(
   float text_size = 15;
   int text_color = 1;
   if(ptLow==0) drawText(Form("p_{T}^{#mu#mu} < %.f GeV/c",ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
-  else if(ptLow == 2.5 && ptHigh==5) drawText(Form("%.1f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
   else drawText(Form("%.f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+
   if(yLow==0) drawText(Form("|y^{#mu#mu}| < %.1f",yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
   else if(yLow!=0) drawText(Form("%.1f < |y^{#mu#mu}| < %.1f",yLow,yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
   if(collId != kPPDATA && collId != kPPMCUps1S && collId != kPPMCUps2S) 
@@ -271,6 +265,11 @@ void doFitUpsilon_Data_pas(
 
   TLegend* fitleg = new TLegend(0.65,0.42,0.88,0.7); fitleg->SetTextSize(20);
   fitleg->SetTextFont(43);
+  if ( collId == kPPDATA ) 
+    fitleg->SetHeader("pp");
+  else if ( collId == kAADATA ) 
+    fitleg->SetHeader("PbPb");
+
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"total fit","l");
@@ -284,10 +283,10 @@ void doFitUpsilon_Data_pas(
   pad2->SetTopMargin(0); // Upper and lower plot are joined
   pad2->SetBottomMargin(0.5); 
   pad2->SetTicks(1,1);
-  pad2->cd();
   pad1->SetLeftMargin(5.2);
   pad2->SetLeftMargin(5.2);
-  
+
+  pad2->cd();
   RooHist* hpull = myPlot2->pullHist("dataHist","modelHist");
   hpull->SetMarkerSize(0.8);
   RooPlot* pullFrame = ws->var("mass")->frame(Title("Pull Distribution")) ;
@@ -297,6 +296,7 @@ void doFitUpsilon_Data_pas(
   pullFrame->GetYaxis()->SetTitle("Pull") ;
   pullFrame->GetYaxis()->SetTitleSize(0.14) ;
   pullFrame->GetYaxis()->SetLabelSize(0.13) ;
+
   pullFrame->GetYaxis()->SetRangeUser(-4.5,4.5) ;
 //  pullFrame->GetYaxis()->SetLimits(-6,6) ;
   pullFrame->GetYaxis()->CenterTitle();
@@ -306,6 +306,7 @@ void doFitUpsilon_Data_pas(
   pullFrame->GetXaxis()->SetLabelOffset(0.04) ;
   pullFrame->GetXaxis()->SetLabelSize(0.180) ;
   pullFrame->GetXaxis()->SetTitleSize(0.196) ;
+  
   pullFrame->GetXaxis()->CenterTitle();
  // pullFrame->GetXaxis()->SetTitleFont(43);
  // pullFrame->GetYaxis()->SetTitleFont(43);
@@ -362,7 +363,6 @@ void doFitUpsilon_Data_pas(
   
   //hh->Draw();
   pad1->Update();
-  pad2->Update();
   //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
   
@@ -398,17 +398,24 @@ void doFitUpsilon_Data_pas(
 
   TString label;
   label="";
-  if(collId == kPPDATA) CMS_lumi(pad1, 1 ,33); 
-  else if(collId == kAADATA && cLow < 60) CMS_lumi(pad1, 2 ,33); 
-  else if(collId == kAADATA && cLow>=60) CMS_lumi(pad1, 21 ,33); 
+  if(collId == kPPDATA) CMS_lumi(pad1, 1 ,33);
+  else if(collId == kAADATA && cLow < 60) CMS_lumi(pad1, 2 ,33);
+  else if(collId == kAADATA && cLow>=60) CMS_lumi(pad1, 21 ,33);
+
+
   pad1->Update();
   pad2->Update();
 
   c1->cd();
+  pad1->Update();
+  pad2->Update();
   pad1->Draw();
   pad2->Draw();
-  pad1->SetLeftMargin(1.2);
-  pad2->SetLeftMargin(1.2);
+  c1->Update();
+
+  pad1->Update();
+  pad2->Update();
+  c1->Update();
 
   TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
