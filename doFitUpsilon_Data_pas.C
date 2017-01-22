@@ -18,13 +18,13 @@
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data_pas_free( 
+void doFitUpsilon_Data_pas(
        int collId = kAADATA,  
-       float ptLow=12, float ptHigh=30, 
+       float ptLow=0, float ptHigh=30, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
        float muPtCut=4.0,
-       bool fixParameters=0  )
+       bool fixParameters=1  )
 {
   float dphiEp2Low = 0 ;
   float dphiEp2High = 100 ;
@@ -133,9 +133,13 @@ void doFitUpsilon_Data_pas_free(
     cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
     cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
     n1s_1.setVal(initPset.n1s_1);  
+    cout << "initPset.alpha1s_1 = " << initPset.alpha1s_1 << endl;
     alpha1s_1.setVal(initPset.alpha1s_1);
+    cout << "initPset.sigma1s_1 = " << initPset.sigma1s_1 << endl;
     sigma1s_1.setVal(initPset.sigma1s_1);
+    cout << "initPset.f1s = " << initPset.f1s << endl;
     f1s->setVal(initPset.f1s); 
+    cout << "initPset.x1s = " << initPset.x1s << endl;
     x1s->setVal(initPset.x1s);
   } 
   // Fix? 
@@ -427,11 +431,14 @@ void doFitUpsilon_Data_pas_free(
 
   ///  cout parameters :
   /*
-    cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
-    cout << "if ( (muPtCut==(float)"<< muPtCut<<") &&  ( ptLow == (float)"<< ptLow <<" ) && (ptHigh == (float)"<<ptHigh<<" ) && (yLow == (float)"<<yLow<<" ) && (yHigh == (float)"<<yHigh<<" ) )" << endl;
-    cout << " {ret.setParMC( " ;
-    cout <<  ws->var("n1S")->getVal() << ", " <<  ws->var("alpha1S")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " << endl;
-    cout <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
+  cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
+  cout << "if ( (muPtCut==(float)"<< muPtCut<<") &&  ( ptLow == (float)"<< ptLow <<" ) && (ptHigh == (float)"<<ptHigh<<" ) && (yLow == (float)"<<yLow<<" ) && (yHigh == (float)"<<yHigh<<" ) )" << endl;
+
+  //  void setSignalParMC(float MCn_, float MCalpha_, float MCsigma1S_, float MCm0_, float MCf_, float MCx_)
+  cout << " {ret.setParMC( " ;
+  cout <<  ws->var("n1s_1")->getVal() << ", " <<  ws->var("alpha1s_1")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " << endl;
+  cout <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
   */
+
 } 
  
