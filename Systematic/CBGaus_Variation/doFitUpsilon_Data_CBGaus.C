@@ -1,6 +1,5 @@
-
-#include "rootFitHeaders.h"
-#include "commonUtility.h"
+#include "../../rootFitHeaders.h"
+#include "../../commonUtility.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -10,8 +9,8 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "cutsAndBin.h"
-#include "PsetCollection.h"
+#include "../../cutsAndBin.h"
+#include "../../PsetCollection.h"
 
 using namespace std;
 using namespace RooFit;
@@ -163,8 +162,8 @@ void doFitUpsilon_Data_CBGaus(
   RooAddPdf*  cb3s = new RooAddPdf("cb3s","Signal 3S",RooArgList(*cb3s_1,*cb3s_2), RooArgList(*f1s) );
 
   RooRealVar *nSig1s= new RooRealVar("nSig1s"," 1S signals",4000,0,100000);
-  RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",1000,0,100000);
-  RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",100, 0,10000);
+  RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",1000,-100,100000);
+  RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",100, -100,10000);
   
   // background : 
   initPset.SetMCBkg();
@@ -208,7 +207,7 @@ void doFitUpsilon_Data_CBGaus(
   RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
   RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));
   
-  if  (ptLow >= 5)        bkg = bkgHighPt ;
+  if  (ptLow >= 6)        bkg = bkgHighPt ;
   else bkg = bkgLowPt;
 
   RooRealVar *nBkg = new RooRealVar("nBkg","fraction of component 1 in bkg",10000,0,5000000);  
