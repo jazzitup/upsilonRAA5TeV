@@ -98,7 +98,7 @@ void doFitUpsilon_Data_CBGaus(
   RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
 
   RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
-  RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgLsigma1s_2,mRatio21) );
+  RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
   RooRealVar alpha1s_1("alpha1s_1","tail shift", 2. , 1.2, 4.);
