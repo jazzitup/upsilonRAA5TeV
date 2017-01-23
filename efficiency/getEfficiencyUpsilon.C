@@ -468,14 +468,14 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
   c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
   
-  //  hptGenPP->Write();
-  //  hptRecoPP->Write();
-  //  hptGenAA->Write();
-  //  hptRecoAA->Write();
-  //  hrapGenPP->Write();
-  //  hrapRecoPP->Write();
-  //  hrapGenAA->Write();
-  //  hrapRecoAA->Write();
+  hptGenPP->Write();
+  hptRecoPP->Write();
+  hptGenAA->Write();
+  hptRecoAA->Write();
+  hrapGenPP->Write();
+  hrapRecoPP->Write();
+  hrapGenAA->Write();
+  hrapRecoAA->Write();
   hptEffPP->Write();
   hptEffAA->Write();
   hrapEffPP->Write();
