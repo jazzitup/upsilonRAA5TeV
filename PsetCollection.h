@@ -251,7 +251,7 @@ void PSetUpsAndBkg::SetParDATADriven()
 if ( collId == kPPDATA) 
 {
   // integrated bin
-  if ( binMatched( 4, 0, 30, 0, 2.4) )   { setSignalParMC(3.30732  ,  1.60069  ,  0.0667393  ,  9.45626  ,  0.535528  ,  1.92417 );} 
+  if ( binMatched( 4, 0, 30, 0, 2.4) ) {setSignalParMC(3.762, 1.47731, 0.0629632, 9.45023, 0.443866, 1.95942 );}
   //Bin for 1S 
   else if ( binMatched( 4, 0, 2, 0, 2.4) )   { setSignalParMC( 3.76996, 1.70039, 0.062522, 9.45683, 0.491621, 2.03249);} 
   else if ( binMatched( 4, 2, 4, 0, 2.4) )   { setSignalParMC( 2.54841, 1.6812, 0.066532, 9.45719, 0.553098, 1.98314);} 
@@ -294,7 +294,7 @@ else if (collId == kAADATA )
 { 
   // Integrated bin  
   //  if ( binMatched( 4, 0, 30, 0, 2.4) )    { setSignalParMC( 3.19451, 1.55708, 0.0684966, 9.45589, 0.560898, 1.90076 );} // MC parameter
-  if ( binMatched( 4, 0, 30, 0, 2.4) )    { setSignalParMC( 1.10, 2.14866, 0.0817941, 9.44919, 0.8621, 2.56117 );} // Data driven parameter
+  if ( binMatched( 4, 0, 30, 0, 2.4) ) {setSignalParMC(3.56395, 1.5354, 0.0852719, 9.44993, 0.993955, 2.68841 );}
 
   //New Bin for 1S 
   else if ( binMatched( 4, 0, 2, 0, 2.4) )   { setSignalParMC( 2.33998, 1.71975, 0.0675697, 9.45611, 0.558206, 2.04994);} 
