@@ -11,6 +11,7 @@ valErr getYield(int state=0, int collId=0, float ptLow=0, float ptHigh=0, float 
 
 Double_t fTsallis1SR(Double_t *x, Double_t *fpar)
 {
+
   Float_t xx = x[0];
   Double_t c = (fpar[0]-1)*(fpar[0]-2)/(fpar[0]*fpar[1]*(fpar[0]*fpar[1]+(fpar[0]-2)*pdgMass.Y1S));
   Double_t mT = TMath::Sqrt(pdgMass.Y1S*pdgMass.Y1S+xx*xx);
@@ -53,7 +54,8 @@ Double_t fTsallis2SR(Double_t *x, Double_t *fpar)
   return fr;
 }
 
-void compareSpectra(int state = 1, int collId= kPPDATA) {
+void compareSpectra(int state = 2, int collId= kAADATA) {
+  cout << "Run getMcSepctra.C before running this macro" << endl;
   
   TH1::SetDefaultSumw2();
   //// modify by hand according to the pt range of the sample
@@ -65,10 +67,10 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
   }
   else if ( state == 2 ) { 
-    nPtBins = nPtBins2s;    ptBin = ptBin2s;
+    nPtBins = nPtBins1s;    ptBin = ptBin1s;
   }
   else if ( state == 3 ) { 
-    nPtBins = nPtBins3s;    ptBin = ptBin3s;
+    nPtBins = nPtBins1s;    ptBin = ptBin1s;
   }
   
   TH1D* hptMc;
@@ -76,7 +78,8 @@ void compareSpectra(int state = 1, int collId= kPPDATA) {
   TH1D* hRatio;   // final Ratio w/ efficiency correctdion
 
 
-  TFile* inf = new TFile(Form("../efficiency/efficiency_ups%ds_MC_noWeight.root",state));
+  //  TFile* inf = new TFile(Form("../efficiency/efficiency_ups%ds_MC_noWeight.root",state));
+  TFile* inf = new TFile(Form("mcSpectra/efficiency_ups%ds_useDataPtWeight0_tnpWeight1_tnpIdx0.root",state));
   if (collId == kPPDATA ){ 
       hptMc  = (TH1D*)inf->Get("hptRecoPP"); } 
   if (collId == kAADATA ){ 
@@ -211,8 +214,9 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
     float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  TFile* inf = new TFile(Form("../fitResults/nominalFits/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
-//TFile* inf = new TFile(Form("../fitResults/dataFit_fixParam1MuPt4_2016_08_30/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  //  TFile* inf = new TFile(Form("../fitResults/nominalFits/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("../fitResults/ptDependence/PAS_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  //  TFile* inf = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/TEST_newNom/PAS_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
   ret.val = fitResults->GetBinContent(state);
