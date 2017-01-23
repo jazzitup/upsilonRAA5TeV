@@ -143,8 +143,8 @@ int draw_sigparam_pt_noerr(TString szAA = "PP", int states =1)
     //// read files
     //if (szAA == "PP" ) { fileIn[ib]= new TFile(Form("./MCParamRootFiles/merged/fitresults_upsilon_DoubleCB_%s_MC_Ups1S_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
     //else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("./MCParamRootFiles/merged/fitresults_upsilon_DoubleCB_%s_MC_Ups1S_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
-    if (szAA == "PP" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/NomPlot/fitresults_upsilon_DoubleCB_%s_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
-    else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/NomPlot/fitresults_upsilon_DoubleCB_%s_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
+    if (szAA == "PP" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/TEST_newNom/PAS_fitresults_upsilon_DoubleCB_%s_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
+    else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/TEST_newNom/PAS_fitresults_upsilon_DoubleCB_%s_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
     else { cout << " Error ::: Select among PP and AA" << endl; return 0; }
     //cout << ib << "th file = " << fileIn[ib]->GetName() << endl;
     //if (fileIn[ib]->IsZombie()) { cout << "CANNOT open data root file\n"; return 1; }
@@ -156,15 +156,15 @@ int draw_sigparam_pt_noerr(TString szAA = "PP", int states =1)
     //// get parameters
     //cout << ws[ib]->var("alpha1s_1")->getVal() << endl;
     alpha1s_1[ib]=ws[ib]->var("alpha1s_1")->getVal();
-    alpha1s_1Err[ib]=0;
+    alpha1s_1Err[ib]=ws[ib]->var("alpha1s_1")->getError();
     n1s_1[ib]=ws[ib]->var("n1s_1")->getVal();
-    n1s_1Err[ib]=0;
+    n1s_1Err[ib]=ws[ib]->var("n1s_1")->getError();
     sigma1s_1[ib]=ws[ib]->var("sigma1s_1")->getVal();
-    sigma1s_1Err[ib]=0;
+    sigma1s_1Err[ib]=ws[ib]->var("sigma1s_1")->getError();
     f1s[ib]=ws[ib]->var("f1s")->getVal();
-    f1sErr[ib]=0;
-    x1s[ib]=(ws[ib]->var("sigma1s_2")->getVal())/(ws[ib]->var("sigma1s_1")->getVal());
-    x1sErr[ib]=0;
+    f1sErr[ib]=ws[ib]->var("f1s")->getError();
+    x1s[ib]=ws[ib]->var("x1s")->getVal();
+    x1sErr[ib]=ws[ib]->var("x1s")->getError();
     mass1s[ib]=ws[ib]->var("m_{#Upsilon(1S)}")->getVal();
     //mass1sErr[ib]=0;
     mass1sErr[ib]=ws[ib]->var("m_{#Upsilon(1S)}")->getError();
@@ -203,7 +203,7 @@ int draw_sigparam_pt_noerr(TString szAA = "PP", int states =1)
   c_alpha1s_1->cd();
   h1_alpha1s_1->GetXaxis()->CenterTitle(1);
   h1_alpha1s_1->GetYaxis()->CenterTitle(1);
-  h1_alpha1s_1->GetYaxis()->SetRangeUser(0,3);
+  h1_alpha1s_1->GetYaxis()->SetRangeUser(0,7);
   h1_alpha1s_1->SetMarkerColor(kRed);
   h1_alpha1s_1->SetLineColor(kRed);
   h1_alpha1s_1->SetMarkerStyle(kFullCircle);
@@ -215,7 +215,7 @@ int draw_sigparam_pt_noerr(TString szAA = "PP", int states =1)
   c_n1s_1->cd();
   h1_n1s_1->GetXaxis()->CenterTitle(1);
   h1_n1s_1->GetYaxis()->CenterTitle(1);
-  h1_n1s_1->GetYaxis()->SetRangeUser(0,6);
+  h1_n1s_1->GetYaxis()->SetRangeUser(0,7);
   h1_n1s_1->SetMarkerColor(kRed);
   h1_n1s_1->SetLineColor(kRed);
   h1_n1s_1->SetMarkerStyle(kFullCircle);
@@ -227,7 +227,7 @@ int draw_sigparam_pt_noerr(TString szAA = "PP", int states =1)
   c_sigma1s_1->cd();
   h1_sigma1s_1->GetXaxis()->CenterTitle(1);
   h1_sigma1s_1->GetYaxis()->CenterTitle(1);
-  h1_sigma1s_1->GetYaxis()->SetRangeUser(0,0.2);
+  h1_sigma1s_1->GetYaxis()->SetRangeUser(0,0.3);
   h1_sigma1s_1->SetMarkerColor(kRed);
   h1_sigma1s_1->SetLineColor(kRed);
   h1_sigma1s_1->SetMarkerStyle(kFullCircle);
