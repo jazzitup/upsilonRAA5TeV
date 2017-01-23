@@ -87,7 +87,8 @@ void doFitUpsilon_Data_CBGaus(
   RooFormulaVar mean2s("mean2s","m_{#Upsilon(1S)}*mRatio21", RooArgSet(mean1s,mRatio21) );
   RooFormulaVar mean3s("mean3s","m_{#Upsilon(1S)}*mRatio31", RooArgSet(mean1s,mRatio31) );
           
-  PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ;
+  PSetUpsAndBkg initPset = getUpsilonPsets( collId, 0, 30, 0, 2.4, 0, 200, muPtCut) ;
+  //PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ;
   //  initPset.SetMCSgl_CBGaus();  
   initPset.SetParDATADriven();
   RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.02, 0.3);
@@ -97,7 +98,7 @@ void doFitUpsilon_Data_CBGaus(
   RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
 
   RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
-  RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
+  RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgLsigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
   RooRealVar alpha1s_1("alpha1s_1","tail shift", 2. , 1.2, 4.);
