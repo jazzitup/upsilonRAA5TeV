@@ -10,11 +10,11 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "cutsAndBin.h"
-#include "PsetCollection.h"
-#include "CMS_lumi.C"
-#include "tdrstyle.C"
-#include "SONGKYO.h"
+#include "../../cutsAndBin.h"
+#include "../../PsetCollection.h"
+#include "../../CMS_lumi.C"
+#include "../../tdrstyle.C"
+#include "../../SONGKYO.h"
 
 using namespace std;
 using namespace RooFit;
