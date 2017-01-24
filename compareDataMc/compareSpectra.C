@@ -54,7 +54,7 @@ Double_t fTsallis2SR(Double_t *x, Double_t *fpar)
   return fr;
 }
 
-void compareSpectra(int state = 2, int collId= kAADATA) {
+void compareSpectra(int state = 1, int collId= kAADATA) {
   cout << "Run getMcSepctra.C before running this macro" << endl;
   
   TH1::SetDefaultSumw2();
@@ -100,11 +100,19 @@ void compareSpectra(int state = 2, int collId= kAADATA) {
     hptSig->SetBinContent( ipt, yieldPP.val ) ;
     hptSig->SetBinError( ipt, yieldPP.err ) ;
   }
-  
+ 
+  // Acceptance correction : 
+  TFile* accf = new TFile(Form("acceptanceIn6Bin_%ds.root",state));
+  TH1D* hacc =  (TH1D*)accf->Get("acc");
+  for ( int ii =1 ; ii<= hacc->GetNbinsX() ; ii++ ) {
+    hacc->SetBinError(ii,0.00001);
+  }
   
   TF1* funct;
 
   c1->cd(1) ;
+  hptMc->Divide(hacc); // acceptance correction
+  hptSig->Divide(hacc);
   TH1ScaleByWidth(hptMc);
   TH1ScaleByWidth(hptSig);
   scaleInt(hptMc);
@@ -214,9 +222,8 @@ valErr getYield(int state, int collId, float ptLow, float ptHigh, float yLow, fl
     float dphiEp2Low,  float dphiEp2High) {
   TString kineLabel = getKineLabel (collId, ptLow, ptHigh, yLow, yHigh, glbMuPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High) ;
   TString SignalCB = "Double";
-  //  TFile* inf = new TFile(Form("../fitResults/nominalFits/fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
-  TFile* inf = new TFile(Form("../fitResults/ptDependence/PAS_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
-  //  TFile* inf = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/TEST_newNom/PAS_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  //  TFile* inf = new TFile(Form("../fitResults/ptDependence/PAS_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
+  TFile* inf = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/TEST_newNom/PAS_fitresults_upsilon_%sCB_%s.root",SignalCB.Data(),kineLabel.Data()));
   TH1D* fitResults = (TH1D*)inf->Get("fitResults");
   valErr ret; 
   ret.val = fitResults->GetBinContent(state);
