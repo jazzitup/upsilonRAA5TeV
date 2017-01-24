@@ -4,7 +4,7 @@
 #include "TFile.h"
 #include "../cutsAndBin.h"
 #include "../multiTreeUtil.h"
-#include "tnp_weight.h"
+#include "../efficiency/tnp_weight.h"
 using namespace std;
 
 
@@ -14,7 +14,7 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=true, int tnpIdx=0) {  // 1S, 2S, 3S
+void getMcSepctra(int state = 1, bool useDataWeight=true, bool useTnpWeight=true, int tnpIdx=0) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
 
 TH1D* ncoll1SBin = new TH1D("ncoll1sbin","", nCentBins1s, centBin1s );
@@ -23,9 +23,7 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
     ncoll1SBin->SetBinContent( ii , nColl1s[ii-1] ) ;
   }
 
-  TString outputDirName = "efficiencyTable";
-  if ( tnpIdx != 0) 
-    outputDirName = "efficiencyTableSys";
+ TString outputDirName = "mcSpectra";
 
   
   float massLow = 8;
@@ -43,14 +41,14 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
     nCentBins = nCentBins1s;  centBin = centBin1s;
   }
   else if ( state == 2 ) {
-    nPtBins = nPtBins2s;    ptBin = ptBin2s;
-    nCentBins = nCentBins2s;  centBin = centBin2s;
-    nYBins = nYBins2S;  yBin = yBin2S;
+    nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nCentBins = nCentBins1s;  centBin = centBin1s;
+    nYBins = nYBins1S;  yBin = yBin1S;
   }
   else if ( state == 3 ) {
-    nPtBins = nPtBins3s;    ptBin = ptBin3s;
-    nCentBins = nCentBins3s;  centBin = centBin3s;
-    nYBins = nYBins3S;  yBin = yBin3S;
+    nPtBins = nPtBins1s;    ptBin = ptBin1s;
+    nCentBins = nCentBins1s;  centBin = centBin1s;
+    nYBins = nYBins1S;  yBin = yBin1S;
   }
 
   
