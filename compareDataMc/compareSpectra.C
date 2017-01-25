@@ -22,6 +22,18 @@ Double_t alt4(Double_t *x, Double_t *fpar)
   //  return fpar[0] +  exp( -(xx-fpar[1])/fpar[2] ) * (xx *fpar[3]);
   return  (  fpar[0]*exp( -xx / fpar[1] ) - 1 / (xx-fpar[2]) + fpar[3] ) ;
 }
+Double_t alt5(Double_t *x, Double_t *fpar)
+{
+  Float_t xx = x[0];
+  //  return fpar[0] +  exp( -(xx-fpar[1])/fpar[2] ) * (xx *fpar[3]);
+  return  (   fpar[0]*exp( -xx / fpar[1] )  +   fpar[4] * ( TMath::Erf( (xx -fpar[2]) / fpar[3] ) + 1 ) );
+}
+Double_t alt6(Double_t *x, Double_t *fpar)
+{
+  Float_t xx = x[0];
+  //  return fpar[0] +  exp( -(xx-fpar[1])/fpar[2] ) * (xx *fpar[3]);
+  return  (   fpar[0]*exp( -xx / fpar[1] )  +   fpar[4] * ( TMath::Erf( (xx -fpar[2]) / fpar[3] ) + 1 ) + fpar[5]);
+}
 
 Double_t polyy(Double_t *x, Double_t *fpar)
 {
@@ -169,6 +181,26 @@ void compareSpectra(int state = 1, int collId= kAADATA) {
     funct->SetParLimits(0,1,5);
     funct->SetParLimits(1,0.5,3);
   }
+  else if ( (state == 2) && (collId == kPPDATA) ) {
+    funct = new TF1("dataMcRatio",alt5, 0,30,5);
+    //  return  (   fpar[0]*exp( -xx / fpar[1] )  +   fpar[4] * ( TMath::Erf( (xx -fpar[2]) / fpar[3] ) + 1 ) );
+    funct->SetParameters(1.2, 3, 5, 3, 1.5 );
+    funct->SetParLimits(0,0.1, 1);
+    funct->SetParLimits(1,0.5,3);
+    funct->SetParLimits(2,3,7);
+    funct->SetParLimits(3,2,10);
+    funct->SetParLimits(4,0.5,2);
+  }
+  else if ( (state == 2) && (collId == kAADATA) ) {
+    funct = new TF1("dataMcRatio",alt5, 0,30,5);
+    //  return  (   fpar[0]*exp( -xx / fpar[1] )  +   fpar[4] * ( TMath::Erf( (xx -fpar[2]) / fpar[3] ) + 1 ) );
+    funct->SetParameters(1.5, 0.5, 6, 3, 3  );
+    funct->SetParLimits(0,1, 2);
+    funct->SetParLimits(1,0.0,1);
+    funct->SetParLimits(2,5,12);
+    funct->SetParLimits(3,2,30);
+    funct->SetParLimits(4,0.5,4);
+    }
 
   //PP 1S
   /*  funct->SetParameters(0.06123,1.023,2.123,1);
@@ -203,16 +235,19 @@ void compareSpectra(int state = 1, int collId= kAADATA) {
   TH1D* hRatioUp = new TH1D("hRatioUp","",nRatioBin,0,30);
   TH1D* hRatioDown = new TH1D("hRatioDown","",nRatioBin,0,30);
   float variationCenter = 0;
-  if ( state == 2) variationCenter = 20;
+  float upRatio = 0.3;
+  if ( (state == 2) && (collId==kAADATA)) 
+    { variationCenter = 15;  upRatio = 0.5;}
+  if ( (state == 2) && (collId==kPPDATA))  
+    { variationCenter = 15; upRatio = 0.1;}
+  float downRatio =  - upRatio;
   for ( int ii=1; ii<= nRatioBin ;  ii++) {
     float xx = hRatioUp->GetBinCenter(ii);
-    float upRatio = 0.3;
     hRatioUp->SetBinContent(ii,   funct->Eval(xx) * (  (upRatio/15.) * (xx-variationCenter) +1 ) );
   }
   handsomeTH1(hRatioUp, 4);  
 for ( int ii=1; ii<= nRatioBin ;  ii++) {
     float xx = hRatioDown->GetBinCenter(ii);
-    float downRatio = -0.3;
     hRatioDown->SetBinContent(ii,   funct->Eval(xx) * (  (downRatio/15.) * (xx-variationCenter) +1 ) );
   }
   handsomeTH1(hRatioUp, 4);
