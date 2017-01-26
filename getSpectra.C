@@ -271,6 +271,9 @@ void getSpectra(int state = 1 ) {
   // pT cr:oss-section is normalized by delta y 
   hcsAA_pt->Scale( 0.5 / yMax );   // 1 / 4.8
   hcsPP_pt->Scale( 0.5 / yMax );   // 1 / 4.8
+  // y cross-section.  We measured it in |y| bin
+  hcsAA_rap->Scale( 0.5);
+  hcsPP_rap->Scale( 0.5);
   
   handsomeTH1(hcsAA_pt,2);
   handsomeTH1(hcsPP_pt,1);
