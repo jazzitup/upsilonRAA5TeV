@@ -45,6 +45,30 @@ void getEffSys(int state =1, int Nsamples=100) {
   TH1D* eff5sys = (TH1D*)eff5->Clone("hcentintEffPPSys"); eff5sys->Reset();
   TH1D* eff6sys = (TH1D*)eff6->Clone("hcentintEffAASys"); eff6sys->Reset();
   TH1D* eff7sys = (TH1D*)eff7->Clone("hcentEffAASys"); eff7sys->Reset();
+  // stat. fluc. Trig
+  TH1D* eff1statTrg = (TH1D*)eff1sys->Clone("hptEffPPStatTrg"); 
+  TH1D* eff2statTrg = (TH1D*)eff2sys->Clone("hptEffAAStatTrg"); 
+  TH1D* eff3statTrg = (TH1D*)eff3sys->Clone("hrapEffPPStatTrg");
+  TH1D* eff4statTrg = (TH1D*)eff4sys->Clone("hrapEffAAStatTrg");
+  TH1D* eff5statTrg = (TH1D*)eff5sys->Clone("hcentintEffPPStatTrg"); 
+  TH1D* eff6statTrg = (TH1D*)eff6sys->Clone("hcentintEffAAStatTrg"); 
+  TH1D* eff7statTrg = (TH1D*)eff7sys->Clone("hcentEffAAStatTrg");
+  // stat. fluc. MuId
+  TH1D* eff1statMuId = (TH1D*)eff1sys->Clone("hptEffPPStatMuId"); 
+  TH1D* eff2statMuId = (TH1D*)eff2sys->Clone("hptEffAAStatMuId"); 
+  TH1D* eff3statMuId = (TH1D*)eff3sys->Clone("hrapEffPPStatMuId");
+  TH1D* eff4statMuId = (TH1D*)eff4sys->Clone("hrapEffAAStatMuId");
+  TH1D* eff5statMuId = (TH1D*)eff5sys->Clone("hcentintEffPPStatMuId"); 
+  TH1D* eff6statMuId = (TH1D*)eff6sys->Clone("hcentintEffAAStatMuId"); 
+  TH1D* eff7statMuId = (TH1D*)eff7sys->Clone("hcentEffAAStatMuId");
+  // stat. fluc. STA
+  TH1D* eff1statSta = (TH1D*)eff1sys->Clone("hptEffPPStatSta"); 
+  TH1D* eff2statSta = (TH1D*)eff2sys->Clone("hptEffAAStatSta"); 
+  TH1D* eff3statSta = (TH1D*)eff3sys->Clone("hrapEffPPStatSta");
+  TH1D* eff4statSta = (TH1D*)eff4sys->Clone("hrapEffAAStatSta");
+  TH1D* eff5statSta = (TH1D*)eff5sys->Clone("hcentintEffPPStatSta"); 
+  TH1D* eff6statSta = (TH1D*)eff6sys->Clone("hcentintEffAAStatSta"); 
+  TH1D* eff7statSta = (TH1D*)eff7sys->Clone("hcentEffAAStatSta");
 
   // sys. tnp variaiton 
   TH1D* eff1sysVar = (TH1D*)eff1sys->Clone("hptEffPPSysVar"); 
@@ -54,14 +78,6 @@ void getEffSys(int state =1, int Nsamples=100) {
   TH1D* eff5sysVar = (TH1D*)eff5sys->Clone("hcentintEffPPSysVar"); 
   TH1D* eff6sysVar = (TH1D*)eff6sys->Clone("hcentintEffAASysVar"); 
   TH1D* eff7sysVar = (TH1D*)eff7sys->Clone("hcentEffAASysVar");
-  // stat. fluc.
-  TH1D* eff1stat = (TH1D*)eff1sys->Clone("hptEffPPStat"); 
-  TH1D* eff2stat = (TH1D*)eff2sys->Clone("hptEffAAStat"); 
-  TH1D* eff3stat = (TH1D*)eff3sys->Clone("hrapEffPPStat");
-  TH1D* eff4stat = (TH1D*)eff4sys->Clone("hrapEffAAStat");
-  TH1D* eff5stat = (TH1D*)eff5sys->Clone("hcentintEffPPStat"); 
-  TH1D* eff6stat = (TH1D*)eff6sys->Clone("hcentintEffAAStat"); 
-  TH1D* eff7stat = (TH1D*)eff7sys->Clone("hcentEffAAStat");
 
   // sys.var_1
   TFile* fid_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx-1.root",state) );
@@ -203,11 +219,11 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff6sta->Add( eff6, -1 );     eff6sta->Divide( eff6);
   eff7sta->Add( eff7, -1 );     eff7sta->Divide( eff7);
   
-  // Stat fluctuation : 
 
+  // stat trig
   for ( int idx=1 ; idx<= Nsamples ; idx++) {
     cout <<"Reading "  << idx<<"th file..." << endl;
-    TFile* fid = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx%d.root",state,idx) );
+    TFile* fid = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId%d_trkId0_muId-100_staId-100.root",state,idx) );
     TH1D* relativeDev1 = (TH1D*)fid->Get("hptEffPP");
     TH1D* relativeDev2 = (TH1D*)fid->Get("hptEffAA");
     TH1D* relativeDev3 = (TH1D*)fid->Get("hrapEffPP");
@@ -224,22 +240,99 @@ void getEffSys(int state =1, int Nsamples=100) {
     relativeDev6->Add( eff6, -1 );     relativeDev6->Divide( eff6);
     relativeDev7->Add( eff7, -1 );     relativeDev7->Divide( eff7);
 
-    addInQuad( eff1stat, relativeDev1 ) ;
-    addInQuad( eff2stat, relativeDev2 ) ;
-    addInQuad( eff3stat, relativeDev3 ) ;
-    addInQuad( eff4stat, relativeDev4 ) ;
-    addInQuad( eff5stat, relativeDev5 ) ;
-    addInQuad( eff6stat, relativeDev6 ) ;
-    addInQuad( eff7stat, relativeDev7 ) ;
+    addInQuad( eff1statTrg, relativeDev1 ) ;
+    addInQuad( eff2statTrg, relativeDev2 ) ;
+    addInQuad( eff3statTrg, relativeDev3 ) ;
+    addInQuad( eff4statTrg, relativeDev4 ) ;
+    addInQuad( eff5statTrg, relativeDev5 ) ;
+    addInQuad( eff6statTrg, relativeDev6 ) ;
+    addInQuad( eff7statTrg, relativeDev7 ) ;
     fid->Close();
   }
-  eff1stat->Scale( 1./sqrt( float(Nsamples) ) );
-  eff2stat->Scale( 1./sqrt( float(Nsamples) ) );
-  eff3stat->Scale( 1./sqrt( float(Nsamples) ) );
-  eff4stat->Scale( 1./sqrt( float(Nsamples) ) );
-  eff5stat->Scale( 1./sqrt( float(Nsamples) ) );
-  eff6stat->Scale( 1./sqrt( float(Nsamples) ) );
-  eff7stat->Scale( 1./sqrt( float(Nsamples) ) );
+  eff1statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+  eff2statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+  eff3statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+  eff4statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+  eff5statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+  eff6statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+  eff7statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+
+  // stat muid
+  for ( int idx=1 ; idx<= Nsamples ; idx++) {
+    cout <<"Reading "  << idx<<"th file..." << endl;
+    TFile* fid = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId%d_staId-100.root",state,idx) );
+    TH1D* relativeDev1 = (TH1D*)fid->Get("hptEffPP");
+    TH1D* relativeDev2 = (TH1D*)fid->Get("hptEffAA");
+    TH1D* relativeDev3 = (TH1D*)fid->Get("hrapEffPP");
+    TH1D* relativeDev4 = (TH1D*)fid->Get("hrapEffAA");
+    TH1D* relativeDev5 = (TH1D*)fid->Get("hcentintEffPP");
+    TH1D* relativeDev6 = (TH1D*)fid->Get("hcentintEffAA");
+    TH1D* relativeDev7 = (TH1D*)fid->Get("hcentEffAA");
+    
+    relativeDev1->Add( eff1, -1 );     relativeDev1->Divide( eff1);
+    relativeDev2->Add( eff2, -1 );     relativeDev2->Divide( eff2);
+    relativeDev3->Add( eff3, -1 );     relativeDev3->Divide( eff3);
+    relativeDev4->Add( eff4, -1 );     relativeDev4->Divide( eff4);
+    relativeDev5->Add( eff5, -1 );     relativeDev5->Divide( eff5);
+    relativeDev6->Add( eff6, -1 );     relativeDev6->Divide( eff6);
+    relativeDev7->Add( eff7, -1 );     relativeDev7->Divide( eff7);
+
+    addInQuad( eff1statMuId, relativeDev1 ) ;
+    addInQuad( eff2statMuId, relativeDev2 ) ;
+    addInQuad( eff3statMuId, relativeDev3 ) ;
+    addInQuad( eff4statMuId, relativeDev4 ) ;
+    addInQuad( eff5statMuId, relativeDev5 ) ;
+    addInQuad( eff6statMuId, relativeDev6 ) ;
+    addInQuad( eff7statMuId, relativeDev7 ) ;
+    fid->Close();
+  }
+  eff1statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+  eff2statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+  eff3statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+  eff4statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+  eff5statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+  eff6statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+  eff7statMuId->Scale( 1./sqrt( float(Nsamples) ) );
+
+  // stat sta
+  for ( int idx=1 ; idx<= Nsamples ; idx++) {
+    cout <<"Reading "  << idx<<"th file..." << endl;
+    TFile* fid = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId%d.root",state,idx) );
+    TH1D* relativeDev1 = (TH1D*)fid->Get("hptEffPP");
+    TH1D* relativeDev2 = (TH1D*)fid->Get("hptEffAA");
+    TH1D* relativeDev3 = (TH1D*)fid->Get("hrapEffPP");
+    TH1D* relativeDev4 = (TH1D*)fid->Get("hrapEffAA");
+    TH1D* relativeDev5 = (TH1D*)fid->Get("hcentintEffPP");
+    TH1D* relativeDev6 = (TH1D*)fid->Get("hcentintEffAA");
+    TH1D* relativeDev7 = (TH1D*)fid->Get("hcentEffAA");
+    
+    relativeDev1->Add( eff1, -1 );     relativeDev1->Divide( eff1);
+    relativeDev2->Add( eff2, -1 );     relativeDev2->Divide( eff2);
+    relativeDev3->Add( eff3, -1 );     relativeDev3->Divide( eff3);
+    relativeDev4->Add( eff4, -1 );     relativeDev4->Divide( eff4);
+    relativeDev5->Add( eff5, -1 );     relativeDev5->Divide( eff5);
+    relativeDev6->Add( eff6, -1 );     relativeDev6->Divide( eff6);
+    relativeDev7->Add( eff7, -1 );     relativeDev7->Divide( eff7);
+
+    addInQuad( eff1statSta, relativeDev1 ) ;
+    addInQuad( eff2statSta, relativeDev2 ) ;
+    addInQuad( eff3statSta, relativeDev3 ) ;
+    addInQuad( eff4statSta, relativeDev4 ) ;
+    addInQuad( eff5statSta, relativeDev5 ) ;
+    addInQuad( eff6statSta, relativeDev6 ) ;
+    addInQuad( eff7statSta, relativeDev7 ) ;
+    fid->Close();
+  }
+  eff1statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  eff2statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  eff3statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  eff4statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  eff5statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  eff6statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  eff7statSta->Scale( 1./sqrt( float(Nsamples) ) );
+  
+  
+
 
   // Merge them! 
   addInQuadSix( eff1sys,  eff1sysVar, eff1binned, eff1sta, eff1muid, eff1stat, eff1ptw );
