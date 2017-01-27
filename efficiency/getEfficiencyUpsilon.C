@@ -15,7 +15,7 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, 
-			  int trgIdx=0,  int muIdx=0,  int staIdx=0, int trkIdx=0 //  id = -100 means no correction on this 
+			  int trgIdx=0,  int trkIdx=0, int muIdx=0,  int staIdx=0 //  id = -100 means no correction on this 
 			  ) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
   
@@ -139,16 +139,16 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
     if (useDataWeight) ptWeight = dmAA.weight;
     float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmAA.cBin ) ) ;
     float tnpWeight = 1;
-    if ( trgIdx > - 100 )   {
+    if ( trgIdx > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, trgIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, trgIdx) ; 
     }
-    if ( muIdx  > - 100 )   {
+    if ( muIdx  > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_muid_pbpb(dmAA.pt1, dmAA.eta1, muIdx) *  tnp_weight_muid_pbpb(dmAA.pt2, dmAA.eta2, muIdx) ; 
     }
-    if ( staIdx  > - 100 )   {
+    if ( staIdx  > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_sta_pbpb(dmAA.pt1, dmAA.eta1, staIdx) *  tnp_weight_sta_pbpb(dmAA.pt2, dmAA.eta2, staIdx) ;
     }
-    if ( trkIdx  > - 100 )   {
+    if ( trkIdx  > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_trk_pbpb(trkIdx) *  tnp_weight_trk_pbpb(trkIdx) ;
     }
     
@@ -216,16 +216,16 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
     if (useDataWeight) ptWeight = dmPP.weight;
     float tnpWeight = 1; 
   
-    if ( trgIdx > - 100 )   {
+    if ( trgIdx > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_trg_pp(dmPP.pt1, dmPP.eta1, trgIdx) *  tnp_weight_trg_pp(dmPP.pt2, dmPP.eta2, trgIdx) ;
     }
-    if ( muIdx  > - 100 )   {
+    if ( muIdx  > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_muid_pp(dmPP.pt1, dmPP.eta1, muIdx) *  tnp_weight_muid_pp(dmPP.pt2, dmPP.eta2, muIdx) ;
     }
-    if ( staIdx  > - 100 )   {
+    if ( staIdx  > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_sta_pp(dmPP.pt1, dmPP.eta1, staIdx) *  tnp_weight_sta_pp(dmPP.pt2, dmPP.eta2, staIdx) ;
     }
-    if ( trkIdx  > - 100 )   {
+    if ( trkIdx  > -100 )   {
       tnpWeight = tnpWeight * tnp_weight_trk_pp(trkIdx) *  tnp_weight_trk_pp(trkIdx) ;
     }
     
