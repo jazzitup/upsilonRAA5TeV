@@ -71,10 +71,10 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   int ulstate = 2; //3S
   static const int n3s = 2;
   double boxw = 0.05; // for syst. box (vs cent)
-  double lower68[n3s] = {0.,0.};
-  double upper68[n3s] = {0.050402958,0.060631106};
-  double lower95[n3s] = {0., 0.};
-  double upper95[n3s] = {0.088932491,0.108333619};
+  double lower68[n3s] = {lower68_y1,lower68_y2};
+  double upper68[n3s] = {upper68_y1,upper68_y2};
+  double lower95[n3s] = {lower95_y1,lower95_y2};
+  double upper95[n3s] = {upper95_y1,upper95_y2};
   if (n3s != npoint[ulstate]) {cout<<"ERROR!! # of bins for UL is wrong!!"<<endl;return;} 
 
   //// --- vs centrality
