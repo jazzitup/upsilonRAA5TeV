@@ -1,6 +1,7 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
+#include "../cutsAndBin.h"
 
 void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
 {
@@ -117,11 +118,30 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   leg->Draw();
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
-//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  double sz_init = 0.895; double sz_step = 0.0535;
+  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
+  globtex->DrawLatex(0.464, sz_init+0.005, "|#eta^{#mu}| < 2.4");
+  globtex->DrawLatex(0.464, sz_init-sz_step*1+0.005, "Cent. 0-100%");
+  
+  double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
+  //double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+lumi_unc_aa*lumi_unc_aa);
+  double sys_global_y = sys_global_val;
+  double sys_global_y_15001 = 0.079;
+  double sys_global_x = 0.8;
+  TBox *globalUncBox = new TBox(xmax-sys_global_x,1-sys_global_y,xmax,1+sys_global_y);
+  globalUncBox -> SetLineColor(kBlack);
+  globalUncBox -> SetFillColorAlpha(kGray+2,0.6);
+  globalUncBox -> SetLineWidth(1);
+  globalUncBox -> Draw("l same");
+  
+  TBox *globalUncBox_15001 = new TBox(xmax-sys_global_x*2,1-sys_global_y_15001,xmax-sys_global_x-0.05,1+sys_global_y_15001);
+  globalUncBox_15001 -> SetLineColor(kRed-2);
+  globalUncBox_15001 -> SetFillColorAlpha(kPink-6,0.6);
+  globalUncBox_15001 -> SetLineWidth(1);
+  globalUncBox_15001 -> Draw("l same");
+  
   
   CMS_lumi( c1, iPeriod, iPos );
 

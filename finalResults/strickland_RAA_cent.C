@@ -104,15 +104,15 @@ void strickland_RAA_cent(bool isArrow =true)
   //// 3S upper limit (arrow)
   int ulstate = 2; //3S
   static const int n3s = 2;
-  double lower68[n3s] = {0,0.010274277};
-  double upper68[n3s] = {0.026982415,0.037286395};
-  double lower95[n3s] = {0., 0.001150934};
-  double upper95[n3s] = {0.054552485,0.051143323};
+  double lower68[n3s] = {lower68_c1,lower68_c2};
+  double upper68[n3s] = {upper68_c1,upper68_c2};
+  double lower95[n3s] = {lower95_c1,lower95_c2};
+  double upper95[n3s] = {upper95_c1,upper95_c2};
   static const int n3s_int = 1;
-  double lower68_int[n3s_int] = {0.001165011};
-  double upper68_int[n3s_int] = {0.048811869};
-  double lower95_int[n3s_int] = {0.};
-  double upper95_int[n3s_int] = {0.079011206};
+  double lower68_int[n3s_int] = {lower68_cint};
+  double upper68_int[n3s_int] = {upper68_cint};
+  double lower95_int[n3s_int] = {lower95_cint};
+  double upper95_int[n3s_int] = {upper95_cint};
   /*
   double lower68[n3s] = {0., 0., 0.0183, 0.};
   double upper68[n3s] = {0.154250585, 0.01689862101, 0.0943 , 0.03990571614};

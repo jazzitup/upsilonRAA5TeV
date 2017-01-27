@@ -1,6 +1,7 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
+#include "../cutsAndBin.h"
 
 void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
 {
@@ -192,12 +193,39 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   leg->Draw();
 
   //// drwa text
-  double sz_init = 0.895; double sz_step = 0.0525;
-//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.22, sz_init-sz_step*2, "|y|^{#mu#mu} < 2.4");
-//  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
+  double sz_init = 0.892; double sz_step = 0.0558;
+  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
+  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
+  globtex->DrawLatex(0.46+0.04, sz_init-sz_step+0.002, "|y|^{#mu#mu} < 2.4");
   
+  //Global Unc.
+  TH1D* hSys_glb;
+  double sys_global_pp;
+  double sys_global_val;
+  double accept_sys;
+  hSys_glb = (TH1D*) fInSys->Get("hintPP_merged");
+  if(istate==1) accept_sys = 0.029;
+  else if(istate==2) accept_sys = 0.036;
+  sys_global_pp = TMath::Sqrt(hSys_glb->GetBinContent(1)*hSys_glb->GetBinContent(1)+accept_sys*accept_sys);
+  
+  sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
+  double sys_global_y = TMath::Sqrt(sys_global_val*sys_global_val + sys_global_pp*sys_global_pp); 
+  double sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.063*0.063); 
+  double sys_global_x = 15;
+ 
+  TBox *globalUncBox = new TBox(xmax-sys_global_x*2,1-sys_global_y,xmax-sys_global_x,1+sys_global_y);
+  globalUncBox -> SetLineColor(kRed-2);
+  globalUncBox -> SetFillColorAlpha(kPink-6,0.6);
+  globalUncBox -> SetLineWidth(1);
+  globalUncBox -> Draw("l same");
+
+  TBox *ppRefUncBox1S = new TBox(xmax-sys_global_x,1-sys_global_y_15001,xmax,1+sys_global_y_15001);
+  ppRefUncBox1S -> SetLineColor(kBlack);
+  ppRefUncBox1S -> SetFillColorAlpha(kGray+2,0.6);
+  ppRefUncBox1S -> SetLineWidth(1);
+  ppRefUncBox1S -> Draw("same");
+
   CMS_lumi( pad_diff, iPeriod, iPos );
   
   //// --- 2nd pad!!!
