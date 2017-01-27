@@ -29,7 +29,7 @@ void addInQuadSix ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, 
 void getEffSys(int state =1, int Nsamples=100) { 
   TH1::SetDefaultSumw2();
 
-  TFile* f1 = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx0.root",state) );
+  TFile* f1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
   TH1D* eff1 = (TH1D*)f1->Get("hptEffPP");
   TH1D* eff2 = (TH1D*)f1->Get("hptEffAA");
   TH1D* eff3 = (TH1D*)f1->Get("hrapEffPP");
@@ -70,56 +70,216 @@ void getEffSys(int state =1, int Nsamples=100) {
   TH1D* eff6statSta = (TH1D*)eff6sys->Clone("hcentintEffAAStatSta"); 
   TH1D* eff7statSta = (TH1D*)eff7sys->Clone("hcentEffAAStatSta");
 
-  // sys. tnp variaiton 
-  TH1D* eff1sysVar = (TH1D*)eff1sys->Clone("hptEffPPSysVar"); 
-  TH1D* eff2sysVar = (TH1D*)eff2sys->Clone("hptEffAASysVar"); 
-  TH1D* eff3sysVar = (TH1D*)eff3sys->Clone("hrapEffPPSysVar");
-  TH1D* eff4sysVar = (TH1D*)eff4sys->Clone("hrapEffAASysVar");
-  TH1D* eff5sysVar = (TH1D*)eff5sys->Clone("hcentintEffPPSysVar"); 
-  TH1D* eff6sysVar = (TH1D*)eff6sys->Clone("hcentintEffAASysVar"); 
-  TH1D* eff7sysVar = (TH1D*)eff7sys->Clone("hcentEffAASysVar");
 
+
+  ///////////////////// sys. trig variation
+  TH1D* eff1TrgVar = (TH1D*)eff1sys->Clone("hptEffPPTrgVar"); 
+  TH1D* eff2TrgVar = (TH1D*)eff2sys->Clone("hptEffAATrgVar"); 
+  TH1D* eff3TrgVar = (TH1D*)eff3sys->Clone("hrapEffPPTrgVar");
+  TH1D* eff4TrgVar = (TH1D*)eff4sys->Clone("hrapEffAATrgVar");
+  TH1D* eff5TrgVar = (TH1D*)eff5sys->Clone("hcentintEffPPTrgVar"); 
+  TH1D* eff6TrgVar = (TH1D*)eff6sys->Clone("hcentintEffAATrgVar"); 
+  TH1D* eff7TrgVar = (TH1D*)eff7sys->Clone("hcentEffAATrgVar");
   // sys.var_1
-  TFile* fid_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx-1.root",state) );
-  TH1D* relDevVar1_1 = (TH1D*)fid_1->Get("hptEffPP");
-  TH1D* relDevVar2_1 = (TH1D*)fid_1->Get("hptEffAA");
-  TH1D* relDevVar3_1 = (TH1D*)fid_1->Get("hrapEffPP");
-  TH1D* relDevVar4_1 = (TH1D*)fid_1->Get("hrapEffAA");
-  TH1D* relDevVar5_1 = (TH1D*)fid_1->Get("hcentintEffPP");
-  TH1D* relDevVar6_1 = (TH1D*)fid_1->Get("hcentintEffAA");
-  TH1D* relDevVar7_1 = (TH1D*)fid_1->Get("hcentEffAA");
-  relDevVar1_1->Add( eff1, -1 );     relDevVar1_1->Divide( eff1);
-  relDevVar2_1->Add( eff2, -1 );     relDevVar2_1->Divide( eff2);
-  relDevVar3_1->Add( eff3, -1 );     relDevVar3_1->Divide( eff3);
-  relDevVar4_1->Add( eff4, -1 );     relDevVar4_1->Divide( eff4);
-  relDevVar5_1->Add( eff5, -1 );     relDevVar5_1->Divide( eff5);
-  relDevVar6_1->Add( eff6, -1 );     relDevVar6_1->Divide( eff6);
-  relDevVar7_1->Add( eff7, -1 );     relDevVar7_1->Divide( eff7);
+  TFile* ftrg_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId-1_trkId0_muId-100_staId-100.root",state));
+  TH1D* relTrgVar1_1 = (TH1D*)ftrg_1->Get("hptEffPP");
+  TH1D* relTrgVar2_1 = (TH1D*)ftrg_1->Get("hptEffAA");
+  TH1D* relTrgVar3_1 = (TH1D*)ftrg_1->Get("hrapEffPP");
+  TH1D* relTrgVar4_1 = (TH1D*)ftrg_1->Get("hrapEffAA");
+  TH1D* relTrgVar5_1 = (TH1D*)ftrg_1->Get("hcentintEffPP");
+  TH1D* relTrgVar6_1 = (TH1D*)ftrg_1->Get("hcentintEffAA");
+  TH1D* relTrgVar7_1 = (TH1D*)ftrg_1->Get("hcentEffAA");
+  relTrgVar1_1->Add( eff1, -1 );     relTrgVar1_1->Divide( eff1);
+  relTrgVar2_1->Add( eff2, -1 );     relTrgVar2_1->Divide( eff2);
+  relTrgVar3_1->Add( eff3, -1 );     relTrgVar3_1->Divide( eff3);
+  relTrgVar4_1->Add( eff4, -1 );     relTrgVar4_1->Divide( eff4);
+  relTrgVar5_1->Add( eff5, -1 );     relTrgVar5_1->Divide( eff5);
+  relTrgVar6_1->Add( eff6, -1 );     relTrgVar6_1->Divide( eff6);
+  relTrgVar7_1->Add( eff7, -1 );     relTrgVar7_1->Divide( eff7);
   // sys.var_2
-  TFile* fid_2 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx-2.root",state) );
-  TH1D* relDevVar1_2 = (TH1D*)fid_2->Get("hptEffPP");
-  TH1D* relDevVar2_2 = (TH1D*)fid_2->Get("hptEffAA");
-  TH1D* relDevVar3_2 = (TH1D*)fid_2->Get("hrapEffPP");
-  TH1D* relDevVar4_2 = (TH1D*)fid_2->Get("hrapEffAA");
-  TH1D* relDevVar5_2 = (TH1D*)fid_2->Get("hcentintEffPP");
-  TH1D* relDevVar6_2 = (TH1D*)fid_2->Get("hcentintEffAA");
-  TH1D* relDevVar7_2 = (TH1D*)fid_2->Get("hcentEffAA");
-  relDevVar1_2->Add( eff1, -1 );     relDevVar1_2->Divide( eff1);
-  relDevVar2_2->Add( eff2, -1 );     relDevVar2_2->Divide( eff2);
-  relDevVar3_2->Add( eff3, -1 );     relDevVar3_2->Divide( eff3);
-  relDevVar4_2->Add( eff4, -1 );     relDevVar4_2->Divide( eff4);
-  relDevVar5_2->Add( eff5, -1 );     relDevVar5_2->Divide( eff5);
-  relDevVar6_2->Add( eff6, -1 );     relDevVar6_2->Divide( eff6);
-  relDevVar7_2->Add( eff7, -1 );     relDevVar7_2->Divide( eff7);
+  TFile* ftrg_2 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId-2_trkId0_muId-100_staId-100.root",state));
+  TH1D* relTrgVar1_2 = (TH1D*)ftrg_2->Get("hptEffPP");
+  TH1D* relTrgVar2_2 = (TH1D*)ftrg_2->Get("hptEffAA");
+  TH1D* relTrgVar3_2 = (TH1D*)ftrg_2->Get("hrapEffPP");
+  TH1D* relTrgVar4_2 = (TH1D*)ftrg_2->Get("hrapEffAA");
+  TH1D* relTrgVar5_2 = (TH1D*)ftrg_2->Get("hcentintEffPP");
+  TH1D* relTrgVar6_2 = (TH1D*)ftrg_2->Get("hcentintEffAA");
+  TH1D* relTrgVar7_2 = (TH1D*)ftrg_2->Get("hcentEffAA");
+  relTrgVar1_2->Add( eff1, -1 );     relTrgVar1_2->Divide( eff1);
+  relTrgVar2_2->Add( eff2, -1 );     relTrgVar2_2->Divide( eff2);
+  relTrgVar3_2->Add( eff3, -1 );     relTrgVar3_2->Divide( eff3);
+  relTrgVar4_2->Add( eff4, -1 );     relTrgVar4_2->Divide( eff4);
+  relTrgVar5_2->Add( eff5, -1 );     relTrgVar5_2->Divide( eff5);
+  relTrgVar6_2->Add( eff6, -1 );     relTrgVar6_2->Divide( eff6);
+  relTrgVar7_2->Add( eff7, -1 );     relTrgVar7_2->Divide( eff7);
   // get Max deviation of each bin:
-  // sys. variation
-  getMaxTH1D(eff1sysVar, relDevVar1_1, relDevVar1_2);
-  getMaxTH1D(eff2sysVar, relDevVar2_1, relDevVar2_2);
-  getMaxTH1D(eff3sysVar, relDevVar3_1, relDevVar3_2);
-  getMaxTH1D(eff4sysVar, relDevVar4_1, relDevVar4_2);
-  getMaxTH1D(eff5sysVar, relDevVar5_1, relDevVar5_2);
-  getMaxTH1D(eff6sysVar, relDevVar6_1, relDevVar6_2);
-  getMaxTH1D(eff7sysVar, relDevVar7_1, relDevVar7_2);
+  getMaxTH1D(eff1TrgVar, relTrgVar1_2, relTrgVar1_2);
+  getMaxTH1D(eff2TrgVar, relTrgVar2_2, relTrgVar2_2);
+  getMaxTH1D(eff3TrgVar, relTrgVar3_2, relTrgVar3_2);
+  getMaxTH1D(eff4TrgVar, relTrgVar4_2, relTrgVar4_2);
+  getMaxTH1D(eff5TrgVar, relTrgVar5_2, relTrgVar5_2);
+  getMaxTH1D(eff6TrgVar, relTrgVar6_2, relTrgVar6_2);
+  getMaxTH1D(eff7TrgVar, relTrgVar7_2, relTrgVar7_2);
+
+
+
+  ///////////////////// sys. muid variation
+  TH1D* eff1MuIdVar = (TH1D*)eff1sys->Clone("hptEffPPMuIdVar"); 
+  TH1D* eff2MuIdVar = (TH1D*)eff2sys->Clone("hptEffAAMuIdVar"); 
+  TH1D* eff3MuIdVar = (TH1D*)eff3sys->Clone("hrapEffPPMuIdVar");
+  TH1D* eff4MuIdVar = (TH1D*)eff4sys->Clone("hrapEffAAMuIdVar");
+  TH1D* eff5MuIdVar = (TH1D*)eff5sys->Clone("hcentintEffPPMuIdVar"); 
+  TH1D* eff6MuIdVar = (TH1D*)eff6sys->Clone("hcentintEffAAMuIdVar"); 
+  TH1D* eff7MuIdVar = (TH1D*)eff7sys->Clone("hcentEffAAMuIdVar");
+  // sys.var_1
+  TFile* fmuId_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-1_staId-100.root",state));
+  TH1D* relMuIdVar1_1 = (TH1D*)fmuId_1->Get("hptEffPP");
+  TH1D* relMuIdVar2_1 = (TH1D*)fmuId_1->Get("hptEffAA");
+  TH1D* relMuIdVar3_1 = (TH1D*)fmuId_1->Get("hrapEffPP");
+  TH1D* relMuIdVar4_1 = (TH1D*)fmuId_1->Get("hrapEffAA");
+  TH1D* relMuIdVar5_1 = (TH1D*)fmuId_1->Get("hcentintEffPP");
+  TH1D* relMuIdVar6_1 = (TH1D*)fmuId_1->Get("hcentintEffAA");
+  TH1D* relMuIdVar7_1 = (TH1D*)fmuId_1->Get("hcentEffAA");
+  relMuIdVar1_1->Add( eff1, -1 );     relMuIdVar1_1->Divide( eff1);
+  relMuIdVar2_1->Add( eff2, -1 );     relMuIdVar2_1->Divide( eff2);
+  relMuIdVar3_1->Add( eff3, -1 );     relMuIdVar3_1->Divide( eff3);
+  relMuIdVar4_1->Add( eff4, -1 );     relMuIdVar4_1->Divide( eff4);
+  relMuIdVar5_1->Add( eff5, -1 );     relMuIdVar5_1->Divide( eff5);
+  relMuIdVar6_1->Add( eff6, -1 );     relMuIdVar6_1->Divide( eff6);
+  relMuIdVar7_1->Add( eff7, -1 );     relMuIdVar7_1->Divide( eff7);
+  // sys.var_2
+  TFile* fmuId_2 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-2_staId-100.root",state));
+  TH1D* relMuIdVar1_2 = (TH1D*)fmuId_2->Get("hptEffPP");
+  TH1D* relMuIdVar2_2 = (TH1D*)fmuId_2->Get("hptEffAA");
+  TH1D* relMuIdVar3_2 = (TH1D*)fmuId_2->Get("hrapEffPP");
+  TH1D* relMuIdVar4_2 = (TH1D*)fmuId_2->Get("hrapEffAA");
+  TH1D* relMuIdVar5_2 = (TH1D*)fmuId_2->Get("hcentintEffPP");
+  TH1D* relMuIdVar6_2 = (TH1D*)fmuId_2->Get("hcentintEffAA");
+  TH1D* relMuIdVar7_2 = (TH1D*)fmuId_2->Get("hcentEffAA");
+  relMuIdVar1_2->Add( eff1, -1 );     relMuIdVar1_2->Divide( eff1);
+  relMuIdVar2_2->Add( eff2, -1 );     relMuIdVar2_2->Divide( eff2);
+  relMuIdVar3_2->Add( eff3, -1 );     relMuIdVar3_2->Divide( eff3);
+  relMuIdVar4_2->Add( eff4, -1 );     relMuIdVar4_2->Divide( eff4);
+  relMuIdVar5_2->Add( eff5, -1 );     relMuIdVar5_2->Divide( eff5);
+  relMuIdVar6_2->Add( eff6, -1 );     relMuIdVar6_2->Divide( eff6);
+  relMuIdVar7_2->Add( eff7, -1 );     relMuIdVar7_2->Divide( eff7);
+  // get Max deviation of each bin:
+  getMaxTH1D(eff1MuIdVar, relMuIdVar1_2, relMuIdVar1_2);
+  getMaxTH1D(eff2MuIdVar, relMuIdVar2_2, relMuIdVar2_2);
+  getMaxTH1D(eff3MuIdVar, relMuIdVar3_2, relMuIdVar3_2);
+  getMaxTH1D(eff4MuIdVar, relMuIdVar4_2, relMuIdVar4_2);
+  getMaxTH1D(eff5MuIdVar, relMuIdVar5_2, relMuIdVar5_2);
+  getMaxTH1D(eff6MuIdVar, relMuIdVar6_2, relMuIdVar6_2);
+  getMaxTH1D(eff7MuIdVar, relMuIdVar7_2, relMuIdVar7_2);
+
+  ///////////////////// sys. sta variation
+  TH1D* eff1StaVar = (TH1D*)eff1sys->Clone("hptEffPPStaVar"); 
+  TH1D* eff2StaVar = (TH1D*)eff2sys->Clone("hptEffAAStaVar"); 
+  TH1D* eff3StaVar = (TH1D*)eff3sys->Clone("hrapEffPPStaVar");
+  TH1D* eff4StaVar = (TH1D*)eff4sys->Clone("hrapEffAAStaVar");
+  TH1D* eff5StaVar = (TH1D*)eff5sys->Clone("hcentintEffPPStaVar"); 
+  TH1D* eff6StaVar = (TH1D*)eff6sys->Clone("hcentintEffAAStaVar"); 
+  TH1D* eff7StaVar = (TH1D*)eff7sys->Clone("hcentEffAAStaVar");
+  // sys.var_1
+  TFile* fsta_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-1.root",state));
+  TH1D* relStaVar1_1 = (TH1D*)fsta_1->Get("hptEffPP");
+  TH1D* relStaVar2_1 = (TH1D*)fsta_1->Get("hptEffAA");
+  TH1D* relStaVar3_1 = (TH1D*)fsta_1->Get("hrapEffPP");
+  TH1D* relStaVar4_1 = (TH1D*)fsta_1->Get("hrapEffAA");
+  TH1D* relStaVar5_1 = (TH1D*)fsta_1->Get("hcentintEffPP");
+  TH1D* relStaVar6_1 = (TH1D*)fsta_1->Get("hcentintEffAA");
+  TH1D* relStaVar7_1 = (TH1D*)fsta_1->Get("hcentEffAA");
+  relStaVar1_1->Add( eff1, -1 );     relStaVar1_1->Divide( eff1);
+  relStaVar2_1->Add( eff2, -1 );     relStaVar2_1->Divide( eff2);
+  relStaVar3_1->Add( eff3, -1 );     relStaVar3_1->Divide( eff3);
+  relStaVar4_1->Add( eff4, -1 );     relStaVar4_1->Divide( eff4);
+  relStaVar5_1->Add( eff5, -1 );     relStaVar5_1->Divide( eff5);
+  relStaVar6_1->Add( eff6, -1 );     relStaVar6_1->Divide( eff6);
+  relStaVar7_1->Add( eff7, -1 );     relStaVar7_1->Divide( eff7);
+  // sys.var_2
+  TFile* fsta_2 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-2.root",state));
+  TH1D* relStaVar1_2 = (TH1D*)fsta_2->Get("hptEffPP");
+  TH1D* relStaVar2_2 = (TH1D*)fsta_2->Get("hptEffAA");
+  TH1D* relStaVar3_2 = (TH1D*)fsta_2->Get("hrapEffPP");
+  TH1D* relStaVar4_2 = (TH1D*)fsta_2->Get("hrapEffAA");
+  TH1D* relStaVar5_2 = (TH1D*)fsta_2->Get("hcentintEffPP");
+  TH1D* relStaVar6_2 = (TH1D*)fsta_2->Get("hcentintEffAA");
+  TH1D* relStaVar7_2 = (TH1D*)fsta_2->Get("hcentEffAA");
+  relStaVar1_2->Add( eff1, -1 );     relStaVar1_2->Divide( eff1);
+  relStaVar2_2->Add( eff2, -1 );     relStaVar2_2->Divide( eff2);
+  relStaVar3_2->Add( eff3, -1 );     relStaVar3_2->Divide( eff3);
+  relStaVar4_2->Add( eff4, -1 );     relStaVar4_2->Divide( eff4);
+  relStaVar5_2->Add( eff5, -1 );     relStaVar5_2->Divide( eff5);
+  relStaVar6_2->Add( eff6, -1 );     relStaVar6_2->Divide( eff6);
+  relStaVar7_2->Add( eff7, -1 );     relStaVar7_2->Divide( eff7);
+  // get Max deviation of each bin:
+  getMaxTH1D(eff1StaVar, relStaVar1_2, relStaVar1_2);
+  getMaxTH1D(eff2StaVar, relStaVar2_2, relStaVar2_2);
+  getMaxTH1D(eff3StaVar, relStaVar3_2, relStaVar3_2);
+  getMaxTH1D(eff4StaVar, relStaVar4_2, relStaVar4_2);
+  getMaxTH1D(eff5StaVar, relStaVar5_2, relStaVar5_2);
+  getMaxTH1D(eff6StaVar, relStaVar6_2, relStaVar6_2);
+  getMaxTH1D(eff7StaVar, relStaVar7_2, relStaVar7_2);
+
+
+  ///////////////////// sys. trk variation
+  TH1D* eff1TrkVar = (TH1D*)eff1sys->Clone("hptEffPPTrkVar"); 
+  TH1D* eff2TrkVar = (TH1D*)eff2sys->Clone("hptEffAATrkVar"); 
+  TH1D* eff3TrkVar = (TH1D*)eff3sys->Clone("hrapEffPPTrkVar");
+  TH1D* eff4TrkVar = (TH1D*)eff4sys->Clone("hrapEffAATrkVar");
+  TH1D* eff5TrkVar = (TH1D*)eff5sys->Clone("hcentintEffPPTrkVar"); 
+  TH1D* eff6TrkVar = (TH1D*)eff6sys->Clone("hcentintEffAATrkVar"); 
+  TH1D* eff7TrkVar = (TH1D*)eff7sys->Clone("hcentEffAATrkVar");
+  // sys.var_1
+  TFile* ftrk_1 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId-1_muId-100_staId-100.root",state));
+  TH1D* relTrkVar1_1 = (TH1D*)ftrk_1->Get("hptEffPP");
+  TH1D* relTrkVar2_1 = (TH1D*)ftrk_1->Get("hptEffAA");
+  TH1D* relTrkVar3_1 = (TH1D*)ftrk_1->Get("hrapEffPP");
+  TH1D* relTrkVar4_1 = (TH1D*)ftrk_1->Get("hrapEffAA");
+  TH1D* relTrkVar5_1 = (TH1D*)ftrk_1->Get("hcentintEffPP");
+  TH1D* relTrkVar6_1 = (TH1D*)ftrk_1->Get("hcentintEffAA");
+  TH1D* relTrkVar7_1 = (TH1D*)ftrk_1->Get("hcentEffAA");
+  relTrkVar1_1->Add( eff1, -1 );     relTrkVar1_1->Divide( eff1);
+  relTrkVar2_1->Add( eff2, -1 );     relTrkVar2_1->Divide( eff2);
+  relTrkVar3_1->Add( eff3, -1 );     relTrkVar3_1->Divide( eff3);
+  relTrkVar4_1->Add( eff4, -1 );     relTrkVar4_1->Divide( eff4);
+  relTrkVar5_1->Add( eff5, -1 );     relTrkVar5_1->Divide( eff5);
+  relTrkVar6_1->Add( eff6, -1 );     relTrkVar6_1->Divide( eff6);
+  relTrkVar7_1->Add( eff7, -1 );     relTrkVar7_1->Divide( eff7);
+  // sys.var_2
+  TFile* ftrk_2 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId-2_muId-100_staId-100.root",state));
+  TH1D* relTrkVar1_2 = (TH1D*)ftrk_2->Get("hptEffPP");
+  TH1D* relTrkVar2_2 = (TH1D*)ftrk_2->Get("hptEffAA");
+  TH1D* relTrkVar3_2 = (TH1D*)ftrk_2->Get("hrapEffPP");
+  TH1D* relTrkVar4_2 = (TH1D*)ftrk_2->Get("hrapEffAA");
+  TH1D* relTrkVar5_2 = (TH1D*)ftrk_2->Get("hcentintEffPP");
+  TH1D* relTrkVar6_2 = (TH1D*)ftrk_2->Get("hcentintEffAA");
+  TH1D* relTrkVar7_2 = (TH1D*)ftrk_2->Get("hcentEffAA");
+  relTrkVar1_2->Add( eff1, -1 );     relTrkVar1_2->Divide( eff1);
+  relTrkVar2_2->Add( eff2, -1 );     relTrkVar2_2->Divide( eff2);
+  relTrkVar3_2->Add( eff3, -1 );     relTrkVar3_2->Divide( eff3);
+  relTrkVar4_2->Add( eff4, -1 );     relTrkVar4_2->Divide( eff4);
+  relTrkVar5_2->Add( eff5, -1 );     relTrkVar5_2->Divide( eff5);
+  relTrkVar6_2->Add( eff6, -1 );     relTrkVar6_2->Divide( eff6);
+  relTrkVar7_2->Add( eff7, -1 );     relTrkVar7_2->Divide( eff7);
+  // get Max deviation of each bin:
+  getMaxTH1D(eff1TrkVar, relTrkVar1_2, relTrkVar1_2);
+  getMaxTH1D(eff2TrkVar, relTrkVar2_2, relTrkVar2_2);
+  getMaxTH1D(eff3TrkVar, relTrkVar3_2, relTrkVar3_2);
+  getMaxTH1D(eff4TrkVar, relTrkVar4_2, relTrkVar4_2);
+  getMaxTH1D(eff5TrkVar, relTrkVar5_2, relTrkVar5_2);
+  getMaxTH1D(eff6TrkVar, relTrkVar6_2, relTrkVar6_2);
+  getMaxTH1D(eff7TrkVar, relTrkVar7_2, relTrkVar7_2);
+
+
+
+
+
+
+
+
+
+
 
 
   // SF from binnined table:
@@ -146,6 +306,7 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff6binned->Add( eff6, -1 );     eff6binned->Divide( eff6);
   eff7binned->Add( eff7, -1 );     eff7binned->Divide( eff7);
 
+  /*
   // pT reweight (nothing to do with TNP
   TFile* fid_ptw = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight0_tnpWeight1_tnpIdx0.root",state) );
   TH1D* eff1ptw = (TH1D*)fid_ptw->Get("hptEffPP");
@@ -169,7 +330,7 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff5ptw->Add( eff5, -1 );     eff5ptw->Divide( eff5);
   eff6ptw->Add( eff6, -1 );     eff6ptw->Divide( eff6);
   eff7ptw->Add( eff7, -1 );     eff7ptw->Divide( eff7);
-
+  */
   // Muon ID
   TFile* fid_200 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnpWeight1_tnpIdx200.root",state) );
   TH1D* eff1muid = (TH1D*)fid_200->Get("hptEffPP");
