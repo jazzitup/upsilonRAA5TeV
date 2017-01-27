@@ -438,7 +438,7 @@ void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D *h3, TH1D* h4, TH1D* h5
 
   TCanvas* c0 = new TCanvas("c_mergedSys","",400,400);
 
-  h0->SetAxisRange(-0.1,1.1,"Y");
+  h0->SetAxisRange(-0.5,1.1,"Y");
   h0->SetYTitle("Relative Uncertainty");
   handsomeTH1(h0,        1); h0->SetLineWidth(2);   h0->DrawCopy("hist");
   handsomeTH1(h1,        2); h1->SetLineWidth(2); h1->DrawCopy("hist same");

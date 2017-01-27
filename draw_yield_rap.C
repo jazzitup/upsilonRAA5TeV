@@ -138,8 +138,8 @@ int draw_yield_rap(TString szAA = "PP", int states =1)
   
   for (int ib =0; ib < nBin; ib ++ ) {
     //// read files
-    if (szAA == "PP" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/NomPlot/fitresults_upsilon_DoubleCB_%s_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
-    else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/NomPlot/fitresults_upsilon_DoubleCB_%s_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
+    if (szAA == "PP" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/fitResults/Final_NomResult_170124/PAS_fitresults_upsilon_DoubleCB_%s_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
+    else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/fitResults/Final_NomResult_170124/PAS_fitresults_upsilon_DoubleCB_%s_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
     else { cout << " Error ::: Select among PP and AA" << endl; return 0; }
     //cout << ib << "th file = " << fileIn[ib]->GetName() << endl;
     //if (fileIn[ib]->IsZombie()) { cout << "CANNOT open data root file\n"; return 1; }
