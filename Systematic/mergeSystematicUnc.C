@@ -18,7 +18,7 @@ void mergeTwoInQuadCent( TH1D* h0=0, TH1D* hAA=0, TH1D* hPP=0);
 void subtractTwo( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0);
 void subtractTwoCent( TH1D* h0=0, TH1D* hAA=0, TH1D* hPP=0);
 
-void mergeSystematicUnc(int state = 1) { 
+void mergeSystematicUnc(int state = 2) { 
   
   TH1::SetDefaultSumw2();
 
@@ -242,7 +242,7 @@ void mergeSystematicUnc(int state = 1) {
   mergeTwoInQuadCent( hcentRAA[4], hcentAA[4], hintPP[4] );
   mergeTwoInQuad( hintRAA[4], hintAA[4], hintPP[4] );
   
-  
+
   // 5 : CB+Gaus PDF 
   TFile* f5 = new TFile(Form("CBGaus_Variation/sys_CBGausVariaion_%ds.root",state));
   hptPP[5] = (TH1D*)f5->Get("hptPP"); hptPP[5]->SetName("hptPPCBGaus");
@@ -438,14 +438,14 @@ void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D *h3, TH1D* h4, TH1D* h5
 
   TCanvas* c0 = new TCanvas("c_mergedSys","",400,400);
 
-  h0->SetAxisRange(0,0.7,"Y");
+  h0->SetAxisRange(-0.1,1.1,"Y");
   h0->SetYTitle("Relative Uncertainty");
   handsomeTH1(h0,        1); h0->SetLineWidth(2);   h0->DrawCopy("hist");
   handsomeTH1(h1,        2); h1->SetLineWidth(2); h1->DrawCopy("hist same");
   handsomeTH1(h2,        3); h2->SetLineWidth(2); h2->DrawCopy("hist same");
-  handsomeTH1(h3,6);         h3->SetLineWidth(2); h3->DrawCopy("hist same");
+  handsomeTH1(h3,4);         h3->SetLineWidth(2); h3->DrawCopy("hist same");
   handsomeTH1(h4,6);         h4->SetLineWidth(2); h4->DrawCopy("hist same");
-  handsomeTH1(h5,8);         h5->SetLineWidth(2); h5->DrawCopy("hist same");
+  handsomeTH1(h5,11);         h5->SetLineWidth(2); h5->DrawCopy("hist same");
   
   TLegend *leg1 = new TLegend(0.55,0.6, 0.85,0.9,NULL,"brNDC");
   easyLeg(leg1,title.Data());

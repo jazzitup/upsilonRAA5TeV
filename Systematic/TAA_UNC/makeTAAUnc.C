@@ -1,11 +1,11 @@
-#include "../commonUtility.h"
+#include "../../commonUtility.h"
 #include "TText.h"
 #include "TLine.h"
 #include "TStyle.h"
 #include "TArrow.h"
 #include "TFile.h"
 #include "TROOT.h"
-#include "cutsAndBin.h"
+#include "../../cutsAndBin.h"
 #include <TGraphErrors.h>
 using namespace std;
 
@@ -61,7 +61,7 @@ void makeTAAUnc(int state=1)
   for(int irap=0;irap<nYBins;irap++)
   {
     hUncRapPP->SetBinContent(irap+1, 0.);
-    hUncRapAA->SetBinContent(irap+1, TAA_unc[nCentBins]);
+    hUncRapAA->SetBinContent(irap+1, 0.);
     pp = hUncRapPP-> GetBinContent(irap+1);
     aa = hUncRapAA-> GetBinContent(irap+1);
     finalUnc = TMath::Sqrt(pp*pp+aa*aa);
@@ -72,7 +72,8 @@ void makeTAAUnc(int state=1)
   for(int ipt=0;ipt<nPtBins;ipt++)
   {
     hUncPtPP->SetBinContent(ipt+1, 0.);
-    hUncPtAA->SetBinContent(ipt+1, TAA_unc[nCentBins]);
+    hUncPtAA->SetBinContent(ipt+1, 0.);
+    //hUncPtAA->SetBinContent(ipt+1, TAA_unc[nCentBins]);
     pp = hUncPtPP-> GetBinContent(ipt+1);
     aa = hUncPtAA-> GetBinContent(ipt+1);
     finalUnc = TMath::Sqrt(pp*pp+aa*aa);
