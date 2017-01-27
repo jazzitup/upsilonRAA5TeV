@@ -11,7 +11,7 @@ using namespace std;
 
 TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 void mergeSixInQuad( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D*h5=0, TH1D*h6=0, int state=1, TString title="");
-void mergeFiveInQuad( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D*h5=0);
+void mergeFiveInQuad( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D*h5=0, int state=1, TString title="");
 void mergeFourInQuad( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0);
 void mergeTwoInQuad( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0);
 void mergeTwoInQuadCent( TH1D* h0=0, TH1D* hAA=0, TH1D* hPP=0);
@@ -317,18 +317,18 @@ void mergeSystematicUnc(int state = 1) {
   mergeSixInQuad( hintRAA[0], hintRAA[1], hintRAA[2], hintRAA[3], hintRAA[4], hintRAA[5], hintRAA[6] , state);
   */
   
-  mergeFiveInQuad( hptPP[0], hptPP[1], hptPP[2], hptPP[4], hptPP[5], hptPP[6] );
-  mergeFiveInQuad( hrapPP[0], hrapPP[1], hrapPP[2], hrapPP[4], hrapPP[5], hrapPP[6] );
-  mergeFiveInQuad( hptAA[0], hptAA[1], hptAA[2], hptAA[4], hptAA[5], hptAA[6] );
-  mergeFiveInQuad( hrapAA[0], hrapAA[1], hrapAA[2], hrapAA[4], hrapAA[5], hrapAA[6] );
-  mergeFiveInQuad( hcentAA[0], hcentAA[1], hcentAA[2], hcentAA[4], hcentAA[5], hcentAA[6] );
-  mergeFiveInQuad( hintAA[0], hintAA[1], hintAA[2], hintAA[4], hintAA[5], hintAA[6] );
-  mergeFiveInQuad( hintPP[0], hintPP[1], hintPP[2], hintPP[4], hintPP[5], hintPP[6] );
+  mergeFiveInQuad( hptPP[0], hptPP[1], hptPP[2], hptPP[4], hptPP[5], hptPP[6] , state);
+  mergeFiveInQuad( hrapPP[0], hrapPP[1], hrapPP[2], hrapPP[4], hrapPP[5], hrapPP[6] , state);
+  mergeFiveInQuad( hptAA[0], hptAA[1], hptAA[2], hptAA[4], hptAA[5], hptAA[6] , state);
+  mergeFiveInQuad( hrapAA[0], hrapAA[1], hrapAA[2], hrapAA[4], hrapAA[5], hrapAA[6] , state);
+  mergeFiveInQuad( hcentAA[0], hcentAA[1], hcentAA[2], hcentAA[4], hcentAA[5], hcentAA[6] , state);
+  mergeFiveInQuad( hintAA[0], hintAA[1], hintAA[2], hintAA[4], hintAA[5], hintAA[6] , state);
+  mergeFiveInQuad( hintPP[0], hintPP[1], hintPP[2], hintPP[4], hintPP[5], hintPP[6] , state);
 
-  mergeFiveInQuad( hptRAA[0], hptRAA[1], hptRAA[2], hptRAA[4], hptRAA[5], hptRAA[6] );
-  mergeFiveInQuad( hrapRAA[0], hrapRAA[1], hrapRAA[2], hrapRAA[4], hrapRAA[5], hrapRAA[6] );
-  mergeFiveInQuad( hcentRAA[0], hcentRAA[1], hcentRAA[2], hcentRAA[4], hcentRAA[5], hcentRAA[6] );
-  mergeFiveInQuad( hintRAA[0], hintRAA[1], hintRAA[2], hintRAA[4], hintRAA[5], hintRAA[6] );
+  mergeFiveInQuad( hptRAA[0], hptRAA[1], hptRAA[2], hptRAA[4], hptRAA[5], hptRAA[6] , state);
+  mergeFiveInQuad( hrapRAA[0], hrapRAA[1], hrapRAA[2], hrapRAA[4], hrapRAA[5], hrapRAA[6] , state);
+  mergeFiveInQuad( hcentRAA[0], hcentRAA[1], hcentRAA[2], hcentRAA[4], hcentRAA[5], hcentRAA[6] , state);
+  mergeFiveInQuad( hintRAA[0], hintRAA[1], hintRAA[2], hintRAA[4], hintRAA[5], hintRAA[6] , state);
   
 
 
@@ -425,7 +425,7 @@ void mergeSixInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5,
   
 }
 
-void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5) {
+void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D *h3, TH1D* h4, TH1D* h5, int state, TString title) {
   for ( int i=1 ; i<= h0->GetNbinsX() ;i++){ 
     float a1 = h1->GetBinContent(i);
     float a2 = h2->GetBinContent(i);
@@ -435,6 +435,36 @@ void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5
     float a0 = sqrt( a1*a1 + a2*a2 + a3*a3 + a4*a4 + a5*a5);
     h0->SetBinContent( i, a0);
   } 
+
+  TCanvas* c0 = new TCanvas("c_mergedSys","",400,400);
+
+  h0->SetAxisRange(0,0.7,"Y");
+  h0->SetYTitle("Relative Uncertainty");
+  handsomeTH1(h0,        1); h0->SetLineWidth(2);   h0->DrawCopy("hist");
+  handsomeTH1(h1,        2); h1->SetLineWidth(2); h1->DrawCopy("hist same");
+  handsomeTH1(h2,        3); h2->SetLineWidth(2); h2->DrawCopy("hist same");
+  handsomeTH1(h3,6);         h3->SetLineWidth(2); h3->DrawCopy("hist same");
+  handsomeTH1(h4,6);         h4->SetLineWidth(2); h4->DrawCopy("hist same");
+  handsomeTH1(h5,8);         h5->SetLineWidth(2); h5->DrawCopy("hist same");
+  
+  TLegend *leg1 = new TLegend(0.55,0.6, 0.85,0.9,NULL,"brNDC");
+  easyLeg(leg1,title.Data());
+  leg1->AddEntry(h0,"Total","l");
+  leg1->AddEntry(h1,"efficiency","l");
+  leg1->AddEntry(h2,"Acceptance","l");
+  leg1->AddEntry(h3,"Background PDF","l");
+  leg1->AddEntry(h4,"Signal PDF","l");
+  leg1->AddEntry(h5,"TAA Uncertainty","l");
+  leg1->Draw();
+  c0->SaveAs(Form("pdfFiles/%s_ups%ds.pdf", h0->GetName(),state ) );
+  // 5 : TAA uncertainty
+  // 4 : CB+Gaus PDF  
+  // 3 : background PDF
+  // 2 : acceptance
+  // 1 : efficiency
+
+
+
 }
 
 void mergeFourInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4) {
