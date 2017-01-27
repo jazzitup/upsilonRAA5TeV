@@ -465,11 +465,11 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
   cout << " pp = " << int(hcentintEffPP->GetBinContent(1)*1000)/1000. << ",  PbPb = " << int(hcentintEffAA->GetBinContent(1)*1000)/1000. << endl; 
 
   
-  TFile* fout = new TFile(Form("%s/efficiency_ups%ds_useDataPtWeight%d_tnp_trgId%d_muId%d_staId%d_trkId%d.root",outputDirName.Data(), state,useDataWeight,trgIdx, muIdx, staIdx, trkIdx),"recreate");
+  TFile* fout = new TFile(Form("%s/efficiency_ups%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.root",outputDirName.Data(), state,useDataWeight,trgIdx, trkIdx, muIdx, staIdx),"recreate");
 
-  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnp_trgId%d_muId%d_staId%d_trkId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, muIdx, staIdx, trkIdx));
-  c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnp_trgId%d_muId%d_staId%d_trkId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, muIdx, staIdx, trkIdx));
-  c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnp_trgId%d_muId%d_staId%d_trkId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, muIdx, staIdx, trkIdx));
+  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, trkIdx, muIdx, staIdx ));
+  c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, trkIdx, muIdx, staIdx ));
+  c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, trkIdx, muIdx, staIdx ));
   
   hptGenPP->Write();
   hptRecoPP->Write();
