@@ -167,7 +167,7 @@ void mergeSystematicUnc(int state = 1) {
   hbkgrapRAA[1] = (TH1D*)hrapAA[4]->Clone("hbkgrapRAA");   hbkgrapRAA[1]->Reset();
   hbkgcentRAA[1] = (TH1D*)hcentAA[4]->Clone("hbkgcentRAA");    hbkgcentRAA[1]->Reset();
   hbkgintRAA[1] = (TH1D*)hintAA[4]->Clone("hbkgintRAA");    hbkgintRAA[1]->Reset();
-
+/*
   subtractTwo( hbkgptRAA[0], hbkgptAA[0], hbkgptPP[0] );
   subtractTwo( hbkgrapRAA[0], hbkgrapAA[0], hbkgrapPP[0] );
   subtractTwoCent( hbkgcentRAA[0], hbkgcentAA[0], hbkgintPP[0] );
@@ -177,8 +177,8 @@ void mergeSystematicUnc(int state = 1) {
   subtractTwo( hbkgrapRAA[1], hbkgrapAA[1], hbkgrapPP[1] );
   subtractTwoCent( hbkgcentRAA[1], hbkgcentAA[1], hbkgintPP[1] );
   subtractTwo( hbkgintRAA[1], hbkgintAA[1], hbkgintPP[1] );
-  
-
+*/  
+/*
   for(int i=1;i<=hbkgptRAA[0]->GetNbinsX();i++)
   {
     if(TMath::Abs(hbkgptRAA[0]->GetBinContent(i)) <= TMath::Abs(hbkgptRAA[1]->GetBinContent(i))) hptRAA[4] -> SetBinContent(i,hbkgptRAA[1]->GetBinContent(i));
@@ -199,7 +199,8 @@ void mergeSystematicUnc(int state = 1) {
     if(TMath::Abs(hbkgintRAA[0]->GetBinContent(i)) <= TMath::Abs(hbkgintRAA[1]->GetBinContent(i))) hintRAA[4] -> SetBinContent(i,hbkgintRAA[1]->GetBinContent(i));
     else hintRAA[4] -> SetBinContent(i,hbkgintRAA[0]->GetBinContent(i));
   }
-  
+*/
+
   for(int i=1;i<=hbkgptPP[0]->GetNbinsX();i++)
   {
     if(TMath::Abs(hbkgptPP[0]->GetBinContent(i)) <= TMath::Abs(hbkgptPP[1]->GetBinContent(i))) hptPP[4] -> SetBinContent(i,hbkgptPP[1]->GetBinContent(i));
@@ -235,7 +236,11 @@ void mergeSystematicUnc(int state = 1) {
     if(TMath::Abs(hbkgcentAA[0]->GetBinContent(i)) <= TMath::Abs(hbkgcentAA[1]->GetBinContent(i))) hcentAA[4] -> SetBinContent(i,hbkgcentAA[1]->GetBinContent(i));
     else hcentAA[4] -> SetBinContent(i,hbkgcentAA[0]->GetBinContent(i));
   }
-  
+
+  mergeTwoInQuad( hptRAA[4], hptAA[4], hptPP[4] );
+  mergeTwoInQuad( hrapRAA[4], hrapAA[4], hrapPP[4] );
+  mergeTwoInQuadCent( hcentRAA[4], hcentAA[4], hintPP[4] );
+  mergeTwoInQuad( hintRAA[4], hintAA[4], hintPP[4] );
   
   
   // 5 : CB+Gaus PDF 
@@ -259,7 +264,7 @@ void mergeSystematicUnc(int state = 1) {
   mergeTwoInQuad( hintRAA[5], hintAA[5], hintPP[5] );
 
   // 6 : TAA uncertainty 
-  TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_Tracking_%ds.root",state));
+  TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_%ds.root",state));
   hptPP[6] = (TH1D*)f6->Get("hptPP"); hptPP[6]->SetName("hptPPTAA");
   hptAA[6] = (TH1D*)f6->Get("hptAA"); hptAA[6]->SetName("hptAATAA");
   hrapPP[6] = (TH1D*)f6->Get("hrapPP"); hrapPP[6]->SetName("hrapPPTAA");
