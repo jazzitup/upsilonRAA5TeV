@@ -1,12 +1,13 @@
 #void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeigt=false, int tnpIdx=0) { 
-# - Trigger:
-#   * idx = 0:  nominal
-#   * idx = 1..100: toy variations, stat. only
-#   * idx = -1: syst variation, "new_MAX", +1 sigma
-#   * idx = -2: syst variation, "new_MAX", -1 sigma
-#   * idx = -10: binned
-# - MuID, STA:
-#   * only one SF (for systematic uncertainty only)
+
+
+
+
+
+#void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
+#                         int trgIdx=0,  int muIdx=0,  int staIdx=0, int trkIdx=0 //  id = -100 means no correction on this
+
+
 
 root -l -b <<EOF
 .L getEfficiencyUpsilon.C++
@@ -16,25 +17,26 @@ EOF
 # NOMINAL
 for state in 1 2 3
 do
-    root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,0,0)'
-    root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,0,0)'
-    root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,1,0)'
-    root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,1,0)'
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,0,0,-100,-100)'  #TNP Nominal
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,0,0,-100,-100)'
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',0,0,0,-100,-100)'  #Pure MC
+    root -l -b -q 'getEfficiencyUpsilon.C+('$state',1,-100,-100,-100,-100)'
+
 done
 
 # SYSTEMATICS
 
 for state in 1 2 3
 do
-    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-1)'
-    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-2)'
-    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-10)'
-    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,200)'
-    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,300)'
-    for (( i=1 ; i<=100 ; i++ ))
-    do
-        root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,'$i')'
-    done
+#    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-1)'
+#    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-2)'
+#    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,-10)'
+#    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,200)'
+#    root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,300)'
+#    for (( i=1 ; i<=100 ; i++ ))
+ #   do
+ #       root -l -b -q 'getEfficiencyUpsilon.C('$state',1,1,'$i')'
+#    done
 done
 
 
