@@ -50,6 +50,40 @@ double nColl2s[nCentBins2s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
 double nColl3s[nCentBins3s]   = {1079, 98.36};
 //double nColl3s[nCentBins3s]   = {1079, 98.36};  
 
+//Upperlimit value
+
+double lower68_pt1 = 0;
+double lower68_pt2 = 0;
+double lower68_y1 = 0;
+double lower68_y2 = 0;
+double lower68_c2 = 0;
+double lower68_c1 = 0.021954136 ;
+double lower68_cint = 0;
+
+double upper68_pt1 = 0.074432328  ;
+double upper68_pt2 = 0.04717349 ;
+double upper68_y1 = 0.040423341 ;
+double upper68_y2 = 0.080328342 ;
+double upper68_c2 = 0.010447972 ;
+double upper68_c1 = 0.108606435  ;
+double upper68_cint = 0.039309411  ;
+
+double lower95_pt1 = 0;
+double lower95_pt2 = 0;
+double lower95_y1 = 0;
+double lower95_y2 = 0;
+double lower95_c2 = 0;
+double lower95_c1 = 0;
+double lower95_cint = 0;
+
+double upper95_pt1 = 0.136068984  ;
+double upper95_pt2 = 0.087142807   ;
+double upper95_y1 = 0.078514687 ;
+double upper95_y2 = 0.114104469 ;
+double upper95_c2 = 0.021243984 ;
+double upper95_c1 = 0.152235113 ;
+double upper95_cint = 0.070095351 ;
+
 // TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
@@ -63,6 +97,7 @@ double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12, 0.089};
 const double inel_cross_PbPb = 6740;
 //const double NumberOfMBColl = 2366003000;
 const double NumberOfMBColl = 2484303150;
+const double NumberOfMBColl1 = 3284093053;
 //const double inel_cross_PbPb = 7716;
 
 // lumi Unc 
