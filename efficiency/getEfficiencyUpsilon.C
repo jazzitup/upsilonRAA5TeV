@@ -14,19 +14,21 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, bool useTnpWeight=true, int tnpIdx=0) {  // 1S, 2S, 3S
+void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, 
+			  int trgIdx=0,  int trkIdx=0, int muIdx=0,  int staIdx=0 //  id = -100 means no correction on this 
+			  ) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
-
-TH1D* ncoll1SBin = new TH1D("ncoll1sbin","", nCentBins1s, centBin1s );
-for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
-  {
-    ncoll1SBin->SetBinContent( ii , nColl1s[ii-1] ) ;
-  }
-
-  TString outputDirName = "efficiencyTable";
-  if ( tnpIdx != 0) 
-    outputDirName = "efficiencyTableSys";
-
+  
+  TH1D* ncoll1SBin = new TH1D("ncoll1sbin","", nCentBins1s, centBin1s );
+  for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
+    {
+      ncoll1SBin->SetBinContent( ii , nColl1s[ii-1] ) ;
+    }
+  
+  TString outputDirName = "efficiencyTableSys";
+  if(    ((trgIdx==0)||(trgIdx==-100)) &&  ((muIdx==0)||(muIdx==-100)) &&  ((staIdx==0)||(staIdx==-100)) &&  ((trkIdx==0)||(trkIdx==-100)) )
+    outputDirName = "efficiencyTable";
+  
   
   float massLow = 8;
   float massHigh = 13;
@@ -118,42 +120,43 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   TBranch        *b_dmAA;
   mmAA->SetBranchAddress("mm",&dmAA,&b_dmAA);
   
-  for(int iev=0; iev<mmAA->GetEntries() ; ++iev)  
-    {
-      mmAA->GetEntry(iev);
-      //Accpetnace 
-      if (  !( (dmAA.pt1 > glbMuPtCut) && (dmAA.pt2 > glbMuPtCut) && ( fabs(dmAA.eta1) < 2.4 ) &&  ( fabs(dmAA.eta2) <2.4 ) ) )
-	continue;
-      
-      if (  !( (dmAA.mass > massLow) 
-	       && (dmAA.mass < massHigh) 
-	       && ( dmAA.pt > ptMin) 
-	       && ( dmAA.pt < ptMax) 
-	       && ( fabs(dmAA.y) > yMin)
+  for(int iev=0; iev<mmAA->GetEntries() ; ++iev)      {
+    mmAA->GetEntry(iev);
+    //Accpetnace 
+    if (  !( (dmAA.pt1 > glbMuPtCut) && (dmAA.pt2 > glbMuPtCut) && ( fabs(dmAA.eta1) < 2.4 ) &&  ( fabs(dmAA.eta2) <2.4 ) ) )
+      continue;
+    
+    if (  !( (dmAA.mass > massLow) 
+	     && (dmAA.mass < massHigh) 
+	     && ( dmAA.pt > ptMin) 
+	     && ( dmAA.pt < ptMax) 
+	     && ( fabs(dmAA.y) > yMin)
 	       && ( fabs(dmAA.y) < yMax)	      )
-	    )
-	continue;
-      
-      float ptWeight = dmAA.weight0; 
-      if (useDataWeight) ptWeight = dmAA.weight;
-      float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmAA.cBin ) ) ;
-      float tnpWeight = 1;
-      if (useTnpWeight) { 
-	if ( tnpIdx == 200 ) {  
-          tnpWeight = tnp_weight_muid_pbpb(dmAA.pt1, dmAA.eta1) *  tnp_weight_muid_pbpb(dmAA.pt2, dmAA.eta2) ;
-	}
-	else if ( tnpIdx == 300 ) { 
-          tnpWeight = tnp_weight_sta_pp(dmAA.pt1, dmAA.eta1) *  tnp_weight_sta_pp(dmAA.pt2, dmAA.eta2) ;
-	}
-	else   {
-	  tnpWeight = tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, tnpIdx) ; 
-	}
-      }
-      hcentintRecoAA->Fill( dmAA.cBin, ptWeight*tnpWeight*ncollWeight);
-      hcentRecoAA->Fill   ( dmAA.cBin, ptWeight*tnpWeight*ncollWeight);
-      hptRecoAA->Fill     ( dmAA.pt,   ptWeight*tnpWeight*ncollWeight);
-      hrapRecoAA->Fill    ( dmAA.y,    ptWeight*tnpWeight*ncollWeight);
+	  )
+      continue;
+    
+    float ptWeight = dmAA.weight0; 
+    if (useDataWeight) ptWeight = dmAA.weight;
+    float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmAA.cBin ) ) ;
+    float tnpWeight = 1;
+    if ( trgIdx > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_trg_pbpb(dmAA.pt1, dmAA.eta1, trgIdx) *  tnp_weight_trg_pbpb(dmAA.pt2, dmAA.eta2, trgIdx) ; 
     }
+    if ( muIdx  > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_muid_pbpb(dmAA.pt1, dmAA.eta1, muIdx) *  tnp_weight_muid_pbpb(dmAA.pt2, dmAA.eta2, muIdx) ; 
+    }
+    if ( staIdx  > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_sta_pbpb(dmAA.pt1, dmAA.eta1, staIdx) *  tnp_weight_sta_pbpb(dmAA.pt2, dmAA.eta2, staIdx) ;
+    }
+    if ( trkIdx  > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_trk_pbpb(trkIdx) *  tnp_weight_trk_pbpb(trkIdx) ;
+    }
+    
+    hcentintRecoAA->Fill( dmAA.cBin, ptWeight*tnpWeight*ncollWeight);
+    hcentRecoAA->Fill   ( dmAA.cBin, ptWeight*tnpWeight*ncollWeight);
+    hptRecoAA->Fill     ( dmAA.pt,   ptWeight*tnpWeight*ncollWeight);
+    hrapRecoAA->Fill    ( dmAA.y,    ptWeight*tnpWeight*ncollWeight);
+  }
   
   
   TChain *mmGenAA = new TChain("mmGen");   
@@ -162,74 +165,74 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   TBranch        *b_dmGenAA;
   mmGenAA->SetBranchAddress("mmGen",&dmGenAA,&b_dmGenAA);
   
-  for(int iev=0; iev<mmGenAA->GetEntries() ; ++iev)  
-    {
-      mmGenAA->GetEntry(iev);
-      //Accpetnace 
-      if (  !( (dmGenAA.pt1 > glbMuPtCut) && (dmGenAA.pt2 > glbMuPtCut) && ( fabs(dmGenAA.eta1) < 2.4 ) &&  ( fabs(dmGenAA.eta2) <2.4 ) ) )
-	continue;
-      
-      if (  !( (dmGenAA.mass > massLow) 
-	       && (dmGenAA.mass < massHigh) 
-	       && ( dmGenAA.pt > ptMin) 
-	       && ( dmGenAA.pt < ptMax) 
-	       && ( fabs(dmGenAA.y) > yMin)
-	       && ( fabs(dmGenAA.y) < yMax)	      )
-	    )
-	continue;
-      
-      float ptWeight = dmGenAA.weight0;
-      if (useDataWeight) ptWeight = dmGenAA.weight;
-      float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmGenAA.cBin ) ) ;
-      hcentintGenAA->Fill( dmGenAA.cBin, ptWeight*ncollWeight);
-      hcentGenAA->Fill   ( dmGenAA.cBin, ptWeight*ncollWeight);
-      hptGenAA->Fill     ( dmGenAA.pt,   ptWeight*ncollWeight);
-      hrapGenAA->Fill    ( dmGenAA.y,    ptWeight*ncollWeight);
-    }
-
+  for(int iev=0; iev<mmGenAA->GetEntries() ; ++iev)      {
+    mmGenAA->GetEntry(iev);
+    //Accpetnace 
+    if (  !( (dmGenAA.pt1 > glbMuPtCut) && (dmGenAA.pt2 > glbMuPtCut) && ( fabs(dmGenAA.eta1) < 2.4 ) &&  ( fabs(dmGenAA.eta2) <2.4 ) ) )
+      continue;
+    
+    if (  !( (dmGenAA.mass > massLow) 
+	     && (dmGenAA.mass < massHigh) 
+	     && ( dmGenAA.pt > ptMin) 
+	     && ( dmGenAA.pt < ptMax) 
+	     && ( fabs(dmGenAA.y) > yMin)
+	     && ( fabs(dmGenAA.y) < yMax)	      )
+	  )
+      continue;
+    
+    float ptWeight = dmGenAA.weight0;
+    if (useDataWeight) ptWeight = dmGenAA.weight;
+    float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmGenAA.cBin ) ) ;
+    hcentintGenAA->Fill( dmGenAA.cBin, ptWeight*ncollWeight);
+    hcentGenAA->Fill   ( dmGenAA.cBin, ptWeight*ncollWeight);
+    hptGenAA->Fill     ( dmGenAA.pt,   ptWeight*ncollWeight);
+    hrapGenAA->Fill    ( dmGenAA.y,    ptWeight*ncollWeight);
+  }
+  
   // pp
-
+  
   TChain *mmPP = new TChain("mm");
   mmPP->Add(fnamePP);
   DiMuon dmPP;
   TBranch        *b_dmPP;
   mmPP->SetBranchAddress("mm",&dmPP,&b_dmPP);
   
-  for(int iev=0; iev<mmPP->GetEntries() ; ++iev)  
-    {
-      mmPP->GetEntry(iev);
-      //Accpetnace
-      if (  !( (dmPP.pt1 > glbMuPtCut) && (dmPP.pt2 > glbMuPtCut) && ( fabs(dmPP.eta1) < 2.4 ) &&  ( fabs(dmPP.eta2) <2.4 ) ) )
-        continue;
-
-      if (  !( (dmPP.mass > massLow)
-               && (dmPP.mass < massHigh)
-               && ( dmPP.pt > ptMin)
-               && ( dmPP.pt < ptMax)
-               && ( fabs(dmPP.y) > yMin)
-               && ( fabs(dmPP.y) < yMax)              )
-            )
-        continue;
-      
-      float ptWeight = dmPP.weight0;
-      if (useDataWeight) ptWeight = dmPP.weight;
-      float tnpWeight = 1; 
-      if (useTnpWeight)   {
-	if ( tnpIdx == 200 ) {  
-          tnpWeight = tnp_weight_muid_pp(dmPP.pt1, dmPP.eta1) *  tnp_weight_muid_pp(dmPP.pt2, dmPP.eta2) ;
-	}
-	else if ( tnpIdx == 300 ) { 
-          tnpWeight = tnp_weight_sta_pp(dmPP.pt1, dmPP.eta1) *  tnp_weight_sta_pp(dmPP.pt2, dmPP.eta2) ;
-	}
-	else   {
-	  tnpWeight = tnp_weight_trg_pbpb(dmPP.pt1, dmPP.eta1, tnpIdx) *  tnp_weight_trg_pbpb(dmPP.pt2, dmPP.eta2, tnpIdx) ; 
-	}
-      }
-      
-      hcentintRecoPP->Fill( dmPP.cBin, ptWeight*tnpWeight);
-      hptRecoPP->Fill     ( dmPP.pt,   ptWeight*tnpWeight);
-      hrapRecoPP->Fill    ( dmPP.y,    ptWeight*tnpWeight);
+  for(int iev=0; iev<mmPP->GetEntries() ; ++iev)      {
+    mmPP->GetEntry(iev);
+    //Accpetnace
+    if (  !( (dmPP.pt1 > glbMuPtCut) && (dmPP.pt2 > glbMuPtCut) && ( fabs(dmPP.eta1) < 2.4 ) &&  ( fabs(dmPP.eta2) <2.4 ) ) )
+      continue;
+    
+    if (  !( (dmPP.mass > massLow)
+	     && (dmPP.mass < massHigh)
+	     && ( dmPP.pt > ptMin)
+	     && ( dmPP.pt < ptMax)
+	     && ( fabs(dmPP.y) > yMin)
+	     && ( fabs(dmPP.y) < yMax)              )
+	  )
+      continue;
+    
+    float ptWeight = dmPP.weight0;
+    if (useDataWeight) ptWeight = dmPP.weight;
+    float tnpWeight = 1; 
+  
+    if ( trgIdx > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_trg_pp(dmPP.pt1, dmPP.eta1, trgIdx) *  tnp_weight_trg_pp(dmPP.pt2, dmPP.eta2, trgIdx) ;
     }
+    if ( muIdx  > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_muid_pp(dmPP.pt1, dmPP.eta1, muIdx) *  tnp_weight_muid_pp(dmPP.pt2, dmPP.eta2, muIdx) ;
+    }
+    if ( staIdx  > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_sta_pp(dmPP.pt1, dmPP.eta1, staIdx) *  tnp_weight_sta_pp(dmPP.pt2, dmPP.eta2, staIdx) ;
+    }
+    if ( trkIdx  > -100 )   {
+      tnpWeight = tnpWeight * tnp_weight_trk_pp(trkIdx) *  tnp_weight_trk_pp(trkIdx) ;
+    }
+    
+    hcentintRecoPP->Fill( dmPP.cBin, ptWeight*tnpWeight);
+    hptRecoPP->Fill     ( dmPP.pt,   ptWeight*tnpWeight);
+    hrapRecoPP->Fill    ( dmPP.y,    ptWeight*tnpWeight);
+  }
   
   
   TChain *mmGenPP = new TChain("mmGen");
@@ -462,11 +465,11 @@ for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
   cout << " pp = " << int(hcentintEffPP->GetBinContent(1)*1000)/1000. << ",  PbPb = " << int(hcentintEffAA->GetBinContent(1)*1000)/1000. << endl; 
 
   
-  TFile* fout = new TFile(Form("%s/efficiency_ups%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.root",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx),"recreate");
+  TFile* fout = new TFile(Form("%s/efficiency_ups%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.root",outputDirName.Data(), state,useDataWeight,trgIdx, trkIdx, muIdx, staIdx),"recreate");
 
-  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
-  c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
-  c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnpWeight%d_tnpIdx%d.pdf",outputDirName.Data(), state,useDataWeight,useTnpWeight,tnpIdx)) ;
+  c_eff_pt->SaveAs(Form("%s/eff_vs_pt_%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, trkIdx, muIdx, staIdx ));
+  c_eff_rap->SaveAs(Form("%s/eff_vs_rap_%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, trkIdx, muIdx, staIdx ));
+  c_eff_cent->SaveAs(Form("%s/eff_vs_cent_%ds_useDataPtWeight%d_tnp_trgId%d_trkId%d_muId%d_staId%d.pdf", outputDirName.Data(), state, useDataWeight, trgIdx, trkIdx, muIdx, staIdx ));
   
   hptGenPP->Write();
   hptRecoPP->Write();
