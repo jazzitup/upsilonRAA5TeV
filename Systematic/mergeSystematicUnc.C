@@ -349,7 +349,7 @@ void mergeSystematicUnc(int state = 2) {
   hintAA[0]->Draw();
   c1->cd(7);
   hcentAA[0]->Draw();
-   
+
   TCanvas* c2= new TCanvas("c2","",800,800);
   c2->Divide(2,2);
   c2->cd(1);
@@ -405,6 +405,7 @@ void mergeSixInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5,
   handsomeTH1(h4,6);         h4->SetLineWidth(2); h4->DrawCopy("hist same");
   handsomeTH1(h6,8);         h6->SetLineWidth(2); h6->DrawCopy("hist same");
   
+
   TLegend *leg1 = new TLegend(0.55,0.6, 0.85,0.9,NULL,"brNDC");
   easyLeg(leg1,title.Data());
   leg1->AddEntry(h0,"Total","l");
@@ -437,6 +438,7 @@ void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D *h3, TH1D* h4, TH1D* h5
   } 
 
   TCanvas* c0 = new TCanvas("c_mergedSys","",400,400);
+  
 
   h0->SetAxisRange(-0.5,1.1,"Y");
   h0->SetYTitle("Relative Uncertainty");
@@ -456,6 +458,8 @@ void mergeFiveInQuad( TH1D* h0, TH1D* h1, TH1D* h2, TH1D *h3, TH1D* h4, TH1D* h5
   leg1->AddEntry(h4,"Signal PDF","l");
   leg1->AddEntry(h5,"TAA Uncertainty","l");
   leg1->Draw();
+  gPad->SetLeftMargin(0.15);
+  gPad->SetBottomMargin(0.11);
   c0->SaveAs(Form("pdfFiles/%s_ups%ds.pdf", h0->GetName(),state ) );
   // 5 : TAA uncertainty
   // 4 : CB+Gaus PDF  
