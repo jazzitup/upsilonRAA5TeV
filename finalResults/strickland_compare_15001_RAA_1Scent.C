@@ -2,8 +2,9 @@
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
 #include "../cutsAndBin.h"
+#include "../commonUtility.h"
 
-void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
+void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -198,7 +199,73 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
   globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
+ 
+  TFile *fstrickland_2760 = new TFile("TheoryCurve/StrickLand_RAA_2760.root","READ");
+  TFile *fstrickland_5023 = new TFile("TheoryCurve/StrickLand_RAA_5023.root","READ");
   
+  TGraphErrors *gRAA_1S_strickland[3]; 
+  TGraphErrors *gRAA_2S_strickland[3]; 
+  
+  for(int i=0;i<3;i++)
+  {
+    gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland_2760-> Get(Form("RAA_strick_nPart_1S_%d",i));
+    gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland_5023-> Get(Form("RAA_strick_nPart_1S_%d",i));
+    gRAA_1S_strickland[i] -> SetLineWidth(3.);
+    gRAA_2S_strickland[i] -> SetLineWidth(3.0);
+  }
+  gRAA_1S_strickland[0]->SetLineColor(kBlue+3);
+  gRAA_1S_strickland[1]->SetLineColor(kBlue+3);
+  gRAA_1S_strickland[2]->SetLineColor(kBlue+3);
+  gRAA_1S_strickland[0]->SetLineStyle(3);
+  gRAA_1S_strickland[1]->SetLineStyle(1);
+  gRAA_1S_strickland[2]->SetLineStyle(8);
+  
+  gRAA_2S_strickland[0]->SetLineColor(kRed-3);
+  gRAA_2S_strickland[1]->SetLineColor(kRed-3);
+  gRAA_2S_strickland[2]->SetLineColor(kRed-3);
+  gRAA_2S_strickland[0]->SetLineStyle(3);
+  gRAA_2S_strickland[1]->SetLineStyle(1);
+  gRAA_2S_strickland[2]->SetLineStyle(8);
+  
+
+  for(int i=0;i<3;i++){
+    gRAA_1S_strickland[i]->Draw("same");
+    gRAA_2S_strickland[i]->Draw("same");
+  }
+   
+  TLegend *leg_strick= new TLegend(0.25, 0.656, 0.48, 0.786);
+  SetLegendStyle(leg_strick);
+  leg_strick->SetTextSize(0.036);
+  leg_strick->AddEntry(gRAA_1S_strickland[1],"2.76 TeV","l");
+  leg_strick->AddEntry(gRAA_2S_strickland[1],"5.02 TeV","l");
+  leg_strick->Draw("same");
+
+  double line_y = 1.23;
+  double line_y_diff = 0.084;
+  double line_x_end = 180;
+  double line_x_start = 155;
+  TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
+  t1->SetLineStyle(3);
+  t1->SetLineWidth(2);
+  t1->SetLineColor(kBlue+3);
+  t1->Draw("same");
+
+  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff,line_x_end,line_y-line_y_diff);
+  t2->SetLineStyle(1);
+  t2->SetLineWidth(2);
+  t2->SetLineColor(kBlue+3);
+  t2->Draw("same");
+
+  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2,line_x_end,line_y-line_y_diff*2);
+  t3->SetLineStyle(8);
+  t3->SetLineWidth(2);
+  t3->SetLineColor(kBlue+3);
+  t3->Draw("same");
+
+  drawText2("4#pi#eta/s=1", line_x_end+7, line_y-0.015, 19);
+  drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 19);
+  drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 19);
+
   //Global Unc.
   TH1D* hSys_glb;
   double sys_global_pp;
@@ -258,8 +325,8 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %"); 
   
-  c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent.pdf",istate));
-  c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent.png",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.pdf",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.png",istate));
 
 /*
 	///////////////////////////////////////////////////////////////////
