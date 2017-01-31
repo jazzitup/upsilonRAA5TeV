@@ -251,11 +251,11 @@ void draw_RAA_cent(bool isArrow =true)
   
   //// draw text
   double sz_init = 0.892; double sz_step = 0.0558;
-  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.46+0.04, sz_init-sz_step+0.002, "|y|^{#mu#mu} < 2.4");
-
+//  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
+  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
+/*
   TLatex* centtex = new TLatex();
   centtex->SetNDC();
   centtex->SetTextAlign(12); //left-center
@@ -271,7 +271,7 @@ void draw_RAA_cent(bool isArrow =true)
   centtex->DrawLatex(0.258,0.555,"50-60%");
   centtex->DrawLatex(0.242,0.698,"60-70%");
   centtex->DrawLatex(0.181,0.781,"70-100%");
-
+*/
 
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
 

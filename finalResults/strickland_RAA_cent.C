@@ -2,6 +2,7 @@
 #include "tdrstyle.C"
 #include "CMS_lumi.C"
 #include "../cutsAndBin.h"
+#include "../commonUtility.h"
 
 void strickland_RAA_cent(bool isArrow =true)
 {
@@ -251,11 +252,11 @@ void strickland_RAA_cent(bool isArrow =true)
   
   //// draw text
   double sz_init = 0.892; double sz_step = 0.0558;
-  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.46+0.04, sz_init-sz_step+0.002, "|y|^{#mu#mu} < 2.4");
-
+//  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
+  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
+/*
   TLatex* centtex = new TLatex();
   centtex->SetNDC();
   centtex->SetTextAlign(12); //left-center
@@ -271,10 +272,10 @@ void strickland_RAA_cent(bool isArrow =true)
   centtex->DrawLatex(0.258,0.555,"50-60%");
   centtex->DrawLatex(0.242,0.698,"60-70%");
   centtex->DrawLatex(0.181,0.781,"70-100%");
-
+*/
 
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
-  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
+  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA_5023.root","READ");
   
   TGraphErrors *gRAA_1S_strickland[3]; 
   TGraphErrors *gRAA_2S_strickland[3]; 
@@ -283,34 +284,61 @@ void strickland_RAA_cent(bool isArrow =true)
   {
     gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_1S_%d",i));
     gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_2S_%d",i));
-    gRAA_1S_strickland[i] -> SetLineWidth(2.5);
+    gRAA_1S_strickland[i] -> SetLineWidth(3.);
     gRAA_2S_strickland[i] -> SetLineWidth(3.0);
   }
-  gRAA_1S_strickland[0]->SetLineColor(kOrange+9);
-  gRAA_1S_strickland[1]->SetLineColor(kBlack);
-  gRAA_1S_strickland[2]->SetLineColor(kBlue+1);
+  gRAA_1S_strickland[0]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[1]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[2]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[0]->SetLineStyle(3);
+  gRAA_1S_strickland[1]->SetLineStyle(1);
+  gRAA_1S_strickland[2]->SetLineStyle(8);
   
-  gRAA_2S_strickland[0]->SetLineColor(kOrange+9);
-  gRAA_2S_strickland[1]->SetLineColor(kBlack);
-  gRAA_2S_strickland[2]->SetLineColor(kBlue+1);
-
-  gRAA_2S_strickland[0]->SetLineStyle(2);
-  gRAA_2S_strickland[1]->SetLineStyle(2);
-  gRAA_2S_strickland[2]->SetLineStyle(2);
+  gRAA_2S_strickland[0]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[1]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[2]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[0]->SetLineStyle(3);
+  gRAA_2S_strickland[1]->SetLineStyle(1);
+  gRAA_2S_strickland[2]->SetLineStyle(8);
+  
 
   for(int i=0;i<3;i++){
     gRAA_1S_strickland[i]->Draw("same");
     gRAA_2S_strickland[i]->Draw("same");
   }
    
-  TLegend *leg_strick= new TLegend(0.4, 0.50, 0.6, 0.70);
+  TLegend *leg_strick= new TLegend(0.29, 0.586, 0.46, 0.716);
   SetLegendStyle(leg_strick);
-  leg_strick->AddEntry(gRAA_1S_strickland[0],"4#pi#eta/s=1","l");
-  leg_strick->AddEntry(gRAA_1S_strickland[1],"4#pi#eta/s=2","l");
-  leg_strick->AddEntry(gRAA_1S_strickland[2],"4#pi#eta/s=3","l");
+  leg_strick->SetTextSize(0.034);
+  leg_strick->AddEntry(gRAA_1S_strickland[2],"Y(1S)","l");
+  leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
+//  leg_strick->Draw("same");
 
-  leg_strick->Draw("same");
+  double line_y = 0.88;
+  double line_y_diff = 0.07;
+  double line_x_end = 148;
+  double line_x_start = 123;
+  TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
+  t1->SetLineStyle(3);
+  t1->SetLineWidth(2);
+  t1->SetLineColor(kRed+3);
+  t1->Draw("same");
 
+  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff,line_x_end,line_y-line_y_diff);
+  t2->SetLineStyle(1);
+  t2->SetLineWidth(2);
+  t2->SetLineColor(kRed+3);
+  t2->Draw("same");
+
+  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2,line_x_end,line_y-line_y_diff*2);
+  t3->SetLineStyle(8);
+  t3->SetLineWidth(2);
+  t3->SetLineColor(kRed+3);
+  t3->Draw("same");
+
+  drawText2("4#pi#eta/s=1", line_x_end+7, line_y-0.015, 16);
+  drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 16);
+  drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 16);
 
   //Global Unc.
   TH1D* hSys_glb[nState];

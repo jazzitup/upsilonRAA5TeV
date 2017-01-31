@@ -90,9 +90,9 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   
   //// legend
   TLegend *leg;
-  if (ppAA==1) leg= new TLegend(0.75, 0.17, 0.95, 0.34);
+  if (ppAA==1) {leg= new TLegend(0.34, 0.24, 0.85, 0.41); leg-> SetNColumns(3);}
   else {
-    leg= new TLegend(0.49, 0.67, 0.95, 0.76);
+    leg= new TLegend(0.56, 0.67, 0.90, 0.76);
     leg-> SetNColumns(3);
   }
   //else leg= new TLegend(0.80, 0.42, 1.00, 0.59);
@@ -110,8 +110,8 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
   gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);
   gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
-  gCrossSection_sys[0]->SetMinimum(0.001);
-  gCrossSection_sys[0]->SetMaximum(100.);
+  gCrossSection_sys[0]->SetMinimum(0.004);
+  gCrossSection_sys[0]->SetMaximum(30.);
   // for rap
   gCrossSection_sys[0]->GetXaxis()->SetNdivisions(505);
  
@@ -129,13 +129,13 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   //// draw text
   double sz_init = 0.895; double sz_step = 0.0525;
   double sz_shift;
-  if (ppAA==1) sz_shift=0.6;
+  if (ppAA==1) sz_shift=0.0;
   else sz_shift=0.0;
-  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
-//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.48, sz_init-sz_shift+0.005, "|#eta^{#mu}| < 2.4");
-  if(ppAA==2) globtex->DrawLatex(0.48, sz_init-sz_shift-sz_step+0.005, "Cent. 0-100%");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "|#eta^{#mu}| < 2.4");
+  if(ppAA==2) globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "Cent. 0-100%");
   
   CMS_lumi( c1, ppAA, iPos );
 
