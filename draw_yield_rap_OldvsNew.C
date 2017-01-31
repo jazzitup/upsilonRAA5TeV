@@ -53,16 +53,15 @@
 using namespace std;
 using namespace RooFit;
 
-int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
+int draw_yield_rap_OldvsNew(int states =1, TString ColId = "PP")
 {
   /////////////////////////////////////////////////////////
   //// set style
   /////////////////////////////////////////////////////////
-  
   TH1::SetDefaultSumw2();
 
   TString szAA = "old";
-
+  
   gROOT->SetStyle("Plain");
   gStyle->SetPalette(1);
   gStyle->SetOptTitle(0);
@@ -97,9 +96,9 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
   //// binning setting
   /////////////////////////////////////////////////////////
   
-  double tmpArr1s[7] = {0.0, 2.0, 4.0, 6.0, 9.0, 12.0, 30.0};
-  double tmpArr2s[4] = {0.0, 4.0, 9.0, 30.0};
-  double tmpArr3s[3] = {0.0, 6.0, 30.0};
+  double tmpArr1s[7] = {0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4};
+  double tmpArr2s[4] = {0.0, 0.8, 1.6, 2.4};
+  double tmpArr3s[3] = {0.0, 1.2, 2.4};
 
   int tmpBin;
   if ( states ==1) {
@@ -141,7 +140,7 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
   double nSig3sErr_old[nBin];
   double nBkg_old[nBin];
   double nBkgErr_old[nBin];
-
+  
   double nSig1s_new[nBin];
   double nSig1sErr_new[nBin];
   double nSig2s_new[nBin];
@@ -153,19 +152,24 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
 
   for (int ib =0; ib < nBin; ib ++ ) {
     //// read files
-    //if (szAA == "old" ) { fileIn[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/fitresults_upsilon_DoubleCB_AA_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",binArr[ib],binArr[ib+1])); }
-    //else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/PAS_fitresults_upsilon_DoubleCB_%s_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
-
-    if(ColId=="AA"){
-    fileIn1[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/fitresults_upsilon_DoubleCB_AA_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",binArr[ib],binArr[ib+1]));
-    fileIn2[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/PAS_fitresults_upsilon_DoubleCB_AA_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",binArr[ib],binArr[ib+1])); }
-    if(ColId=="PP"){
-    fileIn1[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/fitresults_upsilon_DoubleCB_PP_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",binArr[ib],binArr[ib+1]));
-    fileIn2[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/PAS_fitresults_upsilon_DoubleCB_PP_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",binArr[ib],binArr[ib+1])); }
+    //if (szAA == "old" ) { fileIn[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",binArr[ib],binArr[ib+1])); }
+    //else if (szAA == "AA" ) { fileIn[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/PAS_fitresults_upsilon_DoubleCB_%s_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",szAA.Data(),binArr[ib],binArr[ib+1])); }
     //else { cout << " Error ::: Select among old and AA" << endl; return 0; }
+    
+   if(ColId=="AA"){
+   fileIn1[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",binArr[ib],binArr[ib+1]));
+   fileIn2[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/PAS_fitresults_upsilon_DoubleCB_AA_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",binArr[ib],binArr[ib+1])); }
+   if(ColId=="PP"){
+   fileIn1[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/fitresults_upsilon_DoubleCB_PP_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0.root",binArr[ib],binArr[ib+1]));
+   fileIn2[ib]= new TFile(Form("/cms/home/goni/work/Analysis/Upsilon_Raa_8_0_24/src/usercode/upsilonRAA5TeV/fitResults/NominalFits/PAS_fitresults_upsilon_DoubleCB_PP_DATA_pt0.0-30.0_y%.1f-%.1f_muPt4.0.root",binArr[ib],binArr[ib+1])); }
 
+    //cout << ib << "th file = " << fileIn[ib]->GetName() << endl;
+    //if (fileIn[ib]->IsZombie()) { cout << "CANNOT open data root file\n"; return 1; }
     fileIn1[ib]->cd();
     ws1[ib]= (RooWorkspace*)fileIn1[ib]->Get("workspace");
+    //ws[ib]->Print();
+    //// get parameters
+    //cout << ws[ib]->var("nSig1s")->getVal() << endl;
     nSig1s_old[ib]=ws1[ib]->var("nSig1s")->getVal();
     nSig1sErr_old[ib]=ws1[ib]->var("nSig1s")->getError();
     nSig2s_old[ib]=ws1[ib]->var("nSig2s")->getVal();
@@ -174,7 +178,10 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
     nSig3sErr_old[ib]=ws1[ib]->var("nSig3s")->getError();
     nBkg_old[ib]=ws1[ib]->var("nBkg")->getVal();
     nBkgErr_old[ib]=ws1[ib]->var("nBkg")->getError();
-
+    //cout << ib << "th nSig1s = " << nSig1s[ib] << endl;
+    //cout << ib << "th nSig2s = " << nSig2s[ib] << endl;
+    //cout << ib << "th nSig3s = " << nSig3s[ib] << endl;
+    //cout << ib << "th nBkg = " << nBkg[ib] << endl;
     fileIn2[ib]->cd();
     ws2[ib]= (RooWorkspace*)fileIn2[ib]->Get("workspace");
     nSig1s_new[ib]=ws2[ib]->var("nSig1s")->getVal();
@@ -185,25 +192,21 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
     nSig3sErr_new[ib]=ws2[ib]->var("nSig3s")->getError();
     nBkg_new[ib]=ws2[ib]->var("nBkg")->getVal();
     nBkgErr_new[ib]=ws2[ib]->var("nBkg")->getError();
-    //cout << ib << "th nSig1s = " << nSig1s[ib] << endl;
-    //cout << ib << "th nSig2s = " << nSig2s[ib] << endl;
-    //cout << ib << "th nSig3s = " << nSig3s[ib] << endl;
-    //cout << ib << "th nBkg = " << nBkg[ib] << endl;
   }
  
   //// histogram
-  TH1D* h1_nSig1s = new TH1D("h1_nSig1s","h1_nSig1s;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-  TH1D* h1_nSig2s = new TH1D("h1_nSig2s","h1_nSig2s;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-  TH1D* h1_nSig3s = new TH1D("h1_nSig3s","h1_nSig3s;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-  TH1D* h1_nBkg = new TH1D("h1_nBkg","h1_nBkg;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-
-  TH1D* h2_nSig1s = new TH1D("h2_nSig1s","h2_nSig1s;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-  TH1D* h2_nSig2s = new TH1D("h2_nSig2s","h2_nSig2s;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-  TH1D* h2_nSig3s = new TH1D("h2_nSig3s","h2_nSig3s;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-  TH1D* h2_nBkg = new TH1D("h2_nBkg","h2_nBkg;p_{T} (GeV/c);events / ( GeV/c )",nBin,binArr); 
-
-  TFile *fout=new TFile(Form("yield/Yields_%ds.root", states),"recreate");
+  TH1D* h1_nSig1s = new TH1D("h1_nSig1s","h1_nSig1s;|y|;events",nBin,binArr); 
+  TH1D* h1_nSig2s = new TH1D("h1_nSig2s","h1_nSig2s;|y|;events",nBin,binArr); 
+  TH1D* h1_nSig3s = new TH1D("h1_nSig3s","h1_nSig3s;|y|;events",nBin,binArr); 
+  TH1D* h1_nBkg = new TH1D("h1_nBkg","h1_nBkg;|y|;events",nBin,binArr); 
   
+  TH1D* h2_nSig1s = new TH1D("h2_nSig1s","h2_nSig1s;|y|;events",nBin,binArr); 
+  TH1D* h2_nSig2s = new TH1D("h2_nSig2s","h2_nSig2s;|y|;events",nBin,binArr); 
+  TH1D* h2_nSig3s = new TH1D("h2_nSig3s","h2_nSig3s;|y|;events",nBin,binArr); 
+  TH1D* h2_nBkg = new TH1D("h2_nBkg","h2_nBkg;|y|;events",nBin,binArr); 
+
+  TFile *fout=new TFile(Form("yield/Yields_rap_%ds.root", states),"recreate");
+
   for (int ib =0; ib < nBin; ib ++ ) {
     h1_nSig1s->SetBinContent(ib+1,nSig1s_old[ib]);   
     h1_nSig1s->SetBinError(ib+1,nSig1sErr_old[ib]);   
@@ -234,30 +237,16 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
     //h2_nbkg->Write();
   }
 
-  cout<< "nSig1S(1): " << h1_nSig1s->GetBinContent(1) <<endl;
-  cout<< "nSig1S(2): " << h1_nSig1s->GetBinContent(2) <<endl;
-  cout<< "nSig1S(3): " << h1_nSig1s->GetBinContent(3) <<endl;
-  cout<< "nSig1S(4): " << h1_nSig1s->GetBinContent(4) <<endl;
-  cout<< "nSig1S(5): " << h1_nSig1s->GetBinContent(5) <<endl;
-  cout<< "nSig1S(6): " << h1_nSig1s->GetBinContent(6) <<endl;
-  
-  cout<< "nSig2S(1): " << h1_nSig2s->GetBinContent(1) <<endl;
-  cout<< "nSig2S(2): " << h1_nSig2s->GetBinContent(2) <<endl;
-  cout<< "nSig2S(3): " << h1_nSig2s->GetBinContent(3) <<endl;
-  
-  cout<< "nSig3S(1): " << h1_nSig3s->GetBinContent(1) <<endl;
-  cout<< "nSig3S(2): " << h1_nSig3s->GetBinContent(2) <<endl;
-
   //// normalization
   //h1_nSig1s->Scale(1,"width");
   //h1_nSig2s->Scale(1,"width");
   //h1_nSig3s->Scale(1,"width");
   //h1_nBkg->Scale(1,"width");
+
   //h2_nSig1s->Scale(1,"width");
   //h2_nSig2s->Scale(1,"width");
   //h2_nSig3s->Scale(1,"width");
   //h2_nBkg->Scale(1,"width");
-
   //// actual draw
   TLatex* latex = new TLatex();
   latex->SetNDC();
@@ -266,22 +255,25 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
  
   TCanvas* c_nSig1s = new TCanvas("c_nSig1s","c_nSig1s",600,600);
   c_nSig1s->cd();
-  gPad->SetLogy(1);  // KTO for yield
+//  gPad->SetLogy(1);  // KTO for yield
   h1_nSig1s->GetXaxis()->CenterTitle(1);
   h1_nSig1s->GetYaxis()->CenterTitle(1);
-  h1_nSig1s->GetYaxis()->SetRangeUser(1,1000000);
+  if(ColId == "PP") h1_nSig1s->GetYaxis()->SetRangeUser(1,40000);
+  if(ColId == "AA") h1_nSig1s->GetYaxis()->SetRangeUser(1,6000);
   h1_nSig1s->SetMarkerColor(kBlue+2);
   h1_nSig1s->SetLineColor(kBlue+2);
   h1_nSig1s->SetMarkerStyle(kFullCircle);
   h1_nSig1s->Draw("pe");
 
-  h2_nSig1s->GetXaxis()->CenterTitle(1);
-  h2_nSig1s->GetYaxis()->CenterTitle(1);
-  h2_nSig1s->GetYaxis()->SetRangeUser(1,1000000);
   h2_nSig1s->SetMarkerColor(kRed+2);
   h2_nSig1s->SetLineColor(kRed+2);
   h2_nSig1s->SetMarkerStyle(kOpenCircle);
   h2_nSig1s->Draw("pe same");
+
+  //h1_nBkg->SetMarkerColor(kBlue);
+  //h1_nBkg->SetLineColor(kBlue);
+  //h1_nBkg->SetMarkerStyle(kOpenCircle);
+  //h1_nBkg->Draw("pe same");
 
   latex->SetTextColor(kBlack);
   latex->DrawLatex(0.55,0.85,Form("%s",ColId.Data()));
@@ -289,23 +281,22 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
   latex->DrawLatex(0.55,0.79,Form("(New) #Upsilon(%dS) yields",states));
   latex->SetTextColor(kBlue+2);
   latex->DrawLatex(0.55,0.73,Form("(Old) #Upsilon(%dS) yields",states));
-  
-  c_nSig1s->SaveAs(Form("yield/pt_nSig1s_%s_%dS.pdf",ColId.Data(),states));
+
+  c_nSig1s->SaveAs(Form("yield/rap_nSig1s_%s_%dS.pdf",ColId.Data(),states));
   
   TCanvas* c_nSig2s = new TCanvas("c_nSig2s","c_nSig2s",600,600);
   c_nSig2s->cd();
-  gPad->SetLogy(1);  // KTO for yield
+//  gPad->SetLogy(1);  // KTO for yield
   h1_nSig2s->GetXaxis()->CenterTitle(1);
   h1_nSig2s->GetYaxis()->CenterTitle(1);
-  h1_nSig2s->GetYaxis()->SetRangeUser(1,8000);
+  if(ColId == "PP") h1_nSig2s->GetYaxis()->SetRangeUser(1,12000);
+  if(ColId == "AA") h1_nSig2s->GetYaxis()->SetRangeUser(1,800);
+  if(ColId == "AA") h2_nSig2s->GetYaxis()->SetRangeUser(1,800);
   h1_nSig2s->SetMarkerColor(kBlue+2);
   h1_nSig2s->SetLineColor(kBlue+2);
   h1_nSig2s->SetMarkerStyle(kFullCircle);
   h1_nSig2s->Draw("pe");
 
-  h2_nSig2s->GetXaxis()->CenterTitle(1);
-  h2_nSig2s->GetYaxis()->CenterTitle(1);
-  h2_nSig2s->GetYaxis()->SetRangeUser(1,8000);
   h2_nSig2s->SetMarkerColor(kRed+2);
   h2_nSig2s->SetLineColor(kRed+2);
   h2_nSig2s->SetMarkerStyle(kOpenCircle);
@@ -317,14 +308,17 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
   latex->DrawLatex(0.55,0.79,Form("(New) #Upsilon(%dS) yields",states));
   latex->SetTextColor(kBlue+2);
   latex->DrawLatex(0.55,0.73,Form("(Old) #Upsilon(%dS) yields",states));
-  c_nSig2s->SaveAs(Form("yield/pt_nSig2s_%s_%dS.pdf",ColId.Data(),states));
+  c_nSig2s->SaveAs(Form("yield/rap_nSig2s_%s_%dS.pdf",ColId.Data(),states));
   
   TCanvas* c_nSig3s = new TCanvas("c_nSig3s","c_nSig3s",600,600);
   c_nSig3s->cd();
-  gPad->SetLogy(1);  // KTO for yield
+//  gPad->SetLogy(1);  // KTO for yield
   h1_nSig3s->GetXaxis()->CenterTitle(1);
   h1_nSig3s->GetYaxis()->CenterTitle(1);
-  h1_nSig3s->GetYaxis()->SetRangeUser(1,3000);
+//  h1_nSig3s->GetYaxis()->SetRangeUser(1,1000);
+  //if (szAA == "old") h1_nSig3s->GetYaxis()->SetRangeUser(0,5000);
+  //else if (szAA == "AA") h1_nSig3s->GetYaxis()->SetRangeUser(0,100);
+  h1_nSig3s->GetYaxis()->SetRangeUser(0,5000);
   h1_nSig3s->SetMarkerColor(kBlue+2);
   h1_nSig3s->SetLineColor(kBlue+2);
   h1_nSig3s->SetMarkerStyle(kFullCircle);
@@ -341,12 +335,12 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
   latex->DrawLatex(0.55,0.79,Form("(New) #Upsilon(%dS) yields",states));
   latex->SetTextColor(kBlue+2);
   latex->DrawLatex(0.55,0.73,Form("(Old) #Upsilon(%dS) yields",states));
-  c_nSig3s->SaveAs(Form("yield/pt_nSig3s_%s_%dS.pdf",ColId.Data(),states));
+  c_nSig3s->SaveAs(Form("yield/rap_nSig3s_%s_%dS.pdf",ColId.Data(),states));
  
  /* 
   TCanvas* c_nBkg = new TCanvas("c_nBkg","c_nBkg",600,600);
   c_nBkg->cd();
-  gPad->SetLogy(1);  // KTO for yield
+//  gPad->SetLogy(1);  // KTO for yield
   h1_nBkg->GetXaxis()->CenterTitle(1);
   h1_nBkg->GetYaxis()->CenterTitle(1);
   h1_nBkg->GetYaxis()->SetRangeUser(1,100000);
@@ -355,7 +349,7 @@ int draw_yield_pt_OldvsNew(int states =1, TString ColId = "PP")
   h1_nBkg->SetMarkerStyle(kFullCircle);
   h1_nBkg->Draw("pe");
   latex->DrawLatex(0.45,0.83,Form("%s, binning for #Upsilon(%dS)",szAA.Data(),states));
-  c_nBkg->SaveAs(Form("yield/pt_nBkg_%s_%dS.pdf",szAA.Data(),states));
+  c_nBkg->SaveAs(Form("yield/rap_nBkg_%s_%dS.pdf",szAA.Data(),states));
 */
 
   return 0;
