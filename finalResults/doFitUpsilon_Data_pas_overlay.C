@@ -231,13 +231,11 @@ void doFitUpsilon_Data_pas_overlay(
   ws->data("reducedDS")->plotOn(myPlot2,Name("dataOS_FIT"),MarkerSize(.8));
  
   
-//  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Timer(kTRUE),Extended(kTRUE));
-  //RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"),LineColor(kRed));
-//  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
-//  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
-//  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
   ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kRed),LineStyle(kDashed),LineWidth(2));
 
   RooRealVar *f1s_pp = new RooRealVar("f1s_pp","1S CB fraction", 0.5, 0, 1);
@@ -365,14 +363,13 @@ void doFitUpsilon_Data_pas_overlay(
     drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
     drawText("|#eta^{#mu}| < 2.4 GeV/c", pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
   }  
-//  drawText(Form("Signal Function : %s CB", SignalCB.Data() ), 0.55,0.54,1,14);
 
   TLegend* fitleg = new TLegend(0.68,0.42,0.88,0.7); fitleg->SetTextSize(17);
   fitleg->SetTextFont(43);
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"PbPb Data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"Total fit","l");
-//  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"signal","l");
+  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"signal","l");
   fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"background","l");
   fitleg->AddEntry(myPlot2->findObject("ppOverlay"),"pp overlay","l");
   fitleg->Draw("same");
@@ -380,12 +377,7 @@ void doFitUpsilon_Data_pas_overlay(
   // PULL 
 
   TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 0.98, 0.23);
-  //pad2->SetTopMargin(0); // Upper and lower plot are joined
-  //pad1->SetBottomMargin(0.63); 
-  //pad1->SetLeftMargin(0.15);
-//  pad2->SetLeftMargin(0.15);
   pad2->SetTicks(1,1);
-//  pad2->cd();
   pad1->SetLeftMargin(0.18);
   pad1->SetBottomMargin(0.14);
   pad1->SetTopMargin(0.067);
@@ -496,8 +488,8 @@ void doFitUpsilon_Data_pas_overlay(
 
   TFile* outf = new TFile(Form("PAS_overlay_RAANorm_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
-  c1->SaveAs(Form("PAS_overlay_RAANorm_woSig_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
-  c1->SaveAs(Form("PAS_overlay_RAANorm_woSig_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
+  c1->SaveAs(Form("PAS_overlay_RAANorm_wSig_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
+  c1->SaveAs(Form("PAS_overlay_RAANorm_wSig_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
   c1->Write();
   ws->Write();
   cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
