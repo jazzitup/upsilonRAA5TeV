@@ -233,9 +233,9 @@ void doFitUpsilon_Data_pas_overlay(
   
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Timer(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"),LineColor(kRed));
-  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
+//  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
+//  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
+//  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2),LineStyle(2));
   ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kRed),LineStyle(kDashed),LineWidth(2));
 
   RooRealVar *f1s_pp = new RooRealVar("f1s_pp","1S CB fraction", 0.5, 0, 1);
@@ -369,7 +369,7 @@ void doFitUpsilon_Data_pas_overlay(
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"PbPb Data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"Total fit","l");
-  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"signal","l");
+//  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"signal","l");
   fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"background","l");
   fitleg->AddEntry(myPlot2->findObject("ppOverlay"),"pp overlay","l");
   fitleg->Draw("same");
@@ -488,8 +488,8 @@ void doFitUpsilon_Data_pas_overlay(
 
   TFile* outf = new TFile(Form("PAS_overlay_RAANorm_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
-  c1->SaveAs(Form("PAS_overlay_RAANorm_wSig_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
-  c1->SaveAs(Form("PAS_overlay_RAANorm_wSig_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
+  c1->SaveAs(Form("PAS_overlay_RAANorm_woSig_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
+  c1->SaveAs(Form("PAS_overlay_RAANorm_woSig_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
   c1->Write();
   ws->Write();
   cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
