@@ -1,10 +1,10 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi_raaCent.C"
+#include "CMS_lumi.C"
 #include "../cutsAndBin.h"
 #include "../commonUtility.h"
 
-void strickland_RAA_pt_isArrow(bool isArrow=true)
+void strickland_RAA_3S_pt(bool isArrow=true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -109,13 +109,23 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   
   //// legend
   //// axis et. al
-  gRAA_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
-  gRAA_sys[0]->GetXaxis()->CenterTitle();
-  gRAA_sys[0]->GetYaxis()->SetTitle("R_{AA}");
-  gRAA_sys[0]->GetYaxis()->CenterTitle();
-  gRAA_sys[0]->GetXaxis()->SetLimits(0.,xmax);
-  gRAA_sys[0]->SetMinimum(0.0);
-  gRAA_sys[0]->SetMaximum(1.14);
+
+  //3S Garbage
+  TF1 *tx = new TF1("f1","1",0,xmax);
+  tx->SetLineWidth(1);
+  tx->SetLineStyle(7);
+  tx->SetLineColor(1);
+                                 
+
+
+
+  tx->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
+  tx->GetXaxis()->CenterTitle();
+  tx->GetYaxis()->SetTitle("R_{AA}");
+  tx->GetYaxis()->CenterTitle();
+  tx->GetXaxis()->SetLimits(0.,xmax);
+  tx->SetMinimum(0.0);
+  tx->SetMaximum(1.);
 
 
   if (isArrow == true){
@@ -134,18 +144,17 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
         gRAA_sys[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
         gRAA_sys[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
         gRAA_sys[2]->SetMinimum(0.0);
-        gRAA_sys[2]->SetMaximum(1.3);
+        gRAA_sys[2]->SetMaximum(1.);
         gRAA[2]->GetHistogram()->GetXaxis()->SetRangeUser(0,30);
         gRAA[2]->GetHistogram()->GetXaxis()->SetLimits(0,30);
         gRAA[2]->SetMinimum(0.0);
-        gRAA[2]->SetMaximum(1.3);
+        gRAA[2]->SetMaximum(1.);
       }
   
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
-  gPad->SetBottomMargin(0.14);
-  gPad->SetTopMargin(0.067);
-  for (int is=0; is<nState; is++){
+  tx->Draw();
+  for (int is=2; is<nState; is++){
     if ( is==0) {gRAA_sys[is]->Draw("A5");}
     else if(is==ulstate && isArrow==true) {
       for(int ipt=0;ipt<n3s;ipt++){
@@ -155,7 +164,7 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
     }
     else {gRAA_sys[is]->Draw("5");}
   }
-  for(int is=0;is<nState;is++){
+  for(int is=2;is<nState;is++){
     if(is==ulstate && isArrow==true) {
       for(int ipt=0;ipt<n3s;ipt++) {
         arr95per[ipt]->Draw();
@@ -165,14 +174,14 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
     else {gRAA[is]->Draw("P");}
   }
   
-  dashedLine(0.,1.,xmax,1.,1,1);
   TLegend *leg= new TLegend(0.57, 0.62, 0.785, 0.74);
   SetLegendStyle(leg);
   TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
   SetLegendStyle(leg_up);
 
-  TArrow *arrLeg = new TArrow(16.,0.532,16.,0.582,0.02,"<-|");
+  TArrow *arrLeg = new TArrow(16.,0.452,16.,0.502,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
+  
   arrLeg->SetLineWidth(2);
 
   if (isArrow==false) { 
@@ -181,8 +190,8 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
     }
   }
   else {
-    leg -> AddEntry(gRAA[0]," #Upsilon(1S)","lp");
-    leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
+    //leg -> AddEntry(gRAA[0]," #Upsilon(1S)","lp");
+    //leg -> AddEntry(gRAA[1]," #Upsilon(2S)","lp");
 //    leg -> AddEntry(gRAA[2]," #Upsilon(3S)","lp");
     TLegendEntry *ent=leg_up->AddEntry("ent"," #Upsilon(3S) 68\% CL","f");
     ent->SetLineColor(kGreen+3);
@@ -198,7 +207,7 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
 
 
   //// draw text
-  double sz_init = 0.925; double sz_step = 0.0535;
+  double sz_init = 0.922; double sz_step = 0.0535;
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
@@ -232,11 +241,55 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   gRAA_2S_strickland[2]->SetLineStyle(8);
   
 
-  for(int i=0;i<3;i++){
-    gRAA_1S_strickland[i]->Draw("same");
-    gRAA_2S_strickland[i]->Draw("same");
-  }
-   
+//  for(int i=0;i<3;i++){
+//    gRAA_1S_strickland[i]->Draw("same");
+//    gRAA_2S_strickland[i]->Draw("same");
+//  }
+
+//3S theory
+const int npt = 3;
+
+TGraphErrors* g3S = new TGraphErrors("Y3Spt5023Xi0.tsv","%lg %lg %lg %lg","\t");
+
+
+int nPts = g3S->GetN();
+cout<<"Number of Points: "<<nPts<<endl;
+double y3S_1[npt];
+double y3S_2[npt];
+double y3S_3[npt];
+
+for(int i=0;i< nPts; i++){
+    y3S_1[i]=g3S->GetY()[i];
+    y3S_2[i]=g3S->GetErrorX(i);
+    y3S_3[i]=g3S->GetErrorY(i);
+}
+
+double x[npt] = {2.5,3.5,4.0};
+
+TGraphErrors* g1t = new TGraphErrors(g3S->GetN(),g3S->GetX(),y3S_1,x,0);
+TGraphErrors* g2t = new TGraphErrors(g3S->GetN(),g3S->GetX(),y3S_2,x,0);
+TGraphErrors* g3t = new TGraphErrors(g3S->GetN(),g3S->GetX(),y3S_3,x,0);
+
+
+
+g1t->Draw("samep");
+g1t->SetLineWidth(3);
+g1t->SetLineStyle(3);
+g1t->SetLineColor(kGreen+2);
+g1t->SetMarkerSize(0);
+g2t->Draw("SAMEp");
+g2t->SetLineWidth(3);
+g2t->SetLineStyle(1);
+g2t->SetLineColor(kGreen+2);
+g2t->SetMarkerSize(0);
+g3t->Draw("SAMEp");
+g3t->SetLineWidth(3);
+g3t->SetLineColor(kGreen+2);
+g3t->SetLineStyle(8);
+g3t->SetMarkerSize(0);
+
+
+
   TLegend *leg_strick= new TLegend(0.2, 0.516, 0.4, 0.646);
   SetLegendStyle(leg_strick);
   leg_strick->SetTextSize(0.037);
@@ -244,56 +297,34 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
 //  leg_strick->Draw("same");
 
-  double line_y = 0.825;
+  double line_y = 0.559;
   double line_y_diff = 0.07;
-  double line_y_diff_in = 0.02;
   double line_x_end = 4.4;
   double line_x_start = 2.4;
   TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
   t1->SetLineStyle(3);
   t1->SetLineWidth(2);
-  t1->SetLineColor(kRed+3);
+  t1->SetLineColor(kGreen+2);
   t1->Draw("same");
 
-  TLine* t11 = new TLine(line_x_start,line_y-line_y_diff_in,line_x_end,line_y-line_y_diff_in);
-  t11->SetLineStyle(3);
-  t11->SetLineWidth(2);
-  t11->SetLineColor(kBlue-3);
-  t11->Draw("same");
-
-  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in,line_x_end,line_y-line_y_diff-line_y_diff_in);
+  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff,line_x_end,line_y-line_y_diff);
   t2->SetLineStyle(1);
   t2->SetLineWidth(2);
-  t2->SetLineColor(kRed+3);
+  t2->SetLineColor(kGreen+2);
   t2->Draw("same");
 
-  TLine* t22 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in*2,line_x_end,line_y-line_y_diff-line_y_diff_in*2);
-  t22->SetLineStyle(1);
-  t22->SetLineWidth(2);
-  t22->SetLineColor(kBlue-3);
-  t22->Draw("same");
-
-  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*2,line_x_end,line_y-line_y_diff*2-line_y_diff_in*2);
+  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2,line_x_end,line_y-line_y_diff*2);
   t3->SetLineStyle(8);
   t3->SetLineWidth(2);
-  t3->SetLineColor(kRed+3);
+  t3->SetLineColor(kGreen+2);
   t3->Draw("same");
 
-  TLine* t33 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*3,line_x_end,line_y-line_y_diff*2-line_y_diff_in*3);
-  t33->SetLineStyle(8);
-  t33->SetLineWidth(2);
-  t33->SetLineColor(kBlue-3);
-  t33->Draw("same");
+  drawText2("4#pi#eta/s=1", line_x_end+1, line_y-0.015, 22);
+  drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.015, 22);
+  drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.015, 22);
 
-  drawText2("4#pi#eta/s=1", line_x_end+1, line_y-0.025, 22);
-  drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
-  drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
-
-  drawText2("Strickland [1605.03561]",1.05,0.51,22);
-
-
-
-
+  drawText2("Strickland [1605.03561]",15,0.37,22);
+ 
 
   //Global Unc.
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
@@ -304,13 +335,13 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   globalUncBox -> SetLineColor(kBlack);
   globalUncBox -> SetFillColorAlpha(kGray+2,0.6);
   globalUncBox -> SetLineWidth(1);
-  globalUncBox -> Draw("l same");
+  //globalUncBox -> Draw("l same");
   
-  CMS_lumi_raaCent( c1, iPeriod, iPos );
+  CMS_lumi( c1, iPeriod, iPos );
 
 	c1->Update();
-  c1->SaveAs(Form("Strickland_RAA_vs_pt_isArrow%d.pdf",(int)isArrow));
-  c1->SaveAs(Form("Strickland_RAA_vs_pt_isArrow%d.png",(int)isArrow));
+  c1->SaveAs("Strickland_RAA_vs_pt_3S.pdf");
+  c1->SaveAs("Strickland_RAA_vs_pt_3S.png");
 
 /*
 	///////////////////////////////////////////////////////////////////

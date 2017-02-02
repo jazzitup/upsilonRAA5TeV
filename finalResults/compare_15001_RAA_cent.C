@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
 void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
@@ -142,16 +142,18 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   SetGraphStyle(gRAA_int[1], 0, 0); 
   SetGraphStyleSys(gRAA_int_sys[1], 0); 
   
+  double xlonger = 120; 
   //// latex for text
   TLatex* globtex = new TLatex();
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.0387);
   
   //// legend
-  TLegend *leg= new TLegend(0.55, 0.46, 0.95, 0.63);
+  TLegend *leg= new TLegend(0.45, 0.523, 0.85, 0.693);
   SetLegendStyle(leg);
+  leg -> SetTextSize(0.0387);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
@@ -172,11 +174,14 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   gRAA_sys[0]->GetYaxis()->SetLabelSize(0.05*1.0);
 
   //// draw  
-  double xlonger = 120; 
   TCanvas* c1 = new TCanvas("c1","c1",600+xlonger,600);
   TPad* pad_diff = new TPad("pad_diff", "",0, 0, 600/(600.+xlonger), 1.0); // vs centrality
   pad_diff->SetRightMargin(0);
+  pad_diff->SetBottomMargin(0.14);
+  pad_diff->SetTopMargin(0.067);
   TPad* pad_int = new TPad("pad_int", "",600/(600.+xlonger), 0, 1.0, 1.0); // centrality-integrated
+  pad_int->SetBottomMargin(0.14);
+  pad_int->SetTopMargin(0.067);
   pad_int->SetLeftMargin(0);
   pad_int->SetRightMargin(0.032*600/xlonger);
 
@@ -193,11 +198,11 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   leg->Draw();
 
   //// drwa text
-  double sz_init = 0.892; double sz_step = 0.0558;
+  double sz_init = 0.874; double sz_step = 0.0558;
 //  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
   
   //Global Unc.
   TH1D* hSys_glb;
@@ -228,7 +233,7 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   ppRefUncBox1S -> SetLineWidth(1);
   ppRefUncBox1S -> Draw("same");
 
-  CMS_lumi( pad_diff, iPeriod, iPos );
+  CMS_lumi_raaCent( pad_diff, iPeriod, iPos );
   
   //// --- 2nd pad!!!
   c1->cd();
@@ -253,10 +258,11 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   dashedLine(0.,1.,xmax,1.,1,1);
 
   //// draw text 
+  double sz_allign = 0.1497;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %"); 
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%"); 
   
   c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent.pdf",istate));
   c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent.png",istate));

@@ -1,8 +1,8 @@
-#include "CMS_lumi.h"
+#include "CMS_lumi_overlay.h"
 #include <iostream>
 
 void 
-CMS_lumi( TPad* pad, int iPeriod, int iPosX )
+CMS_lumi_overlay( TPad* pad, int iPeriod, int iPosX )
 {            
   bool outOfFrame    = false;
   if( iPosX/10==0 ) 
@@ -23,7 +23,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   float H = pad->GetWh();
   float W = pad->GetWw();
   float l = pad->GetLeftMargin();
-  float t = pad->GetTopMargin();
+  float t = pad->GetTopMargin()*0.76;
   float r = pad->GetRightMargin();
   float b = pad->GetBottomMargin();
   //  float e = 0.025;
@@ -87,15 +87,15 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 
   latex.SetTextFont(42);
   latex.SetTextAlign(31); 
-  latex.SetTextSize(lumiTextSize*t*0.6);    
-  latex.DrawLatex(1-r,1-t+lumiTextOffset*t,lumiText);
+  latex.SetTextSize(lumiTextSize*t);    
+  latex.DrawLatex(1-r,1-t+lumiTextOffset*t-0.014,lumiText);
 
   if( outOfFrame )
     {
       latex.SetTextFont(cmsTextFont);
       latex.SetTextAlign(11); 
       latex.SetTextSize(cmsTextSize*t);    
-      latex.DrawLatex(l,1-t+lumiTextOffset*t,cmsText);
+      latex.DrawLatex(l,1-t+lumiTextOffset*t-0.01,cmsText);
     }
   
   pad->cd();
@@ -121,7 +121,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 	  posX_ =   l + 0.045*(1-l-r)*W/H;
 	  posY_ = 1-t - 0.045*(1-t-b);
 	  float xl_0 = posX_;
-	  float yl_0 = posY_ - 0.15+0.05;
+	  float yl_0 = posY_ - 0.15;
 	  float xl_1 = posX_ + 0.15*H/W;
 	  float yl_1 = posY_;
 	  TASImage* CMS_logo = new TASImage("CMS-BW-label.png");
@@ -137,14 +137,14 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 	  latex.SetTextFont(cmsTextFont);
 	  latex.SetTextSize(cmsTextSize*t);
 	  latex.SetTextAlign(align_);
-	  posX_ -= 0.01; posY_-=0.02; // KYO
+	  posX_ -= 0.01; posY_-=0.07; // KYO
     latex.DrawLatex(posX_, posY_, cmsText);
 	  if( writeExtraText ) 
 	    {
 	      latex.SetTextFont(extraTextFont);
 	      latex.SetTextAlign(align_);
 	      latex.SetTextSize(extraTextSize*t);
-	      latex.DrawLatex(posX_, posY_- relExtraDY*cmsTextSize*t*0.9, extraText);
+	      latex.DrawLatex(posX_, posY_- relExtraDY*cmsTextSize*t, extraText);
 	    }
 	}
     }

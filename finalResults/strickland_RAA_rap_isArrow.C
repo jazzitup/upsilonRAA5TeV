@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 #include "../commonUtility.h"
 
@@ -105,7 +105,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
@@ -142,6 +142,8 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  gPad->SetBottomMargin(0.14);
+  gPad->SetTopMargin(0.067);
   //// syst
   for (int is=0; is<nState; is++){
     if ( is==0) {gRAA_sys[is]->Draw("A5");}
@@ -197,7 +199,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   }
 
   //// draw text
-  double sz_init = 0.872; double sz_step = 0.0535;
+  double sz_init = 0.925; double sz_step = 0.0535;
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
@@ -243,8 +245,9 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
 //  leg_strick->Draw("same");
 
-  double line_y = 0.70;
+  double line_y = 0.825;
   double line_y_diff = 0.07;
+  double line_y_diff_in = 0.02;
   double line_x_end = 0.33;
   double line_x_start = 0.2;
   TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
@@ -253,24 +256,43 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   t1->SetLineColor(kRed+3);
   t1->Draw("same");
 
-  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff,line_x_end,line_y-line_y_diff);
+  TLine* t11 = new TLine(line_x_start,line_y-line_y_diff_in,line_x_end,line_y-line_y_diff_in);
+  t11->SetLineStyle(3);
+  t11->SetLineWidth(2);
+  t11->SetLineColor(kBlue-3);
+  t11->Draw("same");
+
+  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in,line_x_end,line_y-line_y_diff-line_y_diff_in);
   t2->SetLineStyle(1);
   t2->SetLineWidth(2);
   t2->SetLineColor(kRed+3);
   t2->Draw("same");
 
-  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2,line_x_end,line_y-line_y_diff*2);
+  TLine* t22 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in*2,line_x_end,line_y-line_y_diff-line_y_diff_in*2);
+  t22->SetLineStyle(1);
+  t22->SetLineWidth(2);
+  t22->SetLineColor(kBlue-3);
+  t22->Draw("same");
+
+  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*2,line_x_end,line_y-line_y_diff*2-line_y_diff_in*2);
   t3->SetLineStyle(8);
   t3->SetLineWidth(2);
   t3->SetLineColor(kRed+3);
   t3->Draw("same");
 
-  drawText2("4#pi#eta/s=1", line_x_end+0.07, line_y-0.015, 16);
-  drawText2("4#pi#eta/s=2", line_x_end+0.07, line_y-line_y_diff*1-0.015, 16);
-  drawText2("4#pi#eta/s=3", line_x_end+0.07, line_y-line_y_diff*2-0.015, 16);
+  TLine* t33 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*3,line_x_end,line_y-line_y_diff*2-line_y_diff_in*3);
+  t33->SetLineStyle(8);
+  t33->SetLineWidth(2);
+  t33->SetLineColor(kBlue-3);
+  t33->Draw("same");
+
+  drawText2("4#pi#eta/s=1", line_x_end+0.07, line_y-0.025, 22);
+  drawText2("4#pi#eta/s=2", line_x_end+0.07, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
+  drawText2("4#pi#eta/s=3", line_x_end+0.07, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
+
+  drawText2("Strickland [1605.03561]",0.1,0.51,22);
 
   
-
   //Global Unc.
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
   //double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+lumi_unc_aa*lumi_unc_aa);
@@ -282,7 +304,7 @@ void strickland_RAA_rap_isArrow(bool isArrow=true)
   globalUncBox -> SetLineWidth(1);
   globalUncBox -> Draw("l same");
   
-  CMS_lumi( c1, iPeriod, iPos );
+  CMS_lumi_raaCent( c1, iPeriod, iPos );
 
 	c1->Update();
   c1->SaveAs(Form("Strickland_RAA_vs_rap_isArrow%d.pdf",(int)isArrow));

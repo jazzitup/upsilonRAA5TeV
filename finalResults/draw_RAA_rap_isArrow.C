@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
 void draw_RAA_rap_isArrow(bool isArrow=true)
@@ -104,7 +104,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
@@ -141,6 +141,8 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  gPad->SetBottomMargin(0.14);
+  gPad->SetTopMargin(0.067);
   //// syst
   for (int is=0; is<nState; is++){
     if ( is==0) {gRAA_sys[is]->Draw("A5");}
@@ -196,7 +198,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   }
 
   //// draw text
-  double sz_init = 0.872; double sz_step = 0.0535;
+  double sz_init = 0.925; double sz_step = 0.0535;
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
@@ -214,7 +216,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   globalUncBox -> SetLineWidth(1);
   globalUncBox -> Draw("l same");
   
-  CMS_lumi( c1, iPeriod, iPos );
+  CMS_lumi_raaCent( c1, iPeriod, iPos );
 
 	c1->Update();
   c1->SaveAs(Form("RAA_vs_rap_isArrow%d.pdf",(int)isArrow));

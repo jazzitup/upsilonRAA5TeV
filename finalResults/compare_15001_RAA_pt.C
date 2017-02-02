@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
 void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
@@ -89,7 +89,7 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// legend
   TLegend *leg= new TLegend(0.55, 0.57, 0.95, 0.74);
@@ -109,6 +109,8 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  gPad->SetBottomMargin(0.14);
+  gPad->SetTopMargin(0.067);
   for (int is=0; is<nfile; is++){
     if ( is==0) gRAA_sys[is]->Draw("A5");
     else gRAA_sys[is]->Draw("5");
@@ -118,10 +120,10 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   leg->Draw();
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0535;
+  double sz_init = 0.927; double sz_step = 0.0535;
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
+  globtex->DrawLatex(0.22, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "|#eta^{#mu}| < 2.4");
   globtex->DrawLatex(0.22, sz_init-sz_step*2, "Cent. 0-100%");
   
@@ -143,7 +145,7 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   globalUncBox_15001 -> Draw("l same");
   
   
-  CMS_lumi( c1, iPeriod, iPos );
+  CMS_lumi_raaCent( c1, iPeriod, iPos );
 
 	c1->Update();
   c1->SaveAs(Form("%dS_comp15001_RAA_vs_pt.pdf",istate));
