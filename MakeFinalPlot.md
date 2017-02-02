@@ -24,7 +24,7 @@ finalResults/CMS_lumi_overlay.h
 finalResults/CMS_lumi_overlay.C
 finalResults/tdrstyle.C
 
-2. Go to finalResults
+2. Go to finalResults (cd finalResults)
 
 3. Now drawing the final plots!
 
