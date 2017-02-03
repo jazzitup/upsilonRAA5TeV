@@ -318,7 +318,7 @@ void strickland_RAA_cent(bool isArrow =true)
   leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
 //  leg_strick->Draw("same");
 
-  double line_y = 0.95;
+  double line_y = 0.88;
   double line_y_diff = 0.07;
   double line_y_diff_in = 0.02;
   double line_x_end = 122;
@@ -363,7 +363,7 @@ void strickland_RAA_cent(bool isArrow =true)
   drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
   drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
 
-  drawText2("Krouppa, Strickland",223,0.49,22);
+  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.06,22);
 
   //Global Unc.
   TH1D* hSys_glb[nState];

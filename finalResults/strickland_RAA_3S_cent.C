@@ -285,8 +285,8 @@ void strickland_RAA_3S_cent(bool isArrow =true)
   centtex->DrawLatex(0.181,0.781,"70-100%");
 */
 
-  globtex->DrawLatex(0.24, sz_init-sz_step*10+0.03, "30-100%");
-  globtex->DrawLatex(0.69, sz_init-sz_step*12, "0-30%");
+  globtex->DrawLatex(0.24, sz_init-sz_step*10+0.04, "30-100%");
+  globtex->DrawLatex(0.69, sz_init-sz_step*12+0.01, "0-30%");
 
   TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA_5023.root","READ");
   
@@ -363,7 +363,7 @@ g3t->SetLineStyle(8);
   leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
 //  leg_strick->Draw("same");
 
-  double line_y = 0.68;
+  double line_y = 0.62;
   double line_y_diff = 0.07;
   double line_x_end = 75;
   double line_x_start = 50;
@@ -388,7 +388,7 @@ g3t->SetLineStyle(8);
   drawText2("4#pi#eta/s=1", line_x_end+7, line_y-0.015, 22);
   drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 22);
   drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 22);
-  drawText2("Krouppa, Strickland",223,0.49,22);
+  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.05,22);
   //Global Unc.
   TH1D* hSys_glb[nState];
   double sys_global_pp[nState];

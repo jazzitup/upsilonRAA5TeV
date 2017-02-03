@@ -239,12 +239,12 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
    
   TLegend *leg_strick= new TLegend(0.2, 0.516, 0.4, 0.646);
   SetLegendStyle(leg_strick);
-  leg_strick->SetTextSize(0.037);
+  leg_strick->SetTextSize(0.040);
   leg_strick->AddEntry(gRAA_1S_strickland[2],"Y(1S)","l");
   leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
 //  leg_strick->Draw("same");
 
-  double line_y = 0.825;
+  double line_y = 0.741;
   double line_y_diff = 0.07;
   double line_y_diff_in = 0.02;
   double line_x_end = 4.4;
@@ -289,7 +289,7 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
   drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
 
-  drawText2("Krouppa, Strickland",1.05,0.51,22);
+  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.06,22);
 
 
 

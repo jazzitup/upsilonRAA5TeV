@@ -292,12 +292,12 @@ g3t->SetMarkerSize(0);
 
   TLegend *leg_strick= new TLegend(0.2, 0.516, 0.4, 0.646);
   SetLegendStyle(leg_strick);
-  leg_strick->SetTextSize(0.037);
+  leg_strick->SetTextSize(0.040);
   leg_strick->AddEntry(gRAA_1S_strickland[2],"Y(1S)","l");
   leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
 //  leg_strick->Draw("same");
 
-  double line_y = 0.559;
+  double line_y = 0.497;
   double line_y_diff = 0.07;
   double line_x_end = 4.4;
   double line_x_start = 2.4;
@@ -323,7 +323,7 @@ g3t->SetMarkerSize(0);
   drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.015, 22);
   drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.015, 22);
 
-  drawText2("Krouppa, Strickland",15,0.37,22);
+  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.05,22);
  
 
   //Global Unc.
