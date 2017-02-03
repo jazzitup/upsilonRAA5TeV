@@ -104,7 +104,7 @@ const double NumberOfMBColl1 = 3092000000;
 
 // lumi Unc 
 double lumi_unc_pp = 0.023;
-double nMB_unc = 0.02;
+double nMB_unc = 0.0224;
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };
