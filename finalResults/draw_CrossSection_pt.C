@@ -103,8 +103,8 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
   //// axis et. al
   gCrossSection_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gCrossSection_sys[0]->GetXaxis()->CenterTitle();
-  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{d#sigma}{#Deltaydp_{T}} (nb/ GeV/c)");
-  else gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{1}{T_{AA}} #frac{dN}{#Deltaydp_{T}} (nb/ GeV/c)");
+  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{d#sigma}{ dp_{T}} (nb/ GeV/c)");
+  else gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{1}{T_{AA}} #frac{dN}{ dp_{T}} (nb/ GeV/c)");
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
   gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
   gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);

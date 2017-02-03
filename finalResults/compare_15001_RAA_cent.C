@@ -157,6 +157,10 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
+  
+  TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
+  header->SetTextSize(0.044);
+  header->SetTextFont(62);
 
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
@@ -220,7 +224,9 @@ void compare_15001_RAA_cent(int istate=1) //1 or 2 (1S or 2S)
   if(istate==1) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.063*0.063); 
   else if(istate==2) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.066*0.066); 
   double sys_global_x = 15;
- 
+
+  cout << "sys_global_pp : " << sys_global_pp << endl;
+
   TBox *globalUncBox = new TBox(xmax-sys_global_x*2,1-sys_global_y,xmax-sys_global_x,1+sys_global_y);
   globalUncBox -> SetLineColor(kRed-2);
   globalUncBox -> SetFillColorAlpha(kPink-6,0.6);

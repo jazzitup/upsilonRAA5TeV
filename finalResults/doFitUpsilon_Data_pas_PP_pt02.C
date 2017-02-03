@@ -235,7 +235,7 @@ void doFitUpsilon_Data_pas_PP_pt02(
   myPlot2->GetYaxis()->SetTitleOffset(1.43);
   myPlot2->GetYaxis()->CenterTitle();
   myPlot2->GetYaxis()->SetTitleSize(0.058);
-  myPlot2->GetYaxis()->SetLabelSize(0.043);
+  myPlot2->GetYaxis()->SetLabelSize(0.054);
   myPlot2->GetXaxis()->SetLabelSize(0);
   myPlot2->GetXaxis()->SetRangeUser(8,14);
   myPlot2->GetXaxis()->SetTitleSize(0);
@@ -272,15 +272,15 @@ void doFitUpsilon_Data_pas_PP_pt02(
   fitleg->SetBorderSize(0);
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"Data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"Total fit","l");
-  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"signal","l");
-  fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"background","l");
+  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"Signal","l");
+  fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"Background","l");
   fitleg->Draw("same");
 
   // PULL 
 
-  TPad *pad2 = new TPad("pad2", "pad2", 0, 0.03, 0.98, 0.23);
+  TPad *pad2 = new TPad("pad2", "pad2", 0, 0.006, 0.98, 0.227);
   pad2->SetTopMargin(0); // Upper and lower plot are joined
-  pad2->SetBottomMargin(0.69); 
+  pad2->SetBottomMargin(0.67); 
   pad1->SetLeftMargin(0.18);
   pad1->SetRightMargin(0.02);
   pad2->SetRightMargin(0.02);
@@ -296,22 +296,22 @@ void doFitUpsilon_Data_pas_PP_pt02(
   pullFrame->GetYaxis()->SetTitleOffset(0.43) ;
   pullFrame->GetYaxis()->SetTitle("Pull") ;
   pullFrame->GetYaxis()->SetTitleSize(0.19) ;
-  pullFrame->GetYaxis()->SetLabelSize(0.12) ;
-  pullFrame->GetYaxis()->SetRangeUser(-3.9,3.9) ;
+  pullFrame->GetYaxis()->SetLabelSize(0.113) ;
+  pullFrame->GetYaxis()->SetRangeUser(-3.8,3.8) ;
 //  pullFrame->GetYaxis()->SetLimits(-6,6) ;
   pullFrame->GetYaxis()->CenterTitle();
 
   pullFrame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
-  pullFrame->GetXaxis()->SetTitleOffset(1.02) ;
+  pullFrame->GetXaxis()->SetTitleOffset(1.05) ;
   pullFrame->GetXaxis()->SetLabelOffset(0.04) ;
-  pullFrame->GetXaxis()->SetLabelSize(0.168) ;
+  pullFrame->GetXaxis()->SetLabelSize(0.23) ;
   pullFrame->GetXaxis()->SetTitleSize(0.28) ;
   pullFrame->GetXaxis()->CenterTitle();
  // pullFrame->GetXaxis()->SetTitleFont(43);
  // pullFrame->GetYaxis()->SetTitleFont(43);
   
-  pullFrame->GetYaxis()->SetTickSize(0.02);
-  pullFrame->GetYaxis()->SetNdivisions(505);
+  pullFrame->GetYaxis()->SetTickSize(0.04);
+  pullFrame->GetYaxis()->SetNdivisions(404);
   pullFrame->GetXaxis()->SetTickSize(0.03);
   pullFrame->Draw() ;
 

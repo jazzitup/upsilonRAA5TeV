@@ -98,6 +98,9 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
 
+  TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
+  header->SetTextSize(0.046);
+  header->SetTextFont(62);
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gRAA_sys[0]->GetXaxis()->CenterTitle();

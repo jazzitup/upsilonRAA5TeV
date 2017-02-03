@@ -290,7 +290,9 @@ void draw_RAA_cent(bool isArrow =true)
     else if(is==2) accept_sys = 0.021;
     sys_global_pp[is] = TMath::Sqrt(hSys_glb[is]->GetBinContent(1)*hSys_glb[is]->GetBinContent(1)+accept_sys*accept_sys);
   } 
-  
+ 
+  cout << "sys_global_pp[0] : " << sys_global_pp[0] << endl;
+
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
   double sys_global_y = sys_global_val; 
   double sys_global_x = 15;

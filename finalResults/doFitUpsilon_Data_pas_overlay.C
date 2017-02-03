@@ -278,14 +278,15 @@ void doFitUpsilon_Data_pas_overlay(
   RooRealVar *nSig2s_pp = new RooRealVar("nSig2s_pp"," 2S signals",1000,0,100000);
   RooRealVar *nSig3s_pp = new RooRealVar("nSig3s_pp"," 3S signals",100, 0,10000);
   RooRealVar *nBkg_pp = new RooRealVar("nBkg_pp","fraction of component 1 in bkg",10000,0,5000000);  
+/*
+  double ppSig1S_over = 34841.4 * TAA1s[nCentBins1s] * 0.935751938 * NumberOfMBColl / (28000000000 * 1.) ;
+  double ppSig2S_over = 11340.7 * TAA1s[nCentBins1s] * 0.935751938 * NumberOfMBColl / (28000000000 * 1.) ;
+  double ppSig3S_over = 5970.83 * TAA1s[nCentBins1s] * 0.935751938 * NumberOfMBColl / (28000000000 * 1.) ;
+  */
 
-  double ppSig1S_over = 34841.4 * TAA1s[nCentBins1s] * NumberOfMBColl / (28000000000 * 1.) ;
-  double ppSig2S_over = 11340.7 * TAA1s[nCentBins1s] * NumberOfMBColl / (28000000000 * 1.) ;
-  double ppSig3S_over = 5970.83 * TAA1s[nCentBins1s] * NumberOfMBColl / (28000000000 * 1.) ;
-  
-  //double ppSig1S_over = ws->var("nSig1s")->getVal();
-  //double ppSig2S_over = ws->var("nSig1s")->getVal()*11340.7/34841.4;
-  //double ppSig3S_over = ws->var("nSig1s")->getVal()*5970.83/34841.4;
+  double ppSig1S_over = ws->var("nSig1s")->getVal()/0.363634;
+  double ppSig2S_over = ws->var("nSig2s")->getVal()/0.104263;
+  double ppSig3S_over = ws->var("nSig3s")->getVal()/0.008466;
 
   
   nSig1s_pp->setVal(ppSig1S_over); nSig1s_pp->setConstant();
@@ -325,17 +326,17 @@ void doFitUpsilon_Data_pas_overlay(
 
   myPlot2->SetFillStyle(4000);
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
-  myPlot2->GetYaxis()->SetTitleOffset(1.75);
+  myPlot2->GetYaxis()->SetTitleOffset(1.77);
   myPlot2->GetYaxis()->CenterTitle();
-  myPlot2->GetYaxis()->SetTitleSize(0.047);
-  myPlot2->GetXaxis()->SetLabelSize(0);
+  myPlot2->GetYaxis()->SetTitleSize(0.05);
+  myPlot2->GetYaxis()->SetLabelSize(0.045) ;
   myPlot2->GetXaxis()->SetRangeUser(8,14);
   myPlot2->GetXaxis()->SetTitleSize(0);
   myPlot2->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
-  myPlot2->GetXaxis()->SetTitleOffset(1.21) ;
-  myPlot2->GetXaxis()->SetLabelOffset(0.016) ;
-  myPlot2->GetXaxis()->SetLabelSize(0.036) ;
-  myPlot2->GetXaxis()->SetTitleSize(0.048) ;
+  myPlot2->GetXaxis()->SetTitleOffset(1.22) ;
+  myPlot2->GetXaxis()->SetLabelOffset(0.018) ;
+  myPlot2->GetXaxis()->SetLabelSize(0.045) ;
+  myPlot2->GetXaxis()->SetTitleSize(0.057) ;
   myPlot2->GetXaxis()->CenterTitle();
   myPlot2->Draw();
   fitRes2->Print("v");
@@ -344,7 +345,7 @@ void doFitUpsilon_Data_pas_overlay(
   TString perc = "%";
 
   float pos_text_x = 0.41;
-  float pos_text_y = 0.821;
+  float pos_text_y = 0.852;
   float pos_y_diff = 0.052;
   float text_size = 17;
   int text_color = 1;
@@ -370,7 +371,7 @@ void doFitUpsilon_Data_pas_overlay(
   fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"PbPb Data","pe");
   fitleg->AddEntry(myPlot2->findObject("modelHist"),"Total fit","l");
 //  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"signal","l");
-  fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"background","l");
+  fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"Background","l");
   fitleg->AddEntry(myPlot2->findObject("ppOverlay"),"pp overlay","l");
   fitleg->Draw("same");
 
@@ -379,7 +380,7 @@ void doFitUpsilon_Data_pas_overlay(
   TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 0.98, 0.23);
   pad2->SetTicks(1,1);
   pad1->SetLeftMargin(0.18);
-  pad1->SetBottomMargin(0.14);
+  pad1->SetBottomMargin(0.17);
   pad1->SetTopMargin(0.067);
   pad1->SetRightMargin(0.05);
   
@@ -489,7 +490,6 @@ void doFitUpsilon_Data_pas_overlay(
   TFile* outf = new TFile(Form("PAS_overlay_RAANorm_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
   c1->SaveAs(Form("PAS_overlay_RAANorm_woSig_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
-  c1->SaveAs(Form("PAS_overlay_RAANorm_woSig_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
   c1->Write();
   ws->Write();
   cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
