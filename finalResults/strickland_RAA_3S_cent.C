@@ -388,7 +388,7 @@ g3t->SetLineStyle(8);
   drawText2("4#pi#eta/s=1", line_x_end+7, line_y-0.015, 22);
   drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 22);
   drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 22);
-  drawText2("Strickland [1605.03561]",223,0.49,22);
+  drawText2("Krouppa, Strickland",223,0.49,22);
   //Global Unc.
   TH1D* hSys_glb[nState];
   double sys_global_pp[nState];

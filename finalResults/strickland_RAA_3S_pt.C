@@ -323,7 +323,7 @@ g3t->SetMarkerSize(0);
   drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.015, 22);
   drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.015, 22);
 
-  drawText2("Strickland [1605.03561]",15,0.37,22);
+  drawText2("Krouppa, Strickland",15,0.37,22);
  
 
   //Global Unc.
