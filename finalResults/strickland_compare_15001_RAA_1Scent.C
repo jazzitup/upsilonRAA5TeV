@@ -151,7 +151,11 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   globtex->SetTextSize(0.038);
   
   //// legend
-  TLegend *leg= new TLegend(0.55, 0.46, 0.95, 0.63);
+  //TLegend *leg= new TLegend(0.55, 0.46, 0.95, 0.63);
+ // TLegend *leg= new TLegend(0.6, 0.656, 1.0, 0.786);
+  
+
+  TLegend *leg= new TLegend(0.25, 0.656, 0.68, 0.786);
   SetLegendStyle(leg);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
@@ -194,7 +198,7 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   leg->Draw();
 
   //// drwa text
-  double sz_init = 0.892; double sz_step = 0.0558;
+  double sz_init = 0.874; double sz_step = 0.0558;
 //  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
@@ -233,22 +237,35 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
     gRAA_2S_strickland[i]->Draw("same");
   }
    
-  TLegend *leg_strick= new TLegend(0.25, 0.656, 0.48, 0.786);
+ // TLegend *leg_strick= new TLegend(0.25, 0.656, 0.48, 0.786);
+  TLegend *leg_strick= new TLegend(0.78, .678, .98, 0.778);
   SetLegendStyle(leg_strick);
   leg_strick->SetTextSize(0.036);
   leg_strick->AddEntry(gRAA_1S_strickland[1],"2.76 TeV","l");
   leg_strick->AddEntry(gRAA_2S_strickland[1],"5.02 TeV","l");
-  leg_strick->Draw("same");
+  //leg_strick->Draw("same");
 
-  double line_y = 1.23;
+  //double line_y = 1.23;
+  double line_y = 0.8;
   double line_y_diff = 0.084;
-  double line_x_end = 180;
-  double line_x_start = 155;
+  double line_y_diff_in = 0.02;
+  //double line_x_end = 180;
+  double line_x_end = 265;
+  //double line_x_start = 155;
+  double line_x_start = 240;
   TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
   t1->SetLineStyle(3);
   t1->SetLineWidth(2);
   t1->SetLineColor(kBlue+3);
   t1->Draw("same");
+  
+  TLine* t11 = new TLine(line_x_start,line_y-line_y_diff_in,line_x_end,line_y-line_y_diff_in);
+  t11->SetLineStyle(3);
+  t11->SetLineWidth(2);
+  t11->SetLineColor(kRed-3);
+  t11->Draw("same");
+
+
 
   TLine* t2 = new TLine(line_x_start,line_y-line_y_diff,line_x_end,line_y-line_y_diff);
   t2->SetLineStyle(1);
@@ -256,16 +273,31 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   t2->SetLineColor(kBlue+3);
   t2->Draw("same");
 
+  TLine* t22 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in,line_x_end,line_y-line_y_diff-line_y_diff_in);
+  t22->SetLineStyle(1);
+  t22->SetLineWidth(2);
+  t22->SetLineColor(kRed-3);
+  t22->Draw("same");
+
+
   TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2,line_x_end,line_y-line_y_diff*2);
   t3->SetLineStyle(8);
   t3->SetLineWidth(2);
   t3->SetLineColor(kBlue+3);
   t3->Draw("same");
 
-  drawText2("4#pi#eta/s=1", line_x_end+7, line_y-0.015, 19);
-  drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 19);
-  drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 19);
+   TLine* t33 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in,line_x_end,line_y-line_y_diff*2-line_y_diff_in);
+   t33->SetLineStyle(8);
+   t33->SetLineWidth(2);
+   t33->SetLineColor(kRed-3);
+   t33->Draw("same");
 
+  
+  drawText2("4#pi #eta/s=1", line_x_end+7, line_y-0.015, 19);
+  drawText2("4#pi #eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 19);
+  drawText2("4#pi #eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 19);
+  drawText2("Krouppa, Strickland",line_x_start,line_y+0.06,22);
+  
   //Global Unc.
   TH1D* hSys_glb;
   double sys_global_pp;
@@ -320,10 +352,11 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   dashedLine(0.,1.,xmax,1.,1,1);
 
   //// draw text 
+  double sz_allign = 0.1497;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %"); 
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100 %"); 
   
   c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.pdf",istate));
   c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.png",istate));

@@ -228,10 +228,10 @@ void strickland_RAA_cent(bool isArrow =true)
   
   //// legend
   //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  TLegend *leg= new TLegend(0.65, 0.51, 0.85, 0.76);
+  TLegend *leg= new TLegend(0.68, 0.51, 0.88, 0.76);
   SetLegendStyle(leg);
   leg->SetTextSize(0.0387);
-  TArrow *arrLeg = new TArrow(255.,0.62,255.,0.67,0.025,"<-|");
+  TArrow *arrLeg = new TArrow(270.,0.62,270.,0.67,0.025,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
   
@@ -256,9 +256,9 @@ void strickland_RAA_cent(bool isArrow =true)
   //// draw text
   double sz_init = 0.874; double sz_step = 0.0558;
 //  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+  globtex->DrawLatex(0.22+0.1, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
+  globtex->DrawLatex(0.22+0.1, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
 /*
   TLatex* centtex = new TLatex();
   centtex->SetNDC();
@@ -321,8 +321,8 @@ void strickland_RAA_cent(bool isArrow =true)
   double line_y = 0.88;
   double line_y_diff = 0.07;
   double line_y_diff_in = 0.02;
-  double line_x_end = 122;
-  double line_x_start = 97;
+  double line_x_end = 105;//122
+  double line_x_start = 80;//97
   TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
   t1->SetLineStyle(3);
   t1->SetLineWidth(2);
@@ -359,11 +359,12 @@ void strickland_RAA_cent(bool isArrow =true)
   t33->SetLineColor(kBlue-3);
   t33->Draw("same");
 
-  drawText2("4#pi#eta/s=1", line_x_end+7, line_y-0.025, 22);
-  drawText2("4#pi#eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
-  drawText2("4#pi#eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
 
-  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.06,22);
+  drawText2("4#pi #eta/s=1", line_x_end+7, line_y-0.025, 22);
+  drawText2("4#pi #eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
+  drawText2("4#pi #eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
+
+  drawText2("Krouppa, Strickland",line_x_start,line_y+0.06,22);
 
   //Global Unc.
   TH1D* hSys_glb[nState];
@@ -446,9 +447,9 @@ void strickland_RAA_cent(bool isArrow =true)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%");
 
 	c1->Update();
-  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
   c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.png",(int)isArrow));
 
+  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
 /*
 	///////////////////////////////////////////////////////////////////
 	//// save as a root file

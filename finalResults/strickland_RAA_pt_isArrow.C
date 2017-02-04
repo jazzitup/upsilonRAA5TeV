@@ -166,12 +166,12 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   }
   
   dashedLine(0.,1.,xmax,1.,1,1);
-  TLegend *leg= new TLegend(0.57, 0.62, 0.785, 0.74);
+  TLegend *leg= new TLegend(0.64, 0.62, 0.855, 0.74);
   SetLegendStyle(leg);
-  TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
+  TLegend *leg_up= new TLegend(0.64, 0.50, 0.85, 0.62);
   SetLegendStyle(leg_up);
 
-  TArrow *arrLeg = new TArrow(16.,0.532,16.,0.582,0.02,"<-|");
+  TArrow *arrLeg = new TArrow(18.5,0.532,18.5,0.582,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
 
@@ -285,11 +285,11 @@ void strickland_RAA_pt_isArrow(bool isArrow=true)
   t33->SetLineColor(kBlue-3);
   t33->Draw("same");
 
-  drawText2("4#pi#eta/s=1", line_x_end+1, line_y-0.025, 22);
-  drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
-  drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
+  drawText2("4#pi #eta/s=1", line_x_end+1, line_y-0.025, 22);
+  drawText2("4#pi #eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
+  drawText2("4#pi #eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
 
-  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.06,22);
+  drawText2("Krouppa, Strickland",line_x_start,line_y+0.06,22);
 
 
 

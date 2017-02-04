@@ -86,6 +86,7 @@ void draw_RAA_cent(bool isArrow =true)
       extmp=gRAA_int[is]->GetErrorX(ipt);
       eytmp=gRAA_int[is]->GetErrorY(ipt);
       relsys=hSys_int[is]->GetBinContent(ipt+1);
+      relsys = TMath::Sqrt(relsys*relsys+0.03207802986*3.207802986)
       cout << ipt <<"th bin RAA value = " << pytmp << endl;
       cout << ipt <<"th bin stat. = " << eytmp << endl;
       //cout << ipt <<"th bin rel. syst. = " << relsys << endl;

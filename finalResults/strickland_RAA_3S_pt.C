@@ -174,12 +174,12 @@ void strickland_RAA_3S_pt(bool isArrow=true)
     else {gRAA[is]->Draw("P");}
   }
   
-  TLegend *leg= new TLegend(0.57, 0.62, 0.785, 0.74);
+  TLegend *leg= new TLegend(0.65, 0.62, 0.855, 0.74);
   SetLegendStyle(leg);
-  TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
+  TLegend *leg_up= new TLegend(0.64, 0.50, 0.85, 0.62);
   SetLegendStyle(leg_up);
 
-  TArrow *arrLeg = new TArrow(16.,0.452,16.,0.502,0.02,"<-|");
+  TArrow *arrLeg = new TArrow(18.5,0.452,18.5,0.502,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   
   arrLeg->SetLineWidth(2);
@@ -319,11 +319,11 @@ g3t->SetMarkerSize(0);
   t3->SetLineColor(kGreen+2);
   t3->Draw("same");
 
-  drawText2("4#pi#eta/s=1", line_x_end+1, line_y-0.015, 22);
-  drawText2("4#pi#eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.015, 22);
-  drawText2("4#pi#eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.015, 22);
+  drawText2("4#pi #eta/s=1", line_x_end+1, line_y-0.015, 22);
+  drawText2("4#pi #eta/s=2", line_x_end+1, line_y-line_y_diff*1-0.015, 22);
+  drawText2("4#pi #eta/s=3", line_x_end+1, line_y-line_y_diff*2-0.015, 22);
 
-  drawText2("Krouppa, Strickland",line_x_start-(line_x_end-line_x_start)*0.7,line_y+0.05,22);
+  drawText2("Krouppa, Strickland",line_x_start,line_y+0.05,22);
  
 
   //Global Unc.
