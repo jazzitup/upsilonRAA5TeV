@@ -4,7 +4,7 @@
 #include "../cutsAndBin.h"
 #include "../commonUtility.h"
 
-void strickland_compare_15001_RAA_1Scent_newglobal(int istate=1) //1 or 2 (1S or 2S)
+void strickland_compare_15001_RAA_1Scent_range_newglobal(int istate=1) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -156,7 +156,7 @@ void strickland_compare_15001_RAA_1Scent_newglobal(int istate=1) //1 or 2 (1S or
  // TLegend *leg= new TLegend(0.6, 0.656, 1.0, 0.786);
   
 
-  TLegend *leg= new TLegend(0.25, 0.656, 0.68, 0.786);
+  TLegend *leg= new TLegend(0.25, 0.186, 0.68, 0.356);
   SetLegendStyle(leg);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
@@ -172,7 +172,7 @@ void strickland_compare_15001_RAA_1Scent_newglobal(int istate=1) //1 or 2 (1S or
   gRAA_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gRAA_sys[0]->SetMinimum(0.0);
 //  gRAA_sys[0]->SetMaximum(1.3);
-  gRAA_sys[0]->SetMaximum(1.6);
+  gRAA_sys[0]->SetMaximum(1.3);
   //// for cent
   gRAA_sys[0]->GetXaxis()->SetTitleSize(0.06*1.0);
   gRAA_sys[0]->GetYaxis()->SetTitleSize(0.06*1.0);
@@ -341,7 +341,7 @@ void strickland_compare_15001_RAA_1Scent_newglobal(int istate=1) //1 or 2 (1S or
   gRAA_int_sys[0]->GetXaxis()->SetLimits(xmin_int,xmax_int);
   gRAA_int_sys[0]->SetMinimum(0.0);
 //  gRAA_int_sys[0]->SetMaximum(1.3);
-  gRAA_int_sys[0]->SetMaximum(1.6);
+  gRAA_int_sys[0]->SetMaximum(1.3);
   gRAA_int_sys[0]->GetXaxis()->SetNdivisions(101);
   gRAA_int_sys[0]->GetXaxis()->SetLabelSize(0);
   gRAA_int_sys[0]->GetYaxis()->SetTickLength(0.03*600/xlonger);
@@ -361,8 +361,8 @@ void strickland_compare_15001_RAA_1Scent_newglobal(int istate=1) //1 or 2 (1S or
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%"); 
   
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_newglobal.pdf",istate));
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_newglobal.png",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_range_newglobal.pdf",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_range_newglobal.png",istate));
 
 /*
 	///////////////////////////////////////////////////////////////////
