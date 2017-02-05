@@ -14,22 +14,26 @@ int main(int argc, char **argv)
   const int N_nPart = 407;
   const int N_pT1S = 5;
   const int N_pT2S = 3;
+  const int N_pT3S = 3;
   const int N_rap = 35;
 
   Double_t nPart, rap, pT;
   Double_t RAA_etas_nPart[3];
   Double_t RAA_etas_pT[3];
   Double_t RAA_etas_rap[3];
-  int sNN = 2760;
+  int sNN = 5023;
  
   fstream openFile_nPart1S(Form("Y1SNpart%dXi0.tsv",sNN));
   fstream openFile_nPart2S(Form("Y2SNpart%dXi0.tsv",sNN));
+  fstream openFile_nPart3S(Form("Y3SNpart%dXi0.tsv",sNN));
   
   fstream openFile_pT1S(Form("Y1Spt%dXi0.tsv",sNN));
   fstream openFile_pT2S(Form("Y2Spt%dXi0.tsv",sNN));
+  fstream openFile_pT3S(Form("Y3Spt%dXi0.tsv",sNN));
   
   fstream openFile_rap1S(Form("Y1Srapidity%dXi0.tsv",sNN));
   fstream openFile_rap2S(Form("Y2Srapidity%dXi0.tsv",sNN));
+  fstream openFile_rap3S(Form("Y3Srapidity%dXi0.tsv",sNN));
 
   TFile *wfile_nPart1S = new TFile(Form("1SXi0_RAA_%d_nPart.root",sNN),"recreate");
   TTree *tree_nPart1S = new TTree("tree","1S Xi0 tree");
@@ -41,6 +45,11 @@ int main(int argc, char **argv)
          tree_nPart2S -> Branch("nPart",&nPart,"nPart/D");
          tree_nPart2S -> Branch("RAA_etas_nPart",&RAA_etas_nPart,"RAA_etas_nPart[3]/D");
   
+  TFile *wfile_nPart3S = new TFile(Form("3SXi0_RAA_%d_nPart.root",sNN),"recreate");
+  TTree *tree_nPart3S = new TTree("tree","3S Xi0 tree");
+         tree_nPart3S -> Branch("nPart",&nPart,"nPart/D");
+         tree_nPart3S -> Branch("RAA_etas_nPart",&RAA_etas_nPart,"RAA_etas_nPart[3]/D");
+  
   TFile *wfile_pT1S = new TFile(Form("1SXi0_RAA_%d_pT.root",sNN),"recreate");
   TTree *tree_pT1S = new TTree("tree","1S Xi0 tree");
          tree_pT1S -> Branch("pT",&pT,"pT/D");
@@ -51,6 +60,11 @@ int main(int argc, char **argv)
          tree_pT2S -> Branch("pT",&pT,"pT/D");
          tree_pT2S -> Branch("RAA_etas_pT",&RAA_etas_pT,"RAA_etas_pT[3]/D");
   
+  TFile *wfile_pT3S = new TFile(Form("3SXi0_RAA_%d_pT.root",sNN),"recreate");
+  TTree *tree_pT3S = new TTree("tree","3S Xi0 tree");
+         tree_pT3S -> Branch("pT",&pT,"pT/D");
+         tree_pT3S -> Branch("RAA_etas_pT",&RAA_etas_pT,"RAA_etas_pT[3]/D");
+  
   TFile *wfile_rap1S = new TFile(Form("1SXi0_RAA_%d_rap.root",sNN),"recreate");
   TTree *tree_rap1S = new TTree("tree","1S Xi0 tree");
          tree_rap1S -> Branch("rap",&rap,"rap/D");
@@ -60,6 +74,11 @@ int main(int argc, char **argv)
   TTree *tree_rap2S = new TTree("tree","2S Xi0 tree");
          tree_rap2S -> Branch("rap",&rap,"rap/D");
          tree_rap2S -> Branch("RAA_etas_rap",&RAA_etas_rap,"RAA_etas_rap[3]/D");
+  
+  TFile *wfile_rap3S = new TFile(Form("3SXi0_RAA_%d_rap.root",sNN),"recreate");
+  TTree *tree_rap3S = new TTree("tree","3S Xi0 tree");
+         tree_rap3S -> Branch("rap",&rap,"rap/D");
+         tree_rap3S -> Branch("RAA_etas_rap",&RAA_etas_rap,"RAA_etas_rap[3]/D");
   
 
   for(int i=0; i<N_nPart; i++)
@@ -89,6 +108,23 @@ int main(int argc, char **argv)
   wfile_nPart2S->cd();
   tree_nPart2S->Write();
   wfile_nPart2S->Close();
+
+  nPart = 0;
+  RAA_etas_nPart[0]=0.;
+  RAA_etas_nPart[1]=0.;
+  RAA_etas_nPart[2]=0.;
+
+
+  for(int i=0; i<N_nPart; i++)
+  {
+    openFile_nPart3S >> nPart >> RAA_etas_nPart[0] >> RAA_etas_nPart[1] >> RAA_etas_nPart[2];
+    tree_nPart3S->Fill();
+  }
+  
+  openFile_nPart3S.close();
+  wfile_nPart3S->cd();
+  tree_nPart3S->Write();
+  wfile_nPart3S->Close();
 
 
   for(int i=0; i<N_pT1S; i++)
@@ -123,6 +159,22 @@ int main(int argc, char **argv)
   RAA_etas_pT[1]=0.;
   RAA_etas_pT[2]=0.;
 
+  for(int i=0; i<N_pT3S; i++)
+  {
+    openFile_pT3S >> pT >> RAA_etas_pT[0] >> RAA_etas_pT[1] >> RAA_etas_pT[2];
+    tree_pT3S->Fill();
+  }
+  
+  openFile_pT3S.close();
+  wfile_pT3S->cd();
+  tree_pT3S->Write();
+  wfile_pT3S->Close();
+  
+  pT = 0;
+  RAA_etas_pT[0]=0.;
+  RAA_etas_pT[1]=0.;
+  RAA_etas_pT[2]=0.;
+
 
   for(int i=0; i<N_rap; i++)
   {
@@ -150,6 +202,22 @@ int main(int argc, char **argv)
   wfile_rap2S->cd();
   tree_rap2S->Write();
   wfile_rap2S->Close();
+
+  rap = 0;
+  RAA_etas_rap[0]= 0.;
+  RAA_etas_rap[1]= 0.;
+  RAA_etas_rap[2]= 0.;
+
+  for(int i=0; i<N_rap; i++)
+  {
+    openFile_rap3S >> rap >> RAA_etas_rap[0] >> RAA_etas_rap[1] >> RAA_etas_rap[2];
+    tree_rap3S->Fill();
+  }
+
+  openFile_rap3S.close();
+  wfile_rap3S->cd();
+  tree_rap3S->Write();
+  wfile_rap3S->Close();
 
   rap = 0;
   RAA_etas_rap[0]= 0.;
