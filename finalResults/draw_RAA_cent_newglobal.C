@@ -3,7 +3,7 @@
 #include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
-void draw_RAA_cent(bool isArrow =true)
+void draw_RAA_cent_newglobal(bool isArrow =true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -86,6 +86,7 @@ void draw_RAA_cent(bool isArrow =true)
       extmp=gRAA_int[is]->GetErrorX(ipt);
       eytmp=gRAA_int[is]->GetErrorY(ipt);
       relsys=hSys_int[is]->GetBinContent(ipt+1);
+      relsys = TMath::Sqrt(relsys*relsys+0.03207802986*0.03207802986);
       cout << ipt <<"th bin RAA value = " << pytmp << endl;
       cout << ipt <<"th bin stat. = " << eytmp << endl;
       //cout << ipt <<"th bin rel. syst. = " << relsys << endl;
@@ -361,8 +362,8 @@ void draw_RAA_cent(bool isArrow =true)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%");
 
 	c1->Update();
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.png",(int)isArrow));
+  c1->SaveAs(Form("RAA_vs_cent_isArrow%d_newglobal.pdf",(int)isArrow));
+  c1->SaveAs(Form("RAA_vs_cent_isArrow%d_newglobal.png",(int)isArrow));
 
 /*
 	///////////////////////////////////////////////////////////////////

@@ -3,7 +3,7 @@
 #include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
-void draw_RAA_cent(bool isArrow =true)
+void draw_RAA_cent_newbox(bool isArrow =true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -321,7 +321,8 @@ void draw_RAA_cent(bool isArrow =true)
   c1->cd();
   pad_int->Draw(); 
   pad_int->cd(); 
-  
+ 
+ 
   //// for int
   gRAA_int_sys[0]->GetXaxis()->SetLimits(xmin_int,xmax_int);
   gRAA_int_sys[0]->SetMinimum(0.0);
@@ -352,17 +353,23 @@ void draw_RAA_cent(bool isArrow =true)
 	}
   dashedLine(0.,1.,xmax_int,1.,1,1);
   
+  TBox *globalUncBox_int = new TBox(xmax_int-xmax_int/8,1-sys_global_y,xmax_int,1+sys_global_y);
+  globalUncBox_int -> SetFillColorAlpha(kGray+2,0);
+  globalUncBox_int -> SetLineColor(kBlack);
+  globalUncBox_int -> SetLineWidth(2);
+  globalUncBox_int -> Draw("l same");
+
   pad_int->Update();
   //// draw text
-  double sz_allign = 0.034;
+  double sz_allign = -0.06;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%");
 
 	c1->Update();
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.png",(int)isArrow));
+  c1->SaveAs(Form("RAA_vs_cent_isArrow%d_newbox.pdf",(int)isArrow));
+  c1->SaveAs(Form("RAA_vs_cent_isArrow%d_newbox.png",(int)isArrow));
 
 /*
 	///////////////////////////////////////////////////////////////////

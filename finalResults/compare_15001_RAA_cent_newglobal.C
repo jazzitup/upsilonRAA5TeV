@@ -1,10 +1,9 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
-#include "../commonUtility.h"
 
-void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
+void compare_15001_RAA_cent_newglobal(int istate=1) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -122,6 +121,7 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
     extmp=gRAA_int[1]->GetErrorX(ipt);
     eytmp=gRAA_int[1]->GetErrorY(ipt);
     relsys=hSys_int->GetBinContent(ipt+1);
+    relsys = TMath::Sqrt(relsys*relsys+0.03207802986*0.03207802986);
     // 1) remove ex from gRAA
     gRAA_int[1]->SetPointError(ipt, 0, eytmp);
     // 2) set ey for gRAA_int_sys
@@ -143,24 +143,24 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   SetGraphStyle(gRAA_int[1], 0, 0); 
   SetGraphStyleSys(gRAA_int_sys[1], 0); 
   
+  double xlonger = 120; 
   //// latex for text
   TLatex* globtex = new TLatex();
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.0387);
   
   //// legend
-  //TLegend *leg= new TLegend(0.55, 0.46, 0.95, 0.63);
- // TLegend *leg= new TLegend(0.6, 0.656, 1.0, 0.786);
-  
-
-  TLegend *leg= new TLegend(0.25, 0.656, 0.68, 0.786);
+  TLegend *leg= new TLegend(0.45, 0.523, 0.85, 0.693);
   SetLegendStyle(leg);
+  leg -> SetTextSize(0.0387);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
+  
   TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
+  header->SetTextSize(0.044);
   header->SetTextFont(62);
 
   //// axis et. al
@@ -179,11 +179,14 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   gRAA_sys[0]->GetYaxis()->SetLabelSize(0.05*1.0);
 
   //// draw  
-  double xlonger = 120; 
   TCanvas* c1 = new TCanvas("c1","c1",600+xlonger,600);
   TPad* pad_diff = new TPad("pad_diff", "",0, 0, 600/(600.+xlonger), 1.0); // vs centrality
   pad_diff->SetRightMargin(0);
+  pad_diff->SetBottomMargin(0.14);
+  pad_diff->SetTopMargin(0.067);
   TPad* pad_int = new TPad("pad_int", "",600/(600.+xlonger), 0, 1.0, 1.0); // centrality-integrated
+  pad_int->SetBottomMargin(0.14);
+  pad_int->SetTopMargin(0.067);
   pad_int->SetLeftMargin(0);
   pad_int->SetRightMargin(0.032*600/xlonger);
 
@@ -205,100 +208,6 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
   globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
- 
-  TFile *fstrickland_2760 = new TFile("TheoryCurve/StrickLand_RAA_2760.root","READ");
-  TFile *fstrickland_5023 = new TFile("TheoryCurve/StrickLand_RAA_5023.root","READ");
-  
-  TGraphErrors *gRAA_1S_strickland[3]; 
-  TGraphErrors *gRAA_2S_strickland[3]; 
-  
-  for(int i=0;i<3;i++)
-  {
-    gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland_2760-> Get(Form("RAA_strick_nPart_1S_%d",i));
-    gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland_5023-> Get(Form("RAA_strick_nPart_1S_%d",i));
-    gRAA_1S_strickland[i] -> SetLineWidth(3.);
-    gRAA_2S_strickland[i] -> SetLineWidth(3.0);
-  }
-  gRAA_1S_strickland[0]->SetLineColor(kBlue+3);
-  gRAA_1S_strickland[1]->SetLineColor(kBlue+3);
-  gRAA_1S_strickland[2]->SetLineColor(kBlue+3);
-  gRAA_1S_strickland[0]->SetLineStyle(3);
-  gRAA_1S_strickland[1]->SetLineStyle(1);
-  gRAA_1S_strickland[2]->SetLineStyle(8);
-  
-  gRAA_2S_strickland[0]->SetLineColor(kRed-3);
-  gRAA_2S_strickland[1]->SetLineColor(kRed-3);
-  gRAA_2S_strickland[2]->SetLineColor(kRed-3);
-  gRAA_2S_strickland[0]->SetLineStyle(3);
-  gRAA_2S_strickland[1]->SetLineStyle(1);
-  gRAA_2S_strickland[2]->SetLineStyle(8);
-  
-
-  for(int i=0;i<3;i++){
-    gRAA_1S_strickland[i]->Draw("same");
-    gRAA_2S_strickland[i]->Draw("same");
-  }
-   
- // TLegend *leg_strick= new TLegend(0.25, 0.656, 0.48, 0.786);
-  TLegend *leg_strick= new TLegend(0.78, .678, .98, 0.778);
-  SetLegendStyle(leg_strick);
-  leg_strick->SetTextSize(0.036);
-  leg_strick->AddEntry(gRAA_1S_strickland[1],"2.76 TeV","l");
-  leg_strick->AddEntry(gRAA_2S_strickland[1],"5.02 TeV","l");
-  //leg_strick->Draw("same");
-
-  //double line_y = 1.23;
-  double line_y = 0.8;
-  double line_y_diff = 0.084;
-  double line_y_diff_in = 0.02;
-  //double line_x_end = 180;
-  double line_x_end = 265;
-  //double line_x_start = 155;
-  double line_x_start = 240;
-  TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
-  t1->SetLineStyle(3);
-  t1->SetLineWidth(2);
-  t1->SetLineColor(kBlue+3);
-  t1->Draw("same");
-  
-  TLine* t11 = new TLine(line_x_start,line_y-line_y_diff_in,line_x_end,line_y-line_y_diff_in);
-  t11->SetLineStyle(3);
-  t11->SetLineWidth(2);
-  t11->SetLineColor(kRed-3);
-  t11->Draw("same");
-
-
-
-  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff,line_x_end,line_y-line_y_diff);
-  t2->SetLineStyle(1);
-  t2->SetLineWidth(2);
-  t2->SetLineColor(kBlue+3);
-  t2->Draw("same");
-
-  TLine* t22 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in,line_x_end,line_y-line_y_diff-line_y_diff_in);
-  t22->SetLineStyle(1);
-  t22->SetLineWidth(2);
-  t22->SetLineColor(kRed-3);
-  t22->Draw("same");
-
-
-  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2,line_x_end,line_y-line_y_diff*2);
-  t3->SetLineStyle(8);
-  t3->SetLineWidth(2);
-  t3->SetLineColor(kBlue+3);
-  t3->Draw("same");
-
-   TLine* t33 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in,line_x_end,line_y-line_y_diff*2-line_y_diff_in);
-   t33->SetLineStyle(8);
-   t33->SetLineWidth(2);
-   t33->SetLineColor(kRed-3);
-   t33->Draw("same");
-
-  
-  drawText2("4#pi #eta/s=1", line_x_end+7, line_y-0.015, 19);
-  drawText2("4#pi #eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.015, 19);
-  drawText2("4#pi #eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.015, 19);
-  drawText2("Krouppa, Strickland",line_x_start,line_y+0.06,22);
   
   //Global Unc.
   TH1D* hSys_glb;
@@ -316,7 +225,9 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   if(istate==1) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.063*0.063); 
   else if(istate==2) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.066*0.066); 
   double sys_global_x = 15;
- 
+
+  cout << "sys_global_pp : " << sys_global_pp << endl;
+
   TBox *globalUncBox = new TBox(xmax-sys_global_x*2,1-sys_global_y,xmax-sys_global_x,1+sys_global_y);
   globalUncBox -> SetLineColor(kRed-2);
   globalUncBox -> SetFillColorAlpha(kPink-6,0.6);
@@ -329,7 +240,7 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   ppRefUncBox1S -> SetLineWidth(1);
   ppRefUncBox1S -> Draw("same");
 
-  CMS_lumi( pad_diff, iPeriod, iPos );
+  CMS_lumi_raaCent( pad_diff, iPeriod, iPos );
   
   //// --- 2nd pad!!!
   c1->cd();
@@ -360,8 +271,8 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%"); 
   
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.pdf",istate));
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.png",istate));
+  c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent_newglobal.pdf",istate));
+  c1->SaveAs(Form("%dS_comp15001_RAA_vs_cent_newglobal.png",istate));
 
 /*
 	///////////////////////////////////////////////////////////////////

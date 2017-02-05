@@ -4,7 +4,7 @@
 #include "../cutsAndBin.h"
 #include "../commonUtility.h"
 
-void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
+void strickland_compare_15001_RAA_1Scent_newglobal(int istate=1) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -360,8 +360,8 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%"); 
   
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.pdf",istate));
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.png",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_newglobal.pdf",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_newglobal.png",istate));
 
 /*
 	///////////////////////////////////////////////////////////////////

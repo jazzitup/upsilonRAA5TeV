@@ -155,7 +155,7 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
  // TLegend *leg= new TLegend(0.6, 0.656, 1.0, 0.786);
   
 
-  TLegend *leg= new TLegend(0.25, 0.656, 0.68, 0.786);
+  TLegend *leg= new TLegend(0.25, 0.186, 0.68, 0.356);
   SetLegendStyle(leg);
   leg -> SetHeader(Form("#Upsilon(%dS)",istate));
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
@@ -171,7 +171,7 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   gRAA_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gRAA_sys[0]->SetMinimum(0.0);
 //  gRAA_sys[0]->SetMaximum(1.3);
-  gRAA_sys[0]->SetMaximum(1.6);
+  gRAA_sys[0]->SetMaximum(1.3);
   //// for cent
   gRAA_sys[0]->GetXaxis()->SetTitleSize(0.06*1.0);
   gRAA_sys[0]->GetYaxis()->SetTitleSize(0.06*1.0);
@@ -340,7 +340,7 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   gRAA_int_sys[0]->GetXaxis()->SetLimits(xmin_int,xmax_int);
   gRAA_int_sys[0]->SetMinimum(0.0);
 //  gRAA_int_sys[0]->SetMaximum(1.3);
-  gRAA_int_sys[0]->SetMaximum(1.6);
+  gRAA_int_sys[0]->SetMaximum(1.3);
   gRAA_int_sys[0]->GetXaxis()->SetNdivisions(101);
   gRAA_int_sys[0]->GetXaxis()->SetLabelSize(0);
   gRAA_int_sys[0]->GetYaxis()->SetTickLength(0.03*600/xlonger);

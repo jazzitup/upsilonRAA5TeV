@@ -137,7 +137,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 	  latex.SetTextFont(cmsTextFont);
 	  latex.SetTextSize(cmsTextSize*t);
 	  latex.SetTextAlign(align_);
-	  posX_ -= 0.01; posY_-=0.02; // KYO
+	  posX_ -= 0.01; posY_-=0.02-0.015; // KYO
     latex.DrawLatex(posX_, posY_, cmsText);
 	  if( writeExtraText ) 
 	    {

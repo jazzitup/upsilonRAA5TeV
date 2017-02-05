@@ -2,8 +2,9 @@
 #include "tdrstyle.C"
 #include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
+#include "../commonUtility.h"
 
-void draw_RAA_cent(bool isArrow =true)
+void strickland_RAA_cent_newglobal(bool isArrow =true)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -227,10 +228,10 @@ void draw_RAA_cent(bool isArrow =true)
   
   //// legend
   //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  TLegend *leg= new TLegend(0.65, 0.51, 0.85, 0.76);
+  TLegend *leg= new TLegend(0.68, 0.51, 0.88, 0.76);
   SetLegendStyle(leg);
   leg->SetTextSize(0.0387);
-  TArrow *arrLeg = new TArrow(255.,0.62,255.,0.67,0.025,"<-|");
+  TArrow *arrLeg = new TArrow(270.,0.62,270.,0.67,0.025,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
   
@@ -248,16 +249,16 @@ void draw_RAA_cent(bool isArrow =true)
     ent->SetFillStyle(1001);
     ent=leg->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
     ent->SetLineColor(kWhite);
-    arrLeg->Draw();
   }
   leg->Draw("same");
+  arrLeg->Draw();
   
   //// draw text
   double sz_init = 0.874; double sz_step = 0.0558;
 //  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+  globtex->DrawLatex(0.22+0.1, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
+  globtex->DrawLatex(0.22+0.1, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
 /*
   TLatex* centtex = new TLatex();
   centtex->SetNDC();
@@ -278,6 +279,93 @@ void draw_RAA_cent(bool isArrow =true)
 
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
 
+  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA_5023.root","READ");
+  
+  TGraphErrors *gRAA_1S_strickland[3]; 
+  TGraphErrors *gRAA_2S_strickland[3]; 
+  
+  for(int i=0;i<3;i++)
+  {
+    gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_1S_%d",i));
+    gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_2S_%d",i));
+    gRAA_1S_strickland[i] -> SetLineWidth(3.);
+    gRAA_2S_strickland[i] -> SetLineWidth(3.0);
+  }
+  gRAA_1S_strickland[0]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[1]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[2]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[0]->SetLineStyle(3);
+  gRAA_1S_strickland[1]->SetLineStyle(1);
+  gRAA_1S_strickland[2]->SetLineStyle(8);
+  
+  gRAA_2S_strickland[0]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[1]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[2]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[0]->SetLineStyle(3);
+  gRAA_2S_strickland[1]->SetLineStyle(1);
+  gRAA_2S_strickland[2]->SetLineStyle(8);
+  
+
+  for(int i=0;i<3;i++){
+    gRAA_1S_strickland[i]->Draw("same");
+    gRAA_2S_strickland[i]->Draw("same");
+  }
+   
+  TLegend *leg_strick= new TLegend(0.29, 0.586, 0.46, 0.716);
+  SetLegendStyle(leg_strick);
+  leg_strick->SetTextSize(0.040);
+  leg_strick->AddEntry(gRAA_1S_strickland[2],"Y(1S)","l");
+  leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
+//  leg_strick->Draw("same");
+
+  double line_y = 0.88;
+  double line_y_diff = 0.07;
+  double line_y_diff_in = 0.02;
+  double line_x_end = 105;//122
+  double line_x_start = 80;//97
+  TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
+  t1->SetLineStyle(3);
+  t1->SetLineWidth(2);
+  t1->SetLineColor(kRed+3);
+  t1->Draw("same");
+
+  TLine* t11 = new TLine(line_x_start,line_y-line_y_diff_in,line_x_end,line_y-line_y_diff_in);
+  t11->SetLineStyle(3);
+  t11->SetLineWidth(2);
+  t11->SetLineColor(kBlue-3);
+  t11->Draw("same");
+
+  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in,line_x_end,line_y-line_y_diff-line_y_diff_in);
+  t2->SetLineStyle(1);
+  t2->SetLineWidth(2);
+  t2->SetLineColor(kRed+3);
+  t2->Draw("same");
+
+  TLine* t22 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in*2,line_x_end,line_y-line_y_diff-line_y_diff_in*2);
+  t22->SetLineStyle(1);
+  t22->SetLineWidth(2);
+  t22->SetLineColor(kBlue-3);
+  t22->Draw("same");
+
+  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*2,line_x_end,line_y-line_y_diff*2-line_y_diff_in*2);
+  t3->SetLineStyle(8);
+  t3->SetLineWidth(2);
+  t3->SetLineColor(kRed+3);
+  t3->Draw("same");
+
+  TLine* t33 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*3,line_x_end,line_y-line_y_diff*2-line_y_diff_in*3);
+  t33->SetLineStyle(8);
+  t33->SetLineWidth(2);
+  t33->SetLineColor(kBlue-3);
+  t33->Draw("same");
+
+
+  drawText2("4#pi #eta/s=1", line_x_end+7, line_y-0.025, 22);
+  drawText2("4#pi #eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
+  drawText2("4#pi #eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
+
+  drawText2("Krouppa, Strickland",line_x_start,line_y+0.06,22);
+
   //Global Unc.
   TH1D* hSys_glb[nState];
   double sys_global_pp[nState];
@@ -290,9 +378,7 @@ void draw_RAA_cent(bool isArrow =true)
     else if(is==2) accept_sys = 0.021;
     sys_global_pp[is] = TMath::Sqrt(hSys_glb[is]->GetBinContent(1)*hSys_glb[is]->GetBinContent(1)+accept_sys*accept_sys);
   } 
- 
-  cout << "sys_global_pp[0] : " << sys_global_pp[0] << endl;
-
+  
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
   double sys_global_y = sys_global_val; 
   double sys_global_x = 15;
@@ -361,9 +447,9 @@ void draw_RAA_cent(bool isArrow =true)
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%");
 
 	c1->Update();
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
-  c1->SaveAs(Form("RAA_vs_cent_isArrow%d.png",(int)isArrow));
+  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d_newglobal.png",(int)isArrow));
 
+  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d_newglobal.pdf",(int)isArrow));
 /*
 	///////////////////////////////////////////////////////////////////
 	//// save as a root file
