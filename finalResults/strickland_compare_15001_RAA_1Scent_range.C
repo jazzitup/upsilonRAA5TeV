@@ -4,7 +4,7 @@
 #include "../cutsAndBin.h"
 #include "../commonUtility.h"
 
-void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
+void strickland_compare_15001_RAA_1Scent_range(int istate=1) //1 or 2 (1S or 2S)
 {
   setTDRStyle();
   writeExtraText = true;       // if extra text
@@ -354,14 +354,14 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   dashedLine(0.,1.,xmax,1.,1,1);
 
   //// draw text 
-  double sz_allign = 0.1497;
+  double sz_allign = 0.0297;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%"); 
   
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.pdf",istate));
-  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent.png",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_range.pdf",istate));
+  c1->SaveAs(Form("Strickland_%dS_comp15001_RAA_vs_cent_range.png",istate));
 
 /*
 	///////////////////////////////////////////////////////////////////

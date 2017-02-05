@@ -4,6 +4,8 @@ root -l -b -q 'compare_15001_RAA_rap.C+(1)'
 root -l -b -q 'compare_15001_RAA_rap.C+(2)'
 root -l -b -q 'compare_15001_RAA_cent.C+(1)'
 root -l -b -q 'compare_15001_RAA_cent.C+(2)'
+root -l -b -q 'compare_15001_RAA_cent_newglobal.C+(1)'
+root -l -b -q 'compare_15001_RAA_cent_newglobal.C+(2)'
 #root -l -b -q 'compare_15001_RAA_cent_noint.C+(1)'
 #root -l -b -q 'compare_15001_RAA_cent_noint.C+(2)'
 

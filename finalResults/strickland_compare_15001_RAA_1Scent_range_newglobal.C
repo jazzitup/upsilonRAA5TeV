@@ -355,7 +355,7 @@ void strickland_compare_15001_RAA_1Scent_range_newglobal(int istate=1) //1 or 2 
   dashedLine(0.,1.,xmax,1.,1,1);
 
   //// draw text 
-  double sz_allign = 0.1497;
+  double sz_allign = 0.0297;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
   globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
