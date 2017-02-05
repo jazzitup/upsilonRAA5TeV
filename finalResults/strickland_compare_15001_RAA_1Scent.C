@@ -52,14 +52,14 @@ void strickland_compare_15001_RAA_1Scent(int istate=1) //1 or 2 (1S or 2S)
   double cex_1s_int[cn_int] = {0.};
   double cey_1s_int[cn_int] = {0.014};
   double cexsys_1s_int[cn_int] = {boxw_int};
-  double ceysys_1s_int[cn_int] = {0.029};
+  double ceysys_1s_int[cn_int] = {0.048};//0.029
   
   double cpx_2s_int[cn_int] = {1};
   double cpy_2s_int[cn_int] = {0.119};
   double cex_2s_int[cn_int] = {0.};
   double cey_2s_int[cn_int] = {0.028};
   double cexsys_2s_int[cn_int] = {boxw_int};
-  double ceysys_2s_int[cn_int] = {0.008};
+  double ceysys_2s_int[cn_int] = {0.014};//0.008
 
   ////////////////////////////////////////////////////////////////
   //// read input file : value & stat.

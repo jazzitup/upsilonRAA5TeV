@@ -40,14 +40,16 @@ void plot_theory_comparison()
   Double_t RAA_etas_rap1S[3];
   Double_t RAA_etas_rap2S[3];
 
-  TFile *ofile_nPart1S = new TFile("1SXi0_RAA_nPart.root","READ");
-  TFile *ofile_nPart2S = new TFile("2SXi0_RAA_nPart.root","READ");
-  TFile *ofile_pT1S = new TFile("1SXi0_RAA_pT.root","READ");
-  TFile *ofile_pT2S = new TFile("2SXi0_RAA_pT.root","READ");
-  TFile *ofile_rap1S = new TFile("1SXi0_RAA_rap.root","READ");
-  TFile *ofile_rap2S = new TFile("2SXi0_RAA_rap.root","READ");
+  int sNN = 2760;
+  //int sNN = 5023;
+  TFile *ofile_nPart1S = new TFile(Form("1SXi0_RAA_%d_nPart.root",sNN),"READ");
+  TFile *ofile_nPart2S = new TFile(Form("2SXi0_RAA_%d_nPart.root",sNN),"READ");
+  TFile *ofile_pT1S = new TFile(Form("1SXi0_RAA_%d_pT.root",sNN),"READ");
+  TFile *ofile_pT2S = new TFile(Form("2SXi0_RAA_%d_pT.root",sNN),"READ");
+  TFile *ofile_rap1S = new TFile(Form("1SXi0_RAA_%d_rap.root",sNN),"READ");
+  TFile *ofile_rap2S = new TFile(Form("2SXi0_RAA_%d_rap.root",sNN),"READ");
 
-  TFile *writeFile = new TFile("StrickLand_RAA.root","recreate");
+  TFile *writeFile = new TFile(Form("StrickLand_RAA_%d.root",sNN),"recreate");
 
   TTree *tree_nPart1S = (TTree*) ofile_nPart1S -> Get("tree");
   tree_nPart1S->SetBranchAddress("nPart",&nPart);
