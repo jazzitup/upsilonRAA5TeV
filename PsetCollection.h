@@ -253,40 +253,16 @@ if ( collId == kPPDATA)
   // integrated bin
   if ( binMatched( 4, 0, 30, 0, 2.4) ) {setSignalParMC(3.762, 1.47731, 0.0629632, 9.45023, 0.443866, 1.95942 );}
   //Bin for 1S 
-  else if ( binMatched( 4, 0, 2, 0, 2.4) )   { setSignalParMC( 3.76996, 1.70039, 0.062522, 9.45683, 0.491621, 2.03249);} 
-  else if ( binMatched( 4, 2, 4, 0, 2.4) )   { setSignalParMC( 2.54841, 1.6812, 0.066532, 9.45719, 0.553098, 1.98314);} 
-  else if ( binMatched( 4, 4, 6, 0, 2.4) )   { setSignalParMC( 1.812, 1.77155, 0.0650865, 9.45745, 0.535116, 2.02773);} 
-  else if ( binMatched( 4, 6, 9, 0, 2.4) )   { setSignalParMC(1.90782, 1.68497, 0.0676252, 9.45505, 0.555618, 1.94159);} 
-  else if ( binMatched( 4, 9, 12, 0, 2.4) )   { setSignalParMC( 2.49551, 1.69633, 0.0653693, 9.45451, 0.501293, 1.92911);} 
-  else if ( binMatched( 4, 12, 30, 0, 2.4) )   { setSignalParMC(3.45418, 1.58837, 0.0691117, 9.4553, 0.543504, 1.83387);} 
-  else if ( binMatched( 4, 0, 30, 0, 0.4) )   { setSignalParMC(1.36109,  1.90884  ,  0.0889045  ,  9.4581  ,  0.189231  ,  0.608914 );} 
-  else if ( binMatched( 4, 0, 30, 0.4, 0.8) )   { setSignalParMC(2.30895  ,  1.75606  ,  0.0942427  ,  9.45866  ,  0.355442  ,  0.664363 );} 
-  else if ( binMatched( 4, 0, 30, 0.8, 1.2) )   { setSignalParMC(1.62317  ,  1.98761  ,  0.0777123  ,  9.45557  ,  0.497941  ,  1.45039 );} 
-  else if ( binMatched( 4, 0, 30, 1.2, 1.6) )   { setSignalParMC(1.38009  ,  2.12727  ,  0.0781824  ,  9.45002  ,  0.239506  ,  1.61113 );} 
-  else if ( binMatched( 4, 0, 30, 1.6, 2.0) )   { setSignalParMC(1.77962  ,  1.98774  ,  0.0726482  ,  9.45001  ,  0.0954821  ,  1.92647 );} 
-  else if ( binMatched( 4, 0, 30, 2.0, 2.4) )   { setSignalParMC(1.77998  ,  2.03591  ,  0.0864709  ,  9.45  ,  0.0852784  ,  1.99843 );} 
-
+  else if ( binMatched( 4, 0, 30, 1, 1.6) ) {setSignalParMC(1.12, 1.85613, 0.0880087, 9.44789, 0.576616, 1.50754 );} 
+  else if ( binMatched( 4, 0, 30, 1, 1.6) ) {setSignalParMC(3.38929, 2.41139, 0.103628, 9.44453, 0.890794, 2.75271 );} 
+  else if ( binMatched( 4, 0, 30, 2, 2.4) ) {setSignalParMC(1.51919, 3.83958, 0.179198, 9.43805, 0.593703, 0.599525 );} 
+  else if ( binMatched( 4, 0, 30, 2, 2.4) ) {setSignalParMC(1.21533, 3.83911, 0.0568538, 9.43076, 0.0251547, 2.97566 );} 
+  else if ( binMatched( 4, 4, 9, 0, 2.4) ) {setSignalParMC(1.13766, 1.86599, 0.0695779, 9.44727, 0.556041, 2.12589 );} 
+  else if ( binMatched( 4, 6, 30, 0, 2.4) ) {setSignalParMC(1.12, 1.91753, 0.141064, 9.44842, 0.472778, 0.480264 );} 
   //New Bin for 2S
-  else if ( binMatched( 4, 0, 4, 0, 2.4) ) { setSignalParMC( 2.30508, 1.84253, 0.0674275, 9.45702, 0.560549, 1.96373 );} 
-  else if ( binMatched( 4, 4, 9, 0, 2.4) ) { setSignalParMC( 2.38183, 1.7319, 0.0667538, 9.45599, 0.525199, 1.86566 );} 
-  else if ( binMatched( 4, 9, 30, 0, 2.4) ) { setSignalParMC( 3.67359, 1.64528, 0.0677543, 9.45487, 0.537117, 1.89586 );} 
-  else if ( binMatched( 4, 0, 30, 0, 0.8) ) { setSignalParMC( 3.3, 1.58721, 0.0869891, 9.45904, 0.327084, 0.646619 );}
-  else if ( binMatched( 4, 0, 30, 0.8, 1.6) ) { setSignalParMC( 3.34101, 1.7953, 0.0813591, 9.45382, 0.431361, 1.48029 );}
-  else if ( binMatched( 4, 0, 30, 1.6, 2.4) ) { setSignalParMC( 2.16579, 1.91729, 0.117034, 9.45, 0.535983, 1.50318 );}
   //New Bin for 3S
-  else if ( binMatched( 4, 0, 6, 0, 2.4) ) { setSignalParMC( 3.74613, 1.57539, 0.0654956, 9.45752, 0.529678, 1.96308 );}
-  else if ( binMatched( 4, 6, 30, 0, 2.4) ) { setSignalParMC( 3.86228, 1.55607, 0.0678253, 9.45518, 0.540205, 1.87503 );}
-  else if ( binMatched( 4, 0, 30, 0, 1.2) )   { setSignalParMC( 2.99101, 1.65623, 0.0981835, 9.45822, 0.419242, 0.605439);} 
-  else if ( binMatched( 4, 0, 30, 1.2, 2.4) )   { setSignalParMC(2.54509, 1.89829, 0.107104, 9.44942, 0.609942, 1.55899);} 
   
   // Old bins before 2017 Jan
-  else if ( binMatched( 4, 0, 2.5, 0, 2.4) )   { setSignalParMC( 3.4916, 1.564, 0.0656761, 9.45756, 0.54466, 1.97011);} 
-  else if ( binMatched( 4, 2.5, 5, 0, 2.4) )   { setSignalParMC( 3.35845, 1.63789, 0.0716633, 9.45802, 0.63576, 1.9029);} 
-  else if ( binMatched( 4, 5, 8, 0, 2.4) )   { setSignalParMC(  3.19046  ,  1.43575  ,  0.0730977  ,  9.45723  ,  0.639965  ,  1.78201);} 
-  else if ( binMatched( 4, 8, 15, 0, 2.4) )   { setSignalParMC(3.29824  ,  1.60905  ,  0.0678905  ,  9.45453  ,  0.537631  ,  1.87837 );} 
-  else if ( binMatched( 4, 15, 30, 0, 2.4) )   { setSignalParMC(3.25139  ,  1.60934  ,  0.0676854  ,  9.45591  ,  0.520767  ,  1.86066 );} 
-  else if ( binMatched( 4, 0, 5, 0, 2.4) )   { setSignalParMC( 3.76, 1.59235, 0.0648477, 9.45739, 0.521473, 1.97614);} 
-  else if ( binMatched( 4, 5, 15, 0, 2.4) )   { setSignalParMC( 3.78201, 1.54632, 0.128471, 9.45551, 0.446142, 0.531346);} 
 
 }
 

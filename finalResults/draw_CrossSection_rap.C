@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "../CMS_lumi.C"
 
 void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
 {
@@ -86,14 +86,13 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// legend
   TLegend *leg;
-  if (ppAA==1) leg= new TLegend(0.75, 0.17, 0.95, 0.34);
+  if (ppAA==1) {leg= new TLegend(0.68, 0.24, 0.85, 0.41); }//leg-> SetNColumns(3);}
   else {
-    leg= new TLegend(0.49, 0.67, 0.95, 0.76);
-    leg-> SetNColumns(3);
+    leg= new TLegend(0.68, 0.6, 0.90, 0.72);
   }
   //else leg= new TLegend(0.80, 0.42, 1.00, 0.59);
   SetLegendStyle(leg);
@@ -109,14 +108,16 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
   gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
   gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);
+  gCrossSection_sys[0]->GetXaxis()->SetTitleOffset(1.);
   gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
-  gCrossSection_sys[0]->SetMinimum(0.001);
-  gCrossSection_sys[0]->SetMaximum(100.);
+  gCrossSection_sys[0]->SetMinimum(0.004);
+  gCrossSection_sys[0]->SetMaximum(30.);
   // for rap
   gCrossSection_sys[0]->GetXaxis()->SetNdivisions(505);
  
   //// draw  
-  TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  TCanvas* c1 = new TCanvas("c1","c1",700,700);
+  c1->SetTicks(1,1); 
   gPad->SetLogy(1); // for cross section
   for (int is=0; is<nState; is++){
     if ( is==0) gCrossSection_sys[is]->Draw("A5");
@@ -125,18 +126,23 @@ void draw_CrossSection_rap(int ppAA=1) //1=pp, 2=AA
 	}
   leg->Draw();
   gPad->SetLeftMargin(0.23);
+  gPad->SetBottomMargin(0.16);
+  gPad->SetRightMargin(0.06);
+  gPad->SetTopMargin(0.1);
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_init = 0.875; double sz_step = 0.0525;
   double sz_shift;
-  if (ppAA==1) sz_shift=0.6;
+  if (ppAA==1) sz_shift=0.0;
   else sz_shift=0.0;
-  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
-//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.48, sz_init-sz_shift+0.005, "|#eta^{#mu}| < 2.4");
-  if(ppAA==2) globtex->DrawLatex(0.48, sz_init-sz_shift-sz_step+0.005, "Cent. 0-100%");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "|#eta^{#mu}| < 2.4");
+  if(ppAA==2) globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "Cent. 0-100%");
   
+  c1->Modified();
+  c1->Update();
   CMS_lumi( c1, ppAA, iPos );
 
 	c1->Update();

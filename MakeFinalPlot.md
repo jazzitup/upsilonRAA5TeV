@@ -1,6 +1,7 @@
 To make the final plots!
 
-Before begin, make sure you have 6 root files
+
+1. Before begin, make sure you have 6 root files (in point of home directory)
 
 finalResults/Ups_1_RAA.root
 finalResults/Ups_2_RAA.root
@@ -10,18 +11,28 @@ Systematic/mergedSys_ups2s.root
 Systematic/mergedSys_ups3s.root
 
 and header files
+./CMS_lumi.C
+./CMS_lumi.h
+./tdrstyle.C
+./SONGKYO.h
 finalResults/SONGKYO.h
 finalResults/CMS_lumi.h
 finalResults/CMS_lumi.C
+finalResults/CMS_lumi_raaCent.h
+finalResults/CMS_lumi_raaCent.C
+finalResults/CMS_lumi_overlay.h
+finalResults/CMS_lumi_overlay.C
 finalResults/tdrstyle.C
 
-Now drawing the final plots!
+2. Go to finalResults (cd finalResults)
 
-1. cd finalResults/
-2. ./run_draw_RAA.sh   :  RAA Plots
-3. ./run_draw_CrossSection.sh   : CrossSection Plots
-4. ./run_compare.sh   :  RAA comparison plots with 2.76 TeV
-5. ./run_strickland.sh  :  RAA theory curve comparison plots
+3. Now drawing the final plots!
+
+  a. ./run_draw_RAA.sh   :  RAA Plots
+  b. ./run_draw_CrossSection.sh   : CrossSection Plots
+  c. ./run_compare.sh   :  RAA comparison plots with 2.76 TeV
+  d. ./run_strickland.sh  :  RAA theory curve comparison plots
+  d. ./run_massPlot.sh  :  Mass Plot & overlay Plot (will take some time & you need the skimmed files)
 
 
 Making the systematic table

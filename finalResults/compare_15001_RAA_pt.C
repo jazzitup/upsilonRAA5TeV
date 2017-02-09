@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
 void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
@@ -79,8 +79,8 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   ////////////////////////////////////////////////////////////////
   
   //// graph style 
-  SetGraphStyle(gRAA[0], 4, 4); 
-  SetGraphStyleSys(gRAA_sys[0], 4); 
+  SetGraphStyle(gRAA[0], 1, 1); 
+  SetGraphStyleSys(gRAA_sys[0], 1); 
   SetGraphStyle(gRAA[1], 0, 0); 
   SetGraphStyleSys(gRAA_sys[1], 0); 
   
@@ -89,7 +89,7 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// legend
   TLegend *leg= new TLegend(0.55, 0.57, 0.95, 0.74);
@@ -98,6 +98,9 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   leg -> AddEntry(gRAA[0],"#surd s_{NN} = 2.76 TeV","lp");
   leg -> AddEntry(gRAA[1],"#surd s_{NN} = 5.02 TeV","lp");
 
+  TLegendEntry *header = (TLegendEntry*)leg->GetListOfPrimitives()->First();
+  header->SetTextSize(0.046);
+  header->SetTextFont(62);
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gRAA_sys[0]->GetXaxis()->CenterTitle();
@@ -109,6 +112,8 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  gPad->SetBottomMargin(0.14);
+  gPad->SetTopMargin(0.067);
   for (int is=0; is<nfile; is++){
     if ( is==0) gRAA_sys[is]->Draw("A5");
     else gRAA_sys[is]->Draw("5");
@@ -118,32 +123,32 @@ void compare_15001_RAA_pt(int istate=1) //1 or 2 (1S or 2S)
   leg->Draw();
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0535;
-  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  double sz_init = 0.927; double sz_step = 0.0535;
+//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.464, sz_init+0.005, "|#eta^{#mu}| < 2.4");
-  globtex->DrawLatex(0.464, sz_init-sz_step*1+0.005, "Cent. 0-100%");
+  globtex->DrawLatex(0.22, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
+//  globtex->DrawLatex(0.22, sz_init-sz_step*2, "|#eta^{#mu}| < 2.4");
+  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Cent. 0-100%");
   
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
   //double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+lumi_unc_aa*lumi_unc_aa);
   double sys_global_y = sys_global_val;
   double sys_global_y_15001 = 0.079;
   double sys_global_x = 0.8;
-  TBox *globalUncBox = new TBox(xmax-sys_global_x,1-sys_global_y,xmax,1+sys_global_y);
-  globalUncBox -> SetLineColor(kBlack);
-  globalUncBox -> SetFillColorAlpha(kGray+2,0.6);
+  TBox *globalUncBox = new TBox(xmax-sys_global_x*2,1-sys_global_y,xmax-sys_global_x-0.05,1+sys_global_y);
+  globalUncBox -> SetLineColor(kRed-2);
+  globalUncBox -> SetFillColorAlpha(kPink-6,0.6);
   globalUncBox -> SetLineWidth(1);
   globalUncBox -> Draw("l same");
   
-  TBox *globalUncBox_15001 = new TBox(xmax-sys_global_x*2,1-sys_global_y_15001,xmax-sys_global_x-0.05,1+sys_global_y_15001);
-  globalUncBox_15001 -> SetLineColor(kRed-2);
-  globalUncBox_15001 -> SetFillColorAlpha(kPink-6,0.6);
+  TBox *globalUncBox_15001 = new TBox(xmax-sys_global_x,1-sys_global_y_15001,xmax,1+sys_global_y_15001);
+  globalUncBox_15001 -> SetLineColor(kBlue-3);
+  globalUncBox_15001 -> SetFillColorAlpha(kBlue-3,0.6);
   globalUncBox_15001 -> SetLineWidth(1);
   globalUncBox_15001 -> Draw("l same");
   
   
-  CMS_lumi( c1, iPeriod, iPos );
+  CMS_lumi_raaCent( c1, iPeriod, iPos );
 
 	c1->Update();
   c1->SaveAs(Form("%dS_comp15001_RAA_vs_pt.pdf",istate));

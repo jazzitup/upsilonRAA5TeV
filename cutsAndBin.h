@@ -57,16 +57,16 @@ double lower68_pt2 = 0;
 double lower68_y1 = 0;
 double lower68_y2 = 0;
 double lower68_c2 = 0;
-double lower68_c1 = 0.021954136 ;
+double lower68_c1 = 0.032763091  ;
 double lower68_cint = 0;
 
-double upper68_pt1 = 0.074432328  ;
-double upper68_pt2 = 0.04717349 ;
-double upper68_y1 = 0.040423341 ;
-double upper68_y2 = 0.080328342 ;
-double upper68_c2 = 0.010447972 ;
-double upper68_c1 = 0.108606435  ;
-double upper68_cint = 0.039309411  ;
+double upper68_pt1 = 0.078764551*1.0123    ;
+double upper68_pt2 = 0.04717349*1.0123  ;
+double upper68_y1 = 0.040423341*1.0123  ;
+double upper68_y2 = 0.08037104*1.0123   ;
+double upper68_c2 = 0.034826575*1.0123  ;
+double upper68_c1 = 0.162661692*1.0621   ;
+double upper68_cint = 0.039310702*1.0123   ;
 
 double lower95_pt1 = 0;
 double lower95_pt2 = 0;
@@ -76,13 +76,13 @@ double lower95_c2 = 0;
 double lower95_c1 = 0;
 double lower95_cint = 0;
 
-double upper95_pt1 = 0.136068984  ;
-double upper95_pt2 = 0.087142807   ;
-double upper95_y1 = 0.078514687 ;
-double upper95_y2 = 0.114104469 ;
-double upper95_c2 = 0.021243984 ;
-double upper95_c1 = 0.152235113 ;
-double upper95_cint = 0.070095351 ;
+double upper95_pt1 = 0.144571749*1.0123  ;
+double upper95_pt2 = 0.087142807*1.0123  ;
+double upper95_y1 = 0.078720206*1.0123 ;
+double upper95_y2 = 0.114311029*1.0123 ;
+double upper95_c2 = 0.07081328*1.0123  ;
+double upper95_c1 = 0.228228199*1.0621 ;
+double upper95_cint = 0.070285163*1.0123 ;
 
 // TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
@@ -96,13 +96,15 @@ double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12, 0.089};
 
 const double inel_cross_PbPb = 6740;
 //const double NumberOfMBColl = 2366003000;
-const double NumberOfMBColl = 2484303150;
-const double NumberOfMBColl1 = 3284093053;
+const double NumberOfMBColl =  2454000000;
+//const double NumberOfMBColl = 2484303150;
+const double NumberOfMBColl1 = 3092000000;
+//const double NumberOfMBColl1 = 3284093053;
 //const double inel_cross_PbPb = 7716;
 
 // lumi Unc 
 double lumi_unc_pp = 0.023;
-double nMB_unc = 0.02;
+double nMB_unc = 0.0224;
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };

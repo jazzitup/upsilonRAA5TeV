@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "../CMS_lumi.C"
 
 void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
 {
@@ -68,7 +68,10 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
       if (is==0) gCrossSection_sys[is]->SetPointError(ipt, exsys_1s[ipt], pytmp*relsys);
       else if (is==1) gCrossSection_sys[is]->SetPointError(ipt, exsys_2s[ipt], pytmp*relsys);
       else if (is==2 && ppAA==1) gCrossSection_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
-      else if (is==2) gCrossSection_sys[is]->SetPointError(ipt, 0, 0);
+      else if (is==2 && ppAA!=1) {
+        gCrossSection_sys[is]->SetPointError(ipt, 0, 0);
+        gCrossSection[is]->SetPoint(ipt,-10,-10);
+      }
       //else gCrossSection_sys[is]->SetPointError(ipt, exsys_3s[ipt], pytmp*relsys);
     }
   }
@@ -86,10 +89,12 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// legend
-  TLegend *leg= new TLegend(0.75, 0.55, 0.95, 0.75);
+  double leg_ypos_down = 0.52;
+  if(ppAA==2) leg_ypos_down = 0.6;
+  TLegend *leg= new TLegend(0.75, leg_ypos_down, 0.95, 0.72);
   SetLegendStyle(leg);
   for (int is=0; is<nState; is++){
     leg -> AddEntry(gCrossSection[is],Form("#Upsilon(%dS)",is+1),"lp");
@@ -98,18 +103,20 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
   //// axis et. al
   gCrossSection_sys[0]->GetXaxis()->SetTitle("p_{T}^{#mu#mu} (GeV/c)");
   gCrossSection_sys[0]->GetXaxis()->CenterTitle();
-  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{d#sigma}{#Deltaydp_{T}} (nb/ GeV/c)");
-  else gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{1}{T_{AA}} #frac{dN}{#Deltaydp_{T}} (nb/ GeV/c)");
+  if (ppAA==1) gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{d#sigma}{ dp_{T}} (nb/ GeV/c)");
+  else gCrossSection_sys[0]->GetYaxis()->SetTitle("B #frac{1}{T_{AA}} #frac{dN}{ dp_{T}} (nb/ GeV/c)");
   gCrossSection_sys[0]->GetYaxis()->CenterTitle();
   gCrossSection_sys[0]->GetYaxis()->SetTitleOffset(2.0);
   gCrossSection_sys[0]->GetYaxis()->SetTitleSize(0.045);
+  gCrossSection_sys[0]->GetXaxis()->SetTitleOffset(1.);
   gCrossSection_sys[0]->GetXaxis()->SetLimits(0.,xmax);
-  gCrossSection_sys[0]->SetMinimum(0.00005);
+  gCrossSection_sys[0]->SetMinimum(0.00009);
   //gCrossSection_sys[0]->SetMinimum(0.0000001);
-  gCrossSection_sys[0]->SetMaximum(1.);
+  gCrossSection_sys[0]->SetMaximum(10.);
  
   //// draw  
-  TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  TCanvas* c1 = new TCanvas("c1","c1",700,700);
+  c1->SetTicks(1,1); 
   gPad->SetLogy(1); // for cross section
   for (int is=0; is<nState; is++){
     if ( is==0) gCrossSection_sys[is]->Draw("A5");
@@ -118,18 +125,23 @@ void draw_CrossSection_pt(int ppAA=1) //1=pp, 2=AA
 	}
   leg->Draw();
   gPad->SetLeftMargin(0.23);
+  gPad->SetBottomMargin(0.16);
+  gPad->SetRightMargin(0.06);
+  gPad->SetTopMargin(0.1);
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0525;
+  double sz_init = 0.875; double sz_step = 0.0525;
   double sz_shift;
-  if (ppAA==1) sz_shift=0.6;
+  if (ppAA==1) sz_shift=0.0;
   else sz_shift=0.0;
-  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift, "p_{T}^{#mu} > 4 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.48, sz_init-sz_shift+0.005, "|#eta^{#mu}| < 2.4");
-  if(ppAA==2) globtex->DrawLatex(0.48, sz_init-sz_shift-sz_step+0.005, "Cent. 0-100%");
+  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step, "|y^{#mu#mu}| < 2.4");
+//  globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "|#eta^{#mu}| < 2.4");
+  if(ppAA==2) globtex->DrawLatex(0.27, sz_init-sz_shift-sz_step*2, "Cent. 0-100%");
   
+  c1->Modified();
+  c1->Update();
   CMS_lumi( c1, ppAA, iPos );
 
 	c1->Update();

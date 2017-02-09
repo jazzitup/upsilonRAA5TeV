@@ -35,19 +35,23 @@ void plot_theory_comparison()
   Double_t nPart, pT, rap;
   Double_t RAA_etas_nPart1S[3];
   Double_t RAA_etas_nPart2S[3];
+  Double_t RAA_etas_nPart3S[3];
   Double_t RAA_etas_pT1S[3];
   Double_t RAA_etas_pT2S[3];
   Double_t RAA_etas_rap1S[3];
   Double_t RAA_etas_rap2S[3];
 
-  TFile *ofile_nPart1S = new TFile("1SXi0_RAA_nPart.root","READ");
-  TFile *ofile_nPart2S = new TFile("2SXi0_RAA_nPart.root","READ");
-  TFile *ofile_pT1S = new TFile("1SXi0_RAA_pT.root","READ");
-  TFile *ofile_pT2S = new TFile("2SXi0_RAA_pT.root","READ");
-  TFile *ofile_rap1S = new TFile("1SXi0_RAA_rap.root","READ");
-  TFile *ofile_rap2S = new TFile("2SXi0_RAA_rap.root","READ");
+  int sNN = 5023;
+  //int sNN = 5023;
+  TFile *ofile_nPart1S = new TFile(Form("1SXi0_RAA_%d_nPart.root",sNN),"READ");
+  TFile *ofile_nPart2S = new TFile(Form("2SXi0_RAA_%d_nPart.root",sNN),"READ");
+  TFile *ofile_nPart3S = new TFile(Form("3SXi0_RAA_%d_nPart.root",sNN),"READ");
+  TFile *ofile_pT1S = new TFile(Form("1SXi0_RAA_%d_pT.root",sNN),"READ");
+  TFile *ofile_pT2S = new TFile(Form("2SXi0_RAA_%d_pT.root",sNN),"READ");
+  TFile *ofile_rap1S = new TFile(Form("1SXi0_RAA_%d_rap.root",sNN),"READ");
+  TFile *ofile_rap2S = new TFile(Form("2SXi0_RAA_%d_rap.root",sNN),"READ");
 
-  TFile *writeFile = new TFile("StrickLand_RAA.root","recreate");
+  TFile *writeFile = new TFile(Form("StrickLand_RAA_%d.root",sNN),"recreate");
 
   TTree *tree_nPart1S = (TTree*) ofile_nPart1S -> Get("tree");
   tree_nPart1S->SetBranchAddress("nPart",&nPart);
@@ -55,6 +59,9 @@ void plot_theory_comparison()
   TTree *tree_nPart2S = (TTree*) ofile_nPart2S -> Get("tree");
   tree_nPart2S->SetBranchAddress("nPart",&nPart);
   tree_nPart2S->SetBranchAddress("RAA_etas_nPart",RAA_etas_nPart2S);
+  TTree *tree_nPart3S = (TTree*) ofile_nPart3S -> Get("tree");
+  tree_nPart3S->SetBranchAddress("nPart",&nPart);
+  tree_nPart3S->SetBranchAddress("RAA_etas_nPart",RAA_etas_nPart3S);
   
   TTree *tree_pT1S = (TTree*) ofile_pT1S -> Get("tree");
   tree_pT1S->SetBranchAddress("pT",&pT);
@@ -72,6 +79,7 @@ void plot_theory_comparison()
 
   TGraphErrors *g_nPart_1S[3] ;
   TGraphErrors *g_nPart_2S[3] ;
+  TGraphErrors *g_nPart_3S[3] ;
   TGraphErrors *g_pt_1S[3] ;
   TGraphErrors *g_pt_2S[3] ;
   TGraphErrors *g_rap_1S[3] ;
@@ -80,6 +88,7 @@ void plot_theory_comparison()
   {
     g_nPart_1S[i] = new TGraphErrors();
     g_nPart_2S[i] = new TGraphErrors();
+    g_nPart_3S[i] = new TGraphErrors();
     g_pt_1S[i] = new TGraphErrors();
     g_pt_2S[i] = new TGraphErrors();
     g_rap_1S[i] = new TGraphErrors();
@@ -108,6 +117,21 @@ void plot_theory_comparison()
     g_nPart_2S[1]->SetPointError(i,0,0);
     g_nPart_2S[2]->SetPoint(i,nPart,RAA_etas_nPart2S[2]);
     g_nPart_2S[2]->SetPointError(i,0,0);
+  }
+
+  int nEntries_3s = tree_nPart3S->GetEntries();
+  for(int i=0; i<nEntries_3s; i++)
+  {
+    tree_nPart3S->GetEntry(i);
+    g_nPart_3S[0]->SetPoint(i,nPart,RAA_etas_nPart3S[0]);
+    g_nPart_3S[0]->SetPointError(i,0,0);
+    g_nPart_3S[1]->SetPoint(i,nPart,RAA_etas_nPart3S[1]);
+    g_nPart_3S[1]->SetPointError(i,0,0);
+    g_nPart_3S[2]->SetPoint(i,nPart,RAA_etas_nPart3S[2]);
+    g_nPart_3S[2]->SetPointError(i,0,0);
+
+    cout << "npart : " << nPart << endl;
+    cout << "RAA 3S[0] : " << RAA_etas_nPart3S[0] << endl;
   }
 
   nEntries_1s = 0;
@@ -225,6 +249,7 @@ void plot_theory_comparison()
   for(int i=0;i<3;i++){
   g_nPart_1S[i]->SetName(Form("RAA_strick_nPart_1S_%d",i));
   g_nPart_2S[i]->SetName(Form("RAA_strick_nPart_2S_%d",i));
+  g_nPart_3S[i]->SetName(Form("RAA_strick_nPart_3S_%d",i));
   g_rap_1S[i]->SetName(Form("RAA_strick_rap_1S_%d",i));
   g_rap_2S[i]->SetName(Form("RAA_strick_rap_2S_%d",i));
   g_pt_1S[i]->SetName(Form("RAA_strick_pt_1S_%d",i));
@@ -232,6 +257,7 @@ void plot_theory_comparison()
 
   g_nPart_1S[i]->Write();
   g_nPart_2S[i]->Write();
+  g_nPart_3S[i]->Write();
   g_rap_1S[i]->Write();
   g_rap_2S[i]->Write();
   g_pt_1S[i]->Write();

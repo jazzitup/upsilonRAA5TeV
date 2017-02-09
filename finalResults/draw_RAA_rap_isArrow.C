@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
 void draw_RAA_rap_isArrow(bool isArrow=true)
@@ -104,7 +104,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.038);
+  globtex->SetTextSize(0.040);
   
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("|y^{#mu#mu}|");
@@ -113,7 +113,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   gRAA_sys[0]->GetYaxis()->CenterTitle();
   gRAA_sys[0]->GetXaxis()->SetLimits(0.,xmax);
   gRAA_sys[0]->SetMinimum(0.0);
-  gRAA_sys[0]->SetMaximum(1.3);
+  gRAA_sys[0]->SetMaximum(1.14);
   /// for rap
   gRAA_sys[0]->GetXaxis()->SetNdivisions(505);
   if (isArrow == true){
@@ -141,6 +141,8 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
  
   //// draw  
   TCanvas* c1 = new TCanvas("c1","c1",600,600);
+  gPad->SetBottomMargin(0.14);
+  gPad->SetTopMargin(0.067);
   //// syst
   for (int is=0; is<nState; is++){
     if ( is==0) {gRAA_sys[is]->Draw("A5");}
@@ -170,7 +172,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   TLegend *leg_up= new TLegend(0.57, 0.50, 0.78, 0.62);
   SetLegendStyle(leg_up);
 
-  TArrow *arrLeg = new TArrow(1.285,0.604,1.285,0.654,0.02,"<-|");
+  TArrow *arrLeg = new TArrow(1.285,0.532,1.285,0.582,0.02,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
 
@@ -196,12 +198,12 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   }
 
   //// draw text
-  double sz_init = 0.895; double sz_step = 0.0535;
-  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  double sz_init = 0.925; double sz_step = 0.0535;
+//  globtex->DrawLatex(0.22, sz_init, "p_{T}^{#mu} > 4 GeV/c");
   globtex->DrawLatex(0.22, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
 //  globtex->DrawLatex(0.22, sz_init-sz_step, "|y|^{#mu#mu} < 2.4");
-  globtex->DrawLatex(0.464, sz_init+0.005, "|#eta^{#mu}| < 2.4");
-  globtex->DrawLatex(0.464, sz_init-sz_step*1+0.005, "Cent. 0-100%");
+//  globtex->DrawLatex(0.22, sz_init-sz_step*2, "|#eta^{#mu}| < 2.4");
+  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Cent. 0-100%");
   
   //Global Unc.
   double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+0.089*0.089+nMB_unc*nMB_unc);
@@ -214,7 +216,7 @@ void draw_RAA_rap_isArrow(bool isArrow=true)
   globalUncBox -> SetLineWidth(1);
   globalUncBox -> Draw("l same");
   
-  CMS_lumi( c1, iPeriod, iPos );
+  CMS_lumi_raaCent( c1, iPeriod, iPos );
 
 	c1->Update();
   c1->SaveAs(Form("RAA_vs_rap_isArrow%d.pdf",(int)isArrow));

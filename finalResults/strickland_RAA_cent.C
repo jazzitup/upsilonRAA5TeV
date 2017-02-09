@@ -1,7 +1,8 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
+#include "../commonUtility.h"
 
 void strickland_RAA_cent(bool isArrow =true)
 {
@@ -135,8 +136,7 @@ void strickland_RAA_cent(bool isArrow =true)
     //lower68=0; upper68=0; lower95=0; upper95=0; 
     gRAA[ulstate]->GetPoint(ipt, pxtmp, pytmp);
     box68per[ipt] = new TBox(pxtmp-boxw,lower68[ipt],pxtmp+boxw,upper68[ipt]);
-    arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%
-    box68per[ipt]->SetLineColor(kGreen+2);
+    arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%    box68per[ipt]->SetLineColor(kGreen+2);
     box68per[ipt]->SetFillColorAlpha(kGreen-10,0.5);
     box68per[ipt]->SetLineWidth(1);
     arr95per[ipt]->SetLineColor(kGreen+2);
@@ -167,12 +167,13 @@ void strickland_RAA_cent(bool isArrow =true)
     SetGraphStyleSys(gRAA_int_sys[is], is); 
 	}
   
+  double xlonger = 120;
   //// latex for text
   TLatex* globtex = new TLatex();
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.034);
+  globtex->SetTextSize(0.0387);
   
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
@@ -189,11 +190,14 @@ void strickland_RAA_cent(bool isArrow =true)
   gRAA_sys[0]->GetYaxis()->SetLabelSize(0.05*1.0);
   
   //// draw  
-  double xlonger = 120;
   TCanvas* c1 = new TCanvas("c1","c1",600+xlonger,600);
   TPad* pad_diff = new TPad("pad_diff", "",0, 0, 600/(600.+xlonger), 1.0); // vs centrality
   pad_diff->SetRightMargin(0);
+  pad_diff->SetBottomMargin(0.14);
+  pad_diff->SetTopMargin(0.067);
   TPad* pad_int = new TPad("pad_int", "",600/(600.+xlonger), 0, 1.0, 1.0); // centrality-integrated
+  pad_int->SetBottomMargin(0.14);
+  pad_int->SetTopMargin(0.067);
   pad_int->SetLeftMargin(0);
   pad_int->SetRightMargin(0.032*600/xlonger);
 
@@ -224,10 +228,10 @@ void strickland_RAA_cent(bool isArrow =true)
   
   //// legend
   //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
-  TLegend *leg= new TLegend(0.65, 0.51, 0.85, 0.76);
+  TLegend *leg= new TLegend(0.68, 0.51, 0.88, 0.76);
   SetLegendStyle(leg);
-  leg->SetTextSize(0.033);
-  TArrow *arrLeg = new TArrow(255.,0.62,255.,0.67,0.025,"<-|");
+  leg->SetTextSize(0.0387);
+  TArrow *arrLeg = new TArrow(270.,0.62,270.,0.67,0.025,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
   
@@ -245,17 +249,17 @@ void strickland_RAA_cent(bool isArrow =true)
     ent->SetFillStyle(1001);
     ent=leg->AddEntry("ent"," #Upsilon(3S) 95\% CL","f");
     ent->SetLineColor(kWhite);
-    arrLeg->Draw();
   }
   leg->Draw("same");
+  arrLeg->Draw();
   
   //// draw text
-  double sz_init = 0.892; double sz_step = 0.0558;
-  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.46+0.04, sz_init-sz_step+0.002, "|y|^{#mu#mu} < 2.4");
-
+  double sz_init = 0.874; double sz_step = 0.0558;
+//  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22+0.1, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
+  globtex->DrawLatex(0.22+0.1, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
+/*
   TLatex* centtex = new TLatex();
   centtex->SetNDC();
   centtex->SetTextAlign(12); //left-center
@@ -271,10 +275,11 @@ void strickland_RAA_cent(bool isArrow =true)
   centtex->DrawLatex(0.258,0.555,"50-60%");
   centtex->DrawLatex(0.242,0.698,"60-70%");
   centtex->DrawLatex(0.181,0.781,"70-100%");
-
+*/
 
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
-  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA.root","READ");
+
+  TFile *fstrickland = new TFile("TheoryCurve/StrickLand_RAA_5023.root","READ");
   
   TGraphErrors *gRAA_1S_strickland[3]; 
   TGraphErrors *gRAA_2S_strickland[3]; 
@@ -283,34 +288,83 @@ void strickland_RAA_cent(bool isArrow =true)
   {
     gRAA_1S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_1S_%d",i));
     gRAA_2S_strickland[i] = (TGraphErrors*) fstrickland-> Get(Form("RAA_strick_nPart_2S_%d",i));
-    gRAA_1S_strickland[i] -> SetLineWidth(2.5);
+    gRAA_1S_strickland[i] -> SetLineWidth(3.);
     gRAA_2S_strickland[i] -> SetLineWidth(3.0);
   }
-  gRAA_1S_strickland[0]->SetLineColor(kOrange+9);
-  gRAA_1S_strickland[1]->SetLineColor(kBlack);
-  gRAA_1S_strickland[2]->SetLineColor(kBlue+1);
+  gRAA_1S_strickland[0]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[1]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[2]->SetLineColor(kRed+3);
+  gRAA_1S_strickland[0]->SetLineStyle(3);
+  gRAA_1S_strickland[1]->SetLineStyle(1);
+  gRAA_1S_strickland[2]->SetLineStyle(8);
   
-  gRAA_2S_strickland[0]->SetLineColor(kOrange+9);
-  gRAA_2S_strickland[1]->SetLineColor(kBlack);
-  gRAA_2S_strickland[2]->SetLineColor(kBlue+1);
-
-  gRAA_2S_strickland[0]->SetLineStyle(2);
-  gRAA_2S_strickland[1]->SetLineStyle(2);
-  gRAA_2S_strickland[2]->SetLineStyle(2);
+  gRAA_2S_strickland[0]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[1]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[2]->SetLineColor(kBlue+3);
+  gRAA_2S_strickland[0]->SetLineStyle(3);
+  gRAA_2S_strickland[1]->SetLineStyle(1);
+  gRAA_2S_strickland[2]->SetLineStyle(8);
+  
 
   for(int i=0;i<3;i++){
     gRAA_1S_strickland[i]->Draw("same");
     gRAA_2S_strickland[i]->Draw("same");
   }
    
-  TLegend *leg_strick= new TLegend(0.4, 0.50, 0.6, 0.70);
+  TLegend *leg_strick= new TLegend(0.29, 0.586, 0.46, 0.716);
   SetLegendStyle(leg_strick);
-  leg_strick->AddEntry(gRAA_1S_strickland[0],"4#pi#eta/s=1","l");
-  leg_strick->AddEntry(gRAA_1S_strickland[1],"4#pi#eta/s=2","l");
-  leg_strick->AddEntry(gRAA_1S_strickland[2],"4#pi#eta/s=3","l");
+  leg_strick->SetTextSize(0.040);
+  leg_strick->AddEntry(gRAA_1S_strickland[2],"Y(1S)","l");
+  leg_strick->AddEntry(gRAA_2S_strickland[2],"Y(2S)","l");
+//  leg_strick->Draw("same");
 
-  leg_strick->Draw("same");
+  double line_y = 0.88;
+  double line_y_diff = 0.07;
+  double line_y_diff_in = 0.02;
+  double line_x_end = 105;//122
+  double line_x_start = 80;//97
+  TLine* t1 = new TLine(line_x_start,line_y,line_x_end,line_y);
+  t1->SetLineStyle(3);
+  t1->SetLineWidth(2);
+  t1->SetLineColor(kRed+3);
+  t1->Draw("same");
 
+  TLine* t11 = new TLine(line_x_start,line_y-line_y_diff_in,line_x_end,line_y-line_y_diff_in);
+  t11->SetLineStyle(3);
+  t11->SetLineWidth(2);
+  t11->SetLineColor(kBlue-3);
+  t11->Draw("same");
+
+  TLine* t2 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in,line_x_end,line_y-line_y_diff-line_y_diff_in);
+  t2->SetLineStyle(1);
+  t2->SetLineWidth(2);
+  t2->SetLineColor(kRed+3);
+  t2->Draw("same");
+
+  TLine* t22 = new TLine(line_x_start,line_y-line_y_diff-line_y_diff_in*2,line_x_end,line_y-line_y_diff-line_y_diff_in*2);
+  t22->SetLineStyle(1);
+  t22->SetLineWidth(2);
+  t22->SetLineColor(kBlue-3);
+  t22->Draw("same");
+
+  TLine* t3 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*2,line_x_end,line_y-line_y_diff*2-line_y_diff_in*2);
+  t3->SetLineStyle(8);
+  t3->SetLineWidth(2);
+  t3->SetLineColor(kRed+3);
+  t3->Draw("same");
+
+  TLine* t33 = new TLine(line_x_start,line_y-line_y_diff*2-line_y_diff_in*3,line_x_end,line_y-line_y_diff*2-line_y_diff_in*3);
+  t33->SetLineStyle(8);
+  t33->SetLineWidth(2);
+  t33->SetLineColor(kBlue-3);
+  t33->Draw("same");
+
+
+  drawText2("4#pi #eta/s=1", line_x_end+7, line_y-0.025, 22);
+  drawText2("4#pi #eta/s=2", line_x_end+7, line_y-line_y_diff*1-0.025 - line_y_diff_in, 22);
+  drawText2("4#pi #eta/s=3", line_x_end+7, line_y-line_y_diff*2-0.025 - line_y_diff_in*2, 22);
+
+  drawText2("Krouppa, Strickland",line_x_start,line_y+0.06,22);
 
   //Global Unc.
   TH1D* hSys_glb[nState];
@@ -345,9 +399,10 @@ void strickland_RAA_cent(bool isArrow =true)
   ppRefUncBox2S -> SetFillColor(kBlue-3);
   ppRefUncBox2S -> Draw("same");
 
+  pad_diff->Update();
 //  CMS_lumi( c1, iPeriod, iPos );
-  CMS_lumi( pad_diff, iPeriod, iPos );
- 
+  CMS_lumi_raaCent( pad_diff, iPeriod, iPos );
+  pad_diff->Update();
   //// --- 2nd pad!!!   
   c1->cd();
   pad_int->Draw(); 
@@ -383,16 +438,18 @@ void strickland_RAA_cent(bool isArrow =true)
 	}
   dashedLine(0.,1.,xmax_int,1.,1,1);
   
+  pad_int->Update();
   //// draw text
+  double sz_allign = 0.034;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %");
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%");
 
 	c1->Update();
-  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
   c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.png",(int)isArrow));
 
+  c1->SaveAs(Form("Strickland_RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
 /*
 	///////////////////////////////////////////////////////////////////
 	//// save as a root file

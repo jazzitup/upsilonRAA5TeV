@@ -1,6 +1,6 @@
 #include "SONGKYO.h"
 #include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "CMS_lumi_raaCent.C"
 #include "../cutsAndBin.h"
 
 void draw_RAA_cent(bool isArrow =true)
@@ -135,8 +135,7 @@ void draw_RAA_cent(bool isArrow =true)
     //lower68=0; upper68=0; lower95=0; upper95=0; 
     gRAA[ulstate]->GetPoint(ipt, pxtmp, pytmp);
     box68per[ipt] = new TBox(pxtmp-boxw,lower68[ipt],pxtmp+boxw,upper68[ipt]);
-    arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%
-    box68per[ipt]->SetLineColor(kGreen+2);
+    arr95per[ipt] = new TArrow(pxtmp,lower95[ipt],pxtmp,upper95[ipt],0.027,"<-|"); //95%    box68per[ipt]->SetLineColor(kGreen+2);
     box68per[ipt]->SetFillColorAlpha(kGreen-10,0.5);
     box68per[ipt]->SetLineWidth(1);
     arr95per[ipt]->SetLineColor(kGreen+2);
@@ -167,12 +166,13 @@ void draw_RAA_cent(bool isArrow =true)
     SetGraphStyleSys(gRAA_int_sys[is], is); 
 	}
   
+  double xlonger = 120;
   //// latex for text
   TLatex* globtex = new TLatex();
   globtex->SetNDC();
   globtex->SetTextAlign(12); //left-center
   globtex->SetTextFont(42);
-  globtex->SetTextSize(0.034);
+  globtex->SetTextSize(0.0387);
   
   //// axis et. al
   gRAA_sys[0]->GetXaxis()->SetTitle("N_{part}");
@@ -189,11 +189,14 @@ void draw_RAA_cent(bool isArrow =true)
   gRAA_sys[0]->GetYaxis()->SetLabelSize(0.05*1.0);
   
   //// draw  
-  double xlonger = 120;
   TCanvas* c1 = new TCanvas("c1","c1",600+xlonger,600);
   TPad* pad_diff = new TPad("pad_diff", "",0, 0, 600/(600.+xlonger), 1.0); // vs centrality
   pad_diff->SetRightMargin(0);
+  pad_diff->SetBottomMargin(0.14);
+  pad_diff->SetTopMargin(0.067);
   TPad* pad_int = new TPad("pad_int", "",600/(600.+xlonger), 0, 1.0, 1.0); // centrality-integrated
+  pad_int->SetBottomMargin(0.14);
+  pad_int->SetTopMargin(0.067);
   pad_int->SetLeftMargin(0);
   pad_int->SetRightMargin(0.032*600/xlonger);
 
@@ -226,7 +229,7 @@ void draw_RAA_cent(bool isArrow =true)
   //TLegend *leg= new TLegend(0.75, 0.50, 0.95, 0.70);
   TLegend *leg= new TLegend(0.65, 0.51, 0.85, 0.76);
   SetLegendStyle(leg);
-  leg->SetTextSize(0.033);
+  leg->SetTextSize(0.0387);
   TArrow *arrLeg = new TArrow(255.,0.62,255.,0.67,0.025,"<-|");
   arrLeg->SetLineColor(kGreen+2);
   arrLeg->SetLineWidth(2);
@@ -250,12 +253,12 @@ void draw_RAA_cent(bool isArrow =true)
   leg->Draw("same");
   
   //// draw text
-  double sz_init = 0.892; double sz_step = 0.0558;
-  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
-  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "p_{T}^{#mu#mu} < 30 GeV/c");
-  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
-  globtex->DrawLatex(0.46+0.04, sz_init-sz_step+0.002, "|y|^{#mu#mu} < 2.4");
-
+  double sz_init = 0.874; double sz_step = 0.0558;
+//  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu} > 4 GeV/c");
+  globtex->DrawLatex(0.22+0.04, sz_init, "p_{T}^{#mu#mu} < 30 GeV/c");
+//  globtex->DrawLatex(0.46+0.04, sz_init+0.002, "|#eta|^{#mu} < 2.4");
+  globtex->DrawLatex(0.22+0.04, sz_init-sz_step, "|y^{#mu#mu}| < 2.4");
+/*
   TLatex* centtex = new TLatex();
   centtex->SetNDC();
   centtex->SetTextAlign(12); //left-center
@@ -271,7 +274,7 @@ void draw_RAA_cent(bool isArrow =true)
   centtex->DrawLatex(0.258,0.555,"50-60%");
   centtex->DrawLatex(0.242,0.698,"60-70%");
   centtex->DrawLatex(0.181,0.781,"70-100%");
-
+*/
 
 //  globtex->DrawLatex(0.22, sz_init-sz_step*2, "Centrality 0-100%");
 
@@ -287,7 +290,9 @@ void draw_RAA_cent(bool isArrow =true)
     else if(is==2) accept_sys = 0.021;
     sys_global_pp[is] = TMath::Sqrt(hSys_glb[is]->GetBinContent(1)*hSys_glb[is]->GetBinContent(1)+accept_sys*accept_sys);
   } 
-  
+ 
+  cout << "sys_global_pp[0] : " << sys_global_pp[0] << endl;
+
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
   double sys_global_y = sys_global_val; 
   double sys_global_x = 15;
@@ -308,9 +313,10 @@ void draw_RAA_cent(bool isArrow =true)
   ppRefUncBox2S -> SetFillColor(kBlue-3);
   ppRefUncBox2S -> Draw("same");
 
+  pad_diff->Update();
 //  CMS_lumi( c1, iPeriod, iPos );
-  CMS_lumi( pad_diff, iPeriod, iPos );
- 
+  CMS_lumi_raaCent( pad_diff, iPeriod, iPos );
+  pad_diff->Update();
   //// --- 2nd pad!!!   
   c1->cd();
   pad_int->Draw(); 
@@ -346,11 +352,13 @@ void draw_RAA_cent(bool isArrow =true)
 	}
   dashedLine(0.,1.,xmax_int,1.,1,1);
   
+  pad_int->Update();
   //// draw text
+  double sz_allign = 0.034;
   globtex->SetTextAlign(22); //center-center
   globtex->SetTextSize(0.038*600./xlonger);
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step, "Cent.");
-  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2, "0-100 %");
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step-sz_allign, "Cent.");
+  globtex->DrawLatex(0.5*(1-0.032*600/xlonger), sz_init-sz_step*2-sz_allign, "0-100%");
 
 	c1->Update();
   c1->SaveAs(Form("RAA_vs_cent_isArrow%d.pdf",(int)isArrow));
