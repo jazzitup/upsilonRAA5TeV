@@ -48,10 +48,10 @@ void doFitUpsilon_MC(
   TFile* f0;
 
   if ( collId == kPPMCUps1S) {  
-    f0 = new TFile("/afs/cern.ch/work/g/goni/Analysis/Upsilon/upslion_Raa/Usercode/upsilonRAA5TeV/skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20168121653_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root");
+    f0 = new TFile("skimmedFilesWeight2/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281226_.root");
   }
   else if ( collId == kAAMCUps1S) {  
-    f0 = new TFile("/afs/cern.ch/work/g/goni/Analysis/Upsilon/upslion_Raa/Usercode/upsilonRAA5TeV/skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_2016812170_ce8f82aaf8e612dcd1c7c161216161d988fbf9a6.root");
+    f0 = new TFile("skimmedFilesWeight2/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281233_.root");
   }
   /*
      "skimmedfiles/yskimAA_MC_Ups1S00_03_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_201645164_96e9f6ebf895348a74ba386ce1eb487d594c0759.root",treeName,"", 3.10497);
