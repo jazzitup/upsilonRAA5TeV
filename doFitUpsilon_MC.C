@@ -48,10 +48,10 @@ void doFitUpsilon_MC(
   TFile* f0;
 
   if ( collId == kPPMCUps1S) {  
-    f0 = new TFile("skimmedFilesWeight2/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281226_.root");
+    f0 = new TFile("/home/jazzitup/analysis/temp/upsilonRAA5TeV/skimmedFilesWeight2/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281226_.root");
   }
   else if ( collId == kAAMCUps1S) {  
-    f0 = new TFile("skimmedFilesWeight2/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281233_.root");
+    f0 = new TFile("/home/jazzitup/analysis/temp/upsilonRAA5TeV/skimmedFilesWeight2/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281233_.root");
   }
   /*
      "skimmedfiles/yskimAA_MC_Ups1S00_03_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_201645164_96e9f6ebf895348a74ba386ce1eb487d594c0759.root",treeName,"", 3.10497);
@@ -102,47 +102,10 @@ void doFitUpsilon_MC(
   RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.06, 0.001, 0.5);
   RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
   RooRealVar x1s("x1s","sigma fraction 1s 2nd CB", 0.55, 0., 2.);
-  //pt0-2.5, integrated y
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.40 , 1.35, 1.65);
-  //RooRealVar n1s("n1s","power order", 3.37 , 3.30, 3.55);
-  //pt2.5-5.0, integrated y
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.40 , 1.30, 1.70);
-  //RooRealVar n1s("n1s","power order", 2.3 , 1.70, 3.9);
-  //pt5.0-8.0, integrated y
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.18, 1.18, 1.70);
-  //RooRealVar n1s("n1s","power order", 1.75, 1.60, 3.9);
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.40 , 1.35, 1.75);
-  //RooRealVar n1s("n1s","power order", 2.2, 1.70, 3.8);
-  //pt8.0-15.0, integrated y
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.47 , 1.35, 1.75);
-  //RooRealVar n1s("n1s","power order", 3.23, 3.23, 3.72);
-  //pt15.0-30.0, integrated y
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.50 , 1.45, 1.75);
-  //RooRealVar n1s("n1s","power order", 3.56 , 3.3, 3.85);
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.47 , 1.35, 1.75);
-  //RooRealVar n1s("n1s","power order", 3.23, 3.23, 3.71);
-  //pt integrated, y<0.4
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.14, 1.05, 1.91);
-  //RooRealVar n1s("n1s","power order", 1.1, 1.05, 1.79);
-  //pt integrated, y<0.8
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.0, 1.0, 1.99);
-  //RooRealVar n1s("n1s","power order", 1.0, 1.0, 3.55);
-  //pt integrated, y<1.2
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.0, 1.0, 1.99);
-  //RooRealVar n1s("n1s","power order", 1.05, 1.0, 2.43);
-  //pt integrated, y<1.6
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.11, 1.05, 2.4);
-  //RooRealVar n1s("n1s","power order", 1.06, 1.0, 1.78);
-  //integrated, y<2.0
-  //RooRealVar alpha1s("alpha1s","tail shift", 1.18, 1.18, 2.65);
-  //RooRealVar n1s("n1s","power order", 1.05 , 1.0, 1.78);
-  //integrated, y<2.4
-  RooRealVar alpha1s("alpha1s","tail shift", 1.18, 1.18, 2.65);
-  RooRealVar n1s("n1s","power order", 1.0, 1.0, 1.78);
 
   //0-5pT pp
-  //RooRealVar alpha1s("alpha1s","tail shift", 5., 1.2, 9.);
-  //RooRealVar n1s("n1s","power order", 3.6, 2.6005, 3.76);
+  RooRealVar alpha1s("alpha1s","tail shift", 5., 1.2, 9.);
+  RooRealVar n1s("n1s","power order", 3.6, 1.5, 4.5);
 
   //5-15pT pp
   //RooRealVar alpha1s("alpha1s","tail shift", 5., 1.2, 9.);
@@ -158,8 +121,8 @@ void doFitUpsilon_MC(
 
 
   //RooRealVar sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.06, 0.001, 0.5);
-  RooRealVar sigma2s_1("sigma2s_1","width/sigma of the signal gaussian mass PDF",0.1, 0.01, 0.3);
-  RooRealVar sigma3s_1("sigma3s_1","width/sigma of the signal gaussian mass PDF",0.1, 0.01, 0.3);
+  RooRealVar sigma2s_1("sigma2s_1","width/sigma of the signal gaussian mass PDF",0.1, 0.01, 0.5);
+  RooRealVar sigma3s_1("sigma3s_1","width/sigma of the signal gaussian mass PDF",0.1, 0.01, 0.5);
   //RooRealVar alpha1s("alpha1s","tail shift", 1.8 , 1.1, 5.8);
   RooRealVar alpha2s("alpha2s","tail shift", 5. , 1.0, 9.8);  
   RooRealVar alpha3s("alpha3s","tail shift", 5. , 1.11, 9.8);
