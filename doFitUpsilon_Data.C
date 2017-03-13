@@ -18,9 +18,9 @@
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data_pas(
+void doFitUpsilon_Data(
        int collId = kAADATA,  
-       float ptLow=0, float ptHigh=30, 
+       float ptLow=20, float ptHigh=30, 
        float yLow=0, float yHigh=2.4,
        int cLow=140, int cHigh=200,
        float muPtCut=4.0,

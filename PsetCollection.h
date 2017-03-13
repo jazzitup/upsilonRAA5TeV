@@ -369,14 +369,22 @@ if ( collId == kPPDATA)
   else if ( binMatched( 4, 15, 30, 0, 2.4) )   { setSignalParMC(3.25139  ,  1.60934  ,  0.0676854  ,  9.45591  ,  0.520767  ,  1.86066 );} 
   else if ( binMatched( 4, 0, 5, 0, 2.4) )   { setSignalParMC( 3.76, 1.59235, 0.0648477, 9.45739, 0.521473, 1.97614);} 
   else if ( binMatched( 4, 5, 15, 0, 2.4) )   { setSignalParMC( 3.78201, 1.54632, 0.128471, 9.45551, 0.446142, 0.531346);} 
-
-}
-
-else if (collId == kAADATA ) 
+  
+  else { 
+    cout << "No initial MC fit parameters are in the database." << endl << " The integrated bin values are used instead." << endl;
+    setSignalParMC(3.30732  ,  1.60069  ,  0.0667393  ,  9.45626  ,  0.535528  ,  1.92417 );
+  }
+  
+  
+  
+ }
+ 
+ else if (collId == kAADATA ) 
 { 
   // Integrated bin  
   //  if ( binMatched( 4, 0, 30, 0, 2.4) )    { setSignalParMC( 3.19451, 1.55708, 0.0684966, 9.45589, 0.560898, 1.90076 );} // MC parameter
   if ( binMatched( 4, 0, 30, 0, 2.4) )    { setSignalParMC( 1.10, 2.14866, 0.0817941, 9.44919, 0.8621, 2.56117 );} // Data driven parameter
+  
 
   //New Bin for 1S 
   else if ( binMatched( 4, 0, 2, 0, 2.4) )   { setSignalParMC( 2.33998, 1.71975, 0.0675697, 9.45611, 0.558206, 2.04994);} 
@@ -415,7 +423,13 @@ else if ( binMatched( 4, 0, 5, 0, 2.4) )     { setSignalParMC( 3.714, 1.70183, 0
 else if ( binMatched( 4, 5, 15, 0, 2.4) )    { setSignalParMC( 3.72, 1.52551, 0.0683189, 9.45571, 0.563272, 1.89665 );}
 //for eta bin
 
-    }
+  else {
+    cout << "No initial MC fit parameters are in the database."<< endl<< " The integrated bin values are used instead." << endl;
+    setSignalParMC( 1.10, 2.14866, 0.0817941, 9.44919, 0.8621, 2.56117 );
+  }
+  
+  
+ }
 }
 
 void PSetUpsAndBkg::SetMCSgl_CBGaus() 
