@@ -18,13 +18,13 @@
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data_pas(
+void doFitUpsilon_Data_pas_1(
        int collId = kAADATA,  
        float ptLow=0, float ptHigh=30, 
-       float yLow=0, float yHigh=2.4,
-       int cLow=140, int cHigh=200,
+       float yLow=1.6, float yHigh=2.0,
+       int cLow=0, int cHigh=200,
        float muPtCut=4.0,
-       bool fixParameters=1  )
+       bool fixParameters=0  )
 {
   float dphiEp2Low = 0 ;
   float dphiEp2High = 100 ;
@@ -183,14 +183,10 @@ void doFitUpsilon_Data_pas(
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
  
-  /*RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-*/
-  // cent 20-30, 60-70, 70-100
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
+  //RooRealVar m_lambda("#lambda","m_lambda",  5, 0,50.123);
+  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
 
 
  /* 
@@ -419,4 +415,3 @@ void doFitUpsilon_Data_pas(
   */
 
 } 
- 

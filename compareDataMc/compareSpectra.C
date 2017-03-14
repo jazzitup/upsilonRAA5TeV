@@ -162,14 +162,20 @@ void compareSpectra(int state = 1, int collId= kAADATA) {
   handsomeTH1(hRatio,1);
 
   // Fit :
-  // TF1 *fVar1pp = new TF1("f1srpp",fTsallis1SR,0,30,4);
+  //TF1 *fVar1pp = new TF1("f1srpp",fTsallis1SR,0,30,4);
 
 
-  //  if(state==1) funct = new TF1("dataMcRatio",fTsallis1SR, 0,30,4);
-  //  else if(state==2) funct = new TF1("dataMcRatio","[0]*x+[1]", 0,30);
+  if(state==1) funct = new TF1("dataMcRatio",fTsallis1SR, 0,30,4);
+  else if(state==2) funct = new TF1("dataMcRatio",fTsallis2SR, 0,30,4);
+  funct->SetParameters(0.06123,1.023,2.123,1);
+  funct->SetParLimits(0,-1.,1.3);
+  funct->SetParLimits(1, 0.001,3.1);
+  funct->SetParLimits(2,0.12,6);
+  funct->SetParLimits(3,-1.,20);
+  //else if(state==2) funct = new TF1("dataMcRatio","[0]*x+[1]", 0,30);
   //funct = new TF1("dataMcRatio",polyy, 0,30,4);
   //       return  (  ( fpar[0] + fpar[1]*xx ) * ( 1 + fpar[2] / (xx-fpar[3]) );
-  if ( (state == 1) && (collId == kPPDATA) ) {
+ /* if ( (state == 1) && (collId == kPPDATA) ) {
     funct = new TF1("dataMcRatio",alt3, 0,30,4);
     funct->SetParameters(1.5, -2.,  3, -0.5 );
     funct->SetParLimits(3,-10,0);
@@ -201,14 +207,10 @@ void compareSpectra(int state = 1, int collId= kAADATA) {
     funct->SetParLimits(3,2,30);
     funct->SetParLimits(4,0.5,4);
     }
-
-  //PP 1S
-  /*  funct->SetParameters(0.06123,1.023,2.123,1);
-  funct->SetParLimits(0,-1.,1.3);
-  funct->SetParLimits(1, 0.001,3.1);
-  funct->SetParLimits(2,0.12,6);
-  funct->SetParLimits(3,-1.,20);
-  */
+*/
+  
+  
+  
 
   //AA 1S
   /*
@@ -226,7 +228,6 @@ void compareSpectra(int state = 1, int collId= kAADATA) {
   funct->SetParLimits(2,0.0,150);
   funct->SetParLimits(3,0.,150);
   */
-  hRatio->Fit ( funct, "REM");
   hRatio->Fit ( funct, "REM");
   hRatio->Draw();
   jumSun(0,1,30,1);

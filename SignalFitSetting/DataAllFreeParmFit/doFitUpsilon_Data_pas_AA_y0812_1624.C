@@ -18,10 +18,10 @@
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data(
-       int collId = kAADATA,  
-       float ptLow=0, float ptHigh=6, 
-       float yLow=2, float yHigh=2.4,
+void doFitUpsilon_Data_pas_AA_y0812_1624(
+       int collId = kPPDATA,  
+       float ptLow=0, float ptHigh=30, 
+       float yLow=1.6, float yHigh=2.4,
        int cLow=0, int cHigh=200,
        float muPtCut=4.0,
        bool fixParameters=0  )
@@ -76,11 +76,12 @@ void doFitUpsilon_Data(
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.16, 0.98, 1.0);
   pad1->SetTicks(1,1);
   pad1->Draw(); pad1->cd();
+  c1->SetLeftMargin(2.6);
 
   RooPlot* myPlot = ws->var("mass")->frame(nMassBin); // bins
   //ws->data("reducedDS")->plotOn(myPlot,Name("dataHist"), Layout(0,1,0.95));
   ws->data("reducedDS")->plotOn(myPlot,Name("dataHist"));
-  RooRealVar mean1s("m_{#Upsilon(1S)}","mean of the signal gaussian mass PDF",pdgMass.Y1S, pdgMass.Y1S - 0.2, pdgMass.Y1S + 0.2 ) ;
+  RooRealVar mean1s("m_{#Upsilon(1S)}","mean of the signal gaussian mass PDF",pdgMass.Y1S, pdgMass.Y1S -0.2, pdgMass.Y1S + 0.2 ) ;
   RooRealVar mRatio21("mRatio21","mRatio21",pdgMass.Y2S / pdgMass.Y1S );
   RooRealVar mRatio31("mRatio31","mRatio31",pdgMass.Y3S / pdgMass.Y1S );
   RooFormulaVar mean2s("mean2s","m_{#Upsilon(1S)}*mRatio21", RooArgSet(mean1s,mRatio21) );
@@ -89,31 +90,31 @@ void doFitUpsilon_Data(
   PSetUpsAndBkg initPset = getUpsilonPsets( collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, muPtCut) ; 
   initPset.SetMCSgl();
 
-  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass PDF",0.05, 0.01, 0.5);
+  RooRealVar    sigma1s_1("sigma1s_1","width/sigma of the signal gaussian mass DF",0.02, 0.02, 0.0852);
   RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
   RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
 
-  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
+  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 2.02);
 
   RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 2. , 1, 5);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.022 , 1.246, 3.631);
   RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
-  RooRealVar n1s_1("n1s_1","power order", 2.1 , 1.12, 3.8);
+  RooRealVar n1s_1("n1s_1","power order", 3.405 , 1.902, 3.645);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n2s_2("n2s_2","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_2("n3s_2","1.0*@0",RooArgList(n1s_1) );
 
-  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0., 1);
   RooFormulaVar f2s("f2s","1.0*@0",RooArgList(*f1s) );
   RooFormulaVar f3s("f3s","1.0*@0",RooArgList(*f1s) );
 
@@ -135,11 +136,11 @@ void doFitUpsilon_Data(
     cout << "initPset.alpha1s_1 = " << initPset.alpha1s_1 << endl;
     alpha1s_1.setVal(initPset.alpha1s_1);
     cout << "initPset.sigma1s_1 = " << initPset.sigma1s_1 << endl;
-    sigma1s_1.setVal(initPset.sigma1s_1);
+ //   sigma1s_1.setVal(initPset.sigma1s_1);
     cout << "initPset.f1s = " << initPset.f1s << endl;
-    f1s->setVal(initPset.f1s); 
+ //   f1s->setVal(initPset.f1s); 
     cout << "initPset.x1s = " << initPset.x1s << endl;
-    x1s->setVal(initPset.x1s);
+//    x1s->setVal(initPset.x1s);
   } 
   // Fix? 
   if (fixParameters)   {
@@ -183,14 +184,10 @@ void doFitUpsilon_Data(
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
  
-  /*RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-*/
-  // cent 20-30, 60-70, 70-100
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,30);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,30);
+  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
+  //RooRealVar m_lambda("#lambda","m_lambda",  5, 0,50.123);
+  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
 
 
  /* 
