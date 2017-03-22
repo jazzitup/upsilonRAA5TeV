@@ -370,13 +370,35 @@ if ( collId == kPPDATA)
   else if ( binMatched( 4, 0, 5, 0, 2.4) )   { setSignalParMC( 3.76, 1.59235, 0.0648477, 9.45739, 0.521473, 1.97614);} 
   else if ( binMatched( 4, 5, 15, 0, 2.4) )   { setSignalParMC( 3.78201, 1.54632, 0.128471, 9.45551, 0.446142, 0.531346);} 
 
-}
-
-else if (collId == kAADATA ) 
+  // New bins for low pT 1S, March 13 2017
+  else if ( binMatched( 4, 0, 6, 0, 0.4) )
+    { setSignalParMC( 1.71236, 1.86832, 0.0744289, 9.45898, 0.289749, 0.671747 );}
+  else if ( binMatched( 4, 0, 6, 0.4, 0.8) )
+    { setSignalParMC( 2.21704, 1.79914, 0.0919292, 9.45971, 0.348402, 0.651718 );}
+  else if ( binMatched( 4, 0, 6, 0.8, 1.2) )
+    { setSignalParMC( 3.57391, 1.71997, 0.079357, 9.45813, 0.577343, 1.41178 );}
+  else if ( binMatched( 4, 0, 6, 1.2, 1.6) )
+    { setSignalParMC( 2.83149, 1.63102, 0.0929493, 9.45269, 0.532792, 1.46817 );}
+  else if ( binMatched( 4, 0, 6, 1.6, 2) )
+    { setSignalParMC( 1.58009, 4.80711, 0.0675951, 9.45007, 0.0824775, 1.99982 );}
+  else if ( binMatched( 4, 0, 6, 2, 2.4) )
+    { setSignalParMC( 4.49993, 1.84108, 0.112286, 9.45, 0.202865, 1.57149 );}
+  
+  else { 
+    cout << "No initial MC fit parameters are in the database." << endl << " The integrated bin values are used instead." << endl;
+    setSignalParMC(3.30732  ,  1.60069  ,  0.0667393  ,  9.45626  ,  0.535528  ,  1.92417 );
+  }
+  
+  
+  
+ }
+ 
+ else if (collId == kAADATA ) 
 { 
   // Integrated bin  
   //  if ( binMatched( 4, 0, 30, 0, 2.4) )    { setSignalParMC( 3.19451, 1.55708, 0.0684966, 9.45589, 0.560898, 1.90076 );} // MC parameter
   if ( binMatched( 4, 0, 30, 0, 2.4) )    { setSignalParMC( 1.10, 2.14866, 0.0817941, 9.44919, 0.8621, 2.56117 );} // Data driven parameter
+  
 
   //New Bin for 1S 
   else if ( binMatched( 4, 0, 2, 0, 2.4) )   { setSignalParMC( 2.33998, 1.71975, 0.0675697, 9.45611, 0.558206, 2.04994);} 
@@ -413,9 +435,29 @@ else if ( binMatched( 4, 8, 15, 0, 2.4) )    { setSignalParMC( 3.23, 1.51628, 0.
 else if ( binMatched( 4, 15, 30, 0, 2.4) )   { setSignalParMC( 3.3, 1.56701, 0.0734659, 9.45512, 0.612436, 1.85341 );}
 else if ( binMatched( 4, 0, 5, 0, 2.4) )     { setSignalParMC( 3.714, 1.70183, 0.0736797, 9.45614, 0.55781, 1.61859 );}
 else if ( binMatched( 4, 5, 15, 0, 2.4) )    { setSignalParMC( 3.72, 1.52551, 0.0683189, 9.45571, 0.563272, 1.89665 );}
-//for eta bin
 
-    }
+  // New bins for low pT 1S, March 13 2017
+ else if ( binMatched( 4, 0, 6, 0, 0.4) )
+    { setSignalParMC( 1.58139, 1.85752, 0.0627293, 9.45949, 0.683959, 0.67174 );}
+ else if ( binMatched( 4, 0, 6, 0.4, 0.8) )
+    { setSignalParMC( 1.81926, 1.89187, 0.0979938, 9.45968, 0.245609, 0.651973 );}
+ else if ( binMatched( 4, 0, 6, 0.8, 1.2) )
+    { setSignalParMC( 2.43473, 1.93587, 0.0704807, 9.45478, 0.376981, 1.54314 );}
+ else if ( binMatched( 4, 0, 6, 1.2, 1.6) )
+    { setSignalParMC( 1.50007, 2.01625, 0.102633, 9.45, 0.766519, 1.50387 );}
+ else if ( binMatched( 4, 0, 6, 1.6, 2) )
+    { setSignalParMC( 4.46784, 5.01945, 0.066503, 9.45, 0.0227215, 1.99918 );}
+ else if ( binMatched( 4, 0, 6, 2, 2.4) )
+    { setSignalParMC( 4.49996, 2.39347, 0.123871, 9.45, 0.323487, 1.48574 );}
+
+
+  else {
+    cout << "No initial MC fit parameters are in the database."<< endl<< " The integrated bin values are used instead." << endl;
+    setSignalParMC( 1.10, 2.14866, 0.0817941, 9.44919, 0.8621, 2.56117 );
+  }
+  
+  
+ }
 }
 
 void PSetUpsAndBkg::SetMCSgl_CBGaus() 
