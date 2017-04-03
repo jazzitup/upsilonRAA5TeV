@@ -9,7 +9,7 @@
 #include <TGraphErrors.h>
 using namespace std;
 
-void makeTAAUnc(int state=1)
+void makeTAAUnc(int state=1, bool isHi=true)
 {
   double pp ;  // placeholder for pp
   double aa ; // placeholder for PbPb
@@ -26,17 +26,24 @@ void makeTAAUnc(int state=1)
   if ( state == 1 ) { 
     nPtBins = nPtBins1s;    ptBin = ptBin1s;
     nYBins = nYBins1S;  yBin = yBin1S;
-    nCentBins = nCentBins1s;  centBin = centBin1s; TAA_unc = TAA_unc1s;
+    nCentBins = nCentBins1s;  centBin = centBin1s; 
+    if (isHi)    TAA_unc = TAA_unc1sHi;
+    else         TAA_unc = TAA_unc1sLo;
   }
   else if ( state == 2 ) { 
     nPtBins = nPtBins2s;    ptBin = ptBin2s;
     nCentBins = nCentBins2s;  centBin = centBin2s;
-    nYBins = nYBins2S;  yBin = yBin2S; TAA_unc = TAA_unc2s;
+    nYBins = nYBins2S;  yBin = yBin2S; 
+    if (isHi)    TAA_unc = TAA_unc2sHi;
+    else         TAA_unc = TAA_unc2sLo;
+
   }
   else if ( state == 3 ) { 
     nPtBins = nPtBins3s;    ptBin = ptBin3s;
     nCentBins = nCentBins3s;  centBin = centBin3s;
-    nYBins = nYBins3S;  yBin = yBin3S; TAA_unc = TAA_unc3s;
+    nYBins = nYBins3S;  yBin = yBin3S; 
+    if (isHi)    TAA_unc = TAA_unc3sHi;
+    else         TAA_unc = TAA_unc3sLo;
   }
   
   TH1D *hUncPtPP = new TH1D("hptPP",";Uncertainty;p_{T} (GeV/c)",nPtBins,ptBin);
@@ -98,8 +105,8 @@ void makeTAAUnc(int state=1)
     hUncCentAAoPP->SetBinContent(icent+1,finalUnc);
   }
 
-
-  TFile *wf = new TFile(Form("sys_TAA_%ds.root",state),"recreate");
+  TString hilo = ( isHi == true ? "Hi" : "Low" ) ;
+  TFile *wf = new TFile(Form("sys_TAA_%ds_%s.root",state,hilo.Data()),"recreate");
 
   wf->cd();
   hUncRapPP->Write();
