@@ -105,7 +105,7 @@ void makeTAAUnc(int state=1, bool isHi=true)
     hUncCentAAoPP->SetBinContent(icent+1,finalUnc);
   }
 
-  TString hilo = ( isHi == true ? "Hi" : "Low" ) ;
+  TString hilo = ( isHi == true ? "Hi" : "Lo" ) ;
   TFile *wf = new TFile(Form("sys_TAA_%ds_%s.root",state,hilo.Data()),"recreate");
 
   wf->cd();
