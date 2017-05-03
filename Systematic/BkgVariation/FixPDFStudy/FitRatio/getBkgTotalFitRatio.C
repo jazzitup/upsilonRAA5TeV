@@ -1,6 +1,6 @@
 #include <iostream>
-#include "rootFitHeaders.h"
-#include "commonUtility.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/rootFitHeaders.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/commonUtility.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -10,16 +10,16 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "cutsAndBin.h"
-#include "PsetCollection.h"
-#include "CMS_lumi.C"
-#include "tdrstyle.C"
-#include "SONGKYO.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/cutsAndBin.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/PsetCollection.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/CMS_lumi.C"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/tdrstyle.C"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/SONGKYO.h"
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data(
-       int collId = kPPDATA,  
+void getBkgTotalFitRatio(
+       int collId = kAADATA,  
        float ptLow=0, float ptHigh=2, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
@@ -93,20 +93,20 @@ void doFitUpsilon_Data(
   RooFormulaVar sigma2s_1("sigma2s_1","@0*@1",RooArgList(sigma1s_1,mRatio21) );
   RooFormulaVar sigma3s_1("sigma3s_1","@0*@1",RooArgList(sigma1s_1,mRatio31) );
 
-  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 3);
+  RooRealVar *x1s = new RooRealVar("x1s","sigma ratio ", 0.5, 0, 2.8);
 
   RooFormulaVar sigma1s_2("sigma1s_2","@0*@1",RooArgList(sigma1s_1, *x1s) );
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.621 , 1.103, 3.281);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.38 , 1.107, 3.593);
   RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
-  RooRealVar n1s_1("n1s_1","power order", 2.045 , 1.114, 3.718);
+  RooRealVar n1s_1("n1s_1","power order", 2.156 , 1.050, 3.729);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
@@ -185,21 +185,8 @@ void doFitUpsilon_Data(
  
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  //RooRealVar m_lambda("#lambda","m_lambda",  5, 0,50.123);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
 
-
- /* 
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  RooRealVar m_lambda("#lambda","m_lambda",  5, 0,23);
-*/  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-   
-  /*
-  RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, init_lambda_min, init_lambda_max);
-  */
   RooGenericPdf *bkg;
   RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
   RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));
@@ -212,23 +199,75 @@ void doFitUpsilon_Data(
   RooAddPdf* model = new RooAddPdf();
   model = new RooAddPdf("model","1S+2S+3S + Bkg",RooArgList(*cb1s, *cb2s, *cb3s, *bkg),RooArgList(*nSig1s,*nSig2s,*nSig3s,*nBkg));
 
-  ws->import(*model);
+  // parm input
+  TFile *fileIn_parm;
+  if (collId == kPPDATA )  fileIn_parm = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/fitResults/Final_NomResult_170124/PAS_fitresults_upsilon_DoubleCB_PP_DATA_pt%.1f-%.1f_y%.1f-%.1f_muPt4.0.root",ptLow,ptHigh,yLow,yHigh));
+  else if (collId == kAADATA ) fileIn_parm= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/fitResults/Final_NomResult_170124/PAS_fitresults_upsilon_DoubleCB_AA_DATA_pt%.1f-%.1f_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",ptLow,ptHigh,yLow,yHigh));
+  
+  RooWorkspace* ws_parm;
+  ws_parm = (RooWorkspace*) fileIn_parm->Get("workspace");
+  
+  sigma1s_1.setVal(ws_parm->var("sigma1s_1")->getVal()); sigma1s_1.setConstant();
+  alpha1s_1.setVal(ws_parm->var("alpha1s_1")->getVal()); alpha1s_1.setConstant();
+  n1s_1.setVal(ws_parm->var("n1s_1")->getVal()); n1s_1.setConstant();
+  f1s->setVal(ws_parm->var("f1s")->getVal()); f1s->setConstant();
+  x1s->setVal(ws_parm->var("x1s")->getVal()); x1s->setConstant();
+  mean1s.setVal(ws_parm->var("m_{#Upsilon(1S)}")->getVal()); mean1s.setConstant();
+  
+  err_mu.setVal(ws_parm->var("#mu")->getVal()); err_mu.setConstant();
+  err_sigma.setVal(ws_parm->var("#sigma")->getVal()); err_sigma.setConstant();
+  m_lambda.setVal(ws_parm->var("#lambda")->getVal()); m_lambda.setConstant();
 
+  nSig1s->setVal(ws_parm->var("nSig1s")->getVal()); nSig1s->setConstant();
+  nSig2s->setVal(ws_parm->var("nSig2s")->getVal()); nSig2s->setConstant();
+  nSig3s->setVal(ws_parm->var("nSig3s")->getVal()); nSig3s->setConstant();
+  nBkg->setVal(ws_parm->var("nBkg")->getVal()); nBkg->setConstant();
+
+  double numtotev = nSig1s->getVal()+nSig2s->getVal()+nSig3s->getVal()+nBkg->getVal();
+  double numtotev_bkg = nBkg->getVal();
+  RooRealVar *nTot = new RooRealVar("nTot","total yield",0,10000000000);
+  nTot->setVal(numtotev); nTot->setConstant();
+  
+  ws->import(*model);
 
   RooPlot* myPlot2 = (RooPlot*)myPlot->Clone();
   ws->data("reducedDS")->plotOn(myPlot2,Name("dataOS_FIT"),MarkerSize(.8));
- 
-  
-//  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
-  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Timer(kTRUE),Extended(kTRUE));
-  //RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
-  ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
-  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Normalization(numtotev,RooAbsReal::NumEvent),Name("modelHist"));
+  ws->pdf("model")->plotOn(myPlot2,Normalization(numtotev,RooAbsReal::NumEvent),Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kRed),LineStyle(kDashed),LineWidth(2));
+  ws->pdf("model")->plotOn(myPlot2,Normalization(numtotev,RooAbsReal::NumEvent),Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
+  ws->pdf("model")->plotOn(myPlot2,Normalization(numtotev,RooAbsReal::NumEvent),Components(RooArgSet(*cb2s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
   //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2));
-  ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kBlue),LineStyle(kDashed),LineWidth(2));
+  ws->pdf("model")->plotOn(myPlot2,Normalization(numtotev,RooAbsReal::NumEvent),Components(RooArgSet(*cb3s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
+  TGraphErrors *g1 = new TGraphErrors();
+  g1->SetName("g1");
+  int nBin = 60000;
+  double ratio = 0;
+  double stot = 0;
+  double sbkg = 0;
+  for(int i=0; i<nBin;i++)
+  {
+    ws->var("mass")->setVal(8.+6.*(double)i/nBin);
+    stot = numtotev*model->getVal(RooArgSet(*(ws->var("mass"))));
+    sbkg = numtotev_bkg*bkg->getVal(RooArgSet(*(ws->var("mass"))));
+    ratio = sbkg/stot;
+    g1->SetPoint(i,8.+6.*(double)i/nBin,ratio);
+    g1->SetPointError(i,0,0);
+  }
+  SetGraphStyle(g1,1,1); 
+  g1->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
+  g1->GetXaxis()->CenterTitle();
+  g1->GetYaxis()->SetTitle("Background Fit/Total Fit");
+  g1->GetYaxis()->CenterTitle();
+  g1->GetXaxis()->SetLimits(8,14);
+  g1->SetMarkerSize(0.3);
+  g1->GetXaxis()->SetTitleSize(0.05);
+  g1->GetYaxis()->SetTitleSize(0.05);
+  g1->GetXaxis()->SetLabelSize(0.037);
+  g1->GetYaxis()->SetLabelSize(0.037);
+  g1->GetYaxis()->SetTitleOffset(1.35);
+  g1->GetXaxis()->SetTitleOffset(1.25);
+  g1->SetMinimum(0.93);
+  g1->SetMaximum(1.07);
 
   myPlot2->SetFillStyle(4000);
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
@@ -240,9 +279,6 @@ void doFitUpsilon_Data(
   myPlot2->GetXaxis()->SetRangeUser(8,14);
   myPlot2->GetXaxis()->SetTitleSize(0);
   myPlot2->Draw();
-  fitRes2->Print("v");
-  Double_t theNLL = fitRes2->minNll();
-  cout << " *** NLL : " << theNLL << endl;
   TString perc = "%";
 
   float pos_text_x = 0.43;
@@ -327,8 +363,6 @@ void doFitUpsilon_Data(
     nFullBinsPull++;
   }
 
-  int numFitPar = fitRes2->floatParsFinal().getSize();
-  int ndf = nFullBinsPull - numFitPar;
 
   TLine *l1 = new TLine(massLow,0,massHigh,0);
   l1->SetLineStyle(9);
@@ -397,9 +431,43 @@ void doFitUpsilon_Data(
   TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
   c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
-  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
   c1->Write();
   ws->Write();
+  
+  TCanvas *c2 = new TCanvas("c2","",700,700);
+  c2->cd();
+  c2->SetLeftMargin(0.18);
+  c2->SetRightMargin(0.04);
+  c2->SetTopMargin(0.04);
+  c2->SetBottomMargin(0.14);
+  g1->Draw();
+  if(ptLow==0) drawText(Form("p_{T}^{#mu#mu} < %.f GeV/c",ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  else if(ptLow == 2.5 && ptHigh==5) drawText(Form("%.1f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  else drawText(Form("%.f < p_{T}^{#mu#mu} < %.f GeV/c",ptLow,ptHigh ),pos_text_x,pos_text_y,text_color,text_size);
+  if(yLow==0) drawText(Form("|y^{#mu#mu}| < %.1f",yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
+  else if(yLow!=0) drawText(Form("%.1f < |y^{#mu#mu}| < %.1f",yLow,yHigh ), pos_text_x,pos_text_y-pos_y_diff,text_color,text_size);
+  if(collId != kPPDATA && collId != kPPMCUps1S && collId != kPPMCUps2S) 
+  {
+      drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
+      drawText("|#eta^{#mu}| < 2.4 GeV/c", pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
+      drawText(Form("Centrality %d-%d%s",cLow/2,cHigh/2,perc.Data()),pos_text_x,pos_text_y-pos_y_diff*4,text_color,text_size);
+  }
+  else {
+    drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
+    drawText("|#eta^{#mu}| < 2.4 GeV/c", pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
+  }  
+  c2->SaveAs(Form("FitRatio_upsilon_%s.pdf",kineLabel.Data()));
+  g1->Write();
+  double valr, valx;
+ /* for(int i=0;i<nBin;i++)
+  {
+    g1->GetPoint(i,valx,valr);
+    if(valx==11)
+    {
+      cout << "getPoint : " << valr << endl;
+    }
+  }
+  */
   cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
   //  void setSignalParMC(float MCn_, float MCalpha_, float MCsigma1S_, float MCm0_, float MCf_, float MCx_)
   cout << Form(" else if ( binMatched( %.f, %.f, %.f, %.1f, %.1f) ) {setSignalParMC(",muPtCut, ptLow, ptHigh, yLow, yHigh);
@@ -419,4 +487,3 @@ void doFitUpsilon_Data(
   */
 
 } 
- 

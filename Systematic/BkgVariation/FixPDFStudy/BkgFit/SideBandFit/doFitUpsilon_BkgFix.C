@@ -1,6 +1,6 @@
 #include <iostream>
-#include "rootFitHeaders.h"
-#include "commonUtility.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/rootFitHeaders.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/commonUtility.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -10,21 +10,21 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "cutsAndBin.h"
-#include "PsetCollection.h"
-#include "CMS_lumi.C"
-#include "tdrstyle.C"
-#include "SONGKYO.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/cutsAndBin.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/PsetCollection.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/CMS_lumi.C"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/tdrstyle.C"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/SONGKYO.h"
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data(
-       int collId = kPPDATA,  
+void doFitUpsilon_BkgFix(
+       int collId = kAADATA,  
        float ptLow=0, float ptHigh=2, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
        float muPtCut=4.0,
-       bool fixParameters=0  )
+       bool fixParameters=0 )
 {
   float dphiEp2Low = 0 ;
   float dphiEp2High = 100 ;
@@ -99,14 +99,14 @@ void doFitUpsilon_Data(
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.621 , 1.103, 3.281);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.971 , 1.153, 3.821);
   RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
-  RooRealVar n1s_1("n1s_1","power order", 2.045 , 1.114, 3.718);
+  RooRealVar n1s_1("n1s_1","power order", 1.904 , 1.531, 3.702);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
@@ -173,9 +173,6 @@ void doFitUpsilon_Data(
   double init_sigma = initPset.bkg_sigma ;
   double init_lambda = initPset.bkg_lambda ;
 
-  //  double init_mu_min = init_mu - 5; double init_mu_max = init_mu + 5;
-  //  double init_sigma_min = init_sigma - 2.; double init_sigma_max = init_sigma + 2;
-  //  double init_lambda_min = init_lambda - 10; double init_lambda_max = init_lambda + 10;
   double init_mu_min = init_mu - 10; double init_mu_max = init_mu + 10;
   double init_sigma_min = init_sigma - 10.; double init_sigma_max = init_sigma + 10;
   double init_lambda_min = init_lambda - 10; double init_lambda_max = init_lambda + 10;
@@ -183,23 +180,10 @@ void doFitUpsilon_Data(
   if(init_sigma_min <0) init_sigma_min = 0;
   if(init_lambda_min <0) init_lambda_min = 0;
  
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
+  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 30) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  //RooRealVar m_lambda("#lambda","m_lambda",  5, 0,50.123);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
 
-
- /* 
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  RooRealVar m_lambda("#lambda","m_lambda",  5, 0,23);
-*/  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-   
-  /*
-  RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, init_lambda_min, init_lambda_max);
-  */
   RooGenericPdf *bkg;
   RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
   RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));
@@ -210,25 +194,18 @@ void doFitUpsilon_Data(
   RooRealVar *nBkg = new RooRealVar("nBkg","fraction of component 1 in bkg",0,1000000);  
 
   RooAddPdf* model = new RooAddPdf();
-  model = new RooAddPdf("model","1S+2S+3S + Bkg",RooArgList(*cb1s, *cb2s, *cb3s, *bkg),RooArgList(*nSig1s,*nSig2s,*nSig3s,*nBkg));
+  model = new RooAddPdf("model","Bkg",RooArgList(*bkg),RooArgList(*nBkg));
 
   ws->import(*model);
 
 
   RooPlot* myPlot2 = (RooPlot*)myPlot->Clone();
   ws->data("reducedDS")->plotOn(myPlot2,Name("dataOS_FIT"),MarkerSize(.8));
- 
   
-//  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
-  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Timer(kTRUE),Extended(kTRUE));
-  //RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
-  ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
-  ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2));
-  ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2));
-  ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kBlue),LineStyle(kDashed),LineWidth(2));
+  ws->var("mass")->setRange("R1",8,8.8); 
+  ws->var("mass")->setRange("R2",11,14); 
+  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range("R1,R2"),Timer(kTRUE),Extended(kTRUE));
+  ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kBlue),LineWidth(3));
 
   myPlot2->SetFillStyle(4000);
   myPlot2->SetAxisRange(massLowForPlot, massHighForPlot,"X");
@@ -240,13 +217,14 @@ void doFitUpsilon_Data(
   myPlot2->GetXaxis()->SetRangeUser(8,14);
   myPlot2->GetXaxis()->SetTitleSize(0);
   myPlot2->Draw();
+  myPlot2->Print("v");
   fitRes2->Print("v");
-  Double_t theNLL = fitRes2->minNll();
-  cout << " *** NLL : " << theNLL << endl;
+//  Double_t theNLL = fitRes2->minNll();
+//  cout << " *** NLL : " << theNLL << endl;
   TString perc = "%";
 
   float pos_text_x = 0.43;
-  float pos_text_y = 0.816;
+  float pos_text_y = 0.813;
   float pos_y_diff = 0.056;
   float text_size = 19;
   int text_color = 1;
@@ -270,9 +248,9 @@ void doFitUpsilon_Data(
   TLegend* fitleg = new TLegend(0.76,0.4,0.91,0.7); fitleg->SetTextSize(19);
   fitleg->SetTextFont(43);
   fitleg->SetBorderSize(0);
-  fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"Data","pe");
-  fitleg->AddEntry(myPlot2->findObject("modelHist"),"Total fit","l");
-  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"Signal","l");
+//  fitleg->AddEntry(myPlot2->findObject("dataOS_FIT"),"Data","pe");
+//  fitleg->AddEntry(myPlot2->findObject("modelHist"),"Total fit","l");
+//  fitleg->AddEntry(myPlot2->findObject("Sig1S"),"Signal","l");
   fitleg->AddEntry(myPlot2->findObject("bkgPDF"),"Background","l");
   fitleg->Draw("same");
 
@@ -287,18 +265,26 @@ void doFitUpsilon_Data(
   pad2->SetLeftMargin(0.18);
   pad2->SetTicks(1,1);
   pad2->cd();
-  
-  RooHist* hpull = myPlot2->pullHist("dataHist","modelHist");
-  hpull->SetMarkerSize(0.8);
+ 
+  RooHist *datah = (RooHist*) myPlot2 -> getHist("dataOS_FIT");
+  RooCurve *rooc1 = (RooCurve*) myPlot2->getObject(2);  
+  RooCurve *rooc2 = (RooCurve*) myPlot2->getObject(3);  
+  RooHist *hresid1 = datah->makePullHist(*rooc1,true);
+  RooHist *hresid2 = datah->makePullHist(*rooc2,true);
+
+  //RooHist* hpull = datah->makePullHist("dataHist","bkgPDF");
+  //hpull->SetMarkerSize(0.8);
   RooPlot* pullFrame = ws->var("mass")->frame(Title("Pull Distribution")) ;
-  pullFrame->addPlotable(hpull,"P") ;
+  pullFrame->addPlotable(hresid1,"P") ;
+  pullFrame->addPlotable(hresid2,"P") ;
+  hresid1->SetMarkerSize(0.8);
+  hresid2->SetMarkerSize(0.8);
   pullFrame->SetTitleSize(0);
   pullFrame->GetYaxis()->SetTitleOffset(0.43) ;
   pullFrame->GetYaxis()->SetTitle("Pull") ;
   pullFrame->GetYaxis()->SetTitleSize(0.19) ;
   pullFrame->GetYaxis()->SetLabelSize(0.113) ;
   pullFrame->GetYaxis()->SetRangeUser(-3.8,3.8) ;
-//  pullFrame->GetYaxis()->SetLimits(-6,6) ;
   pullFrame->GetYaxis()->CenterTitle();
 
   pullFrame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
@@ -315,7 +301,7 @@ void doFitUpsilon_Data(
   pullFrame->GetXaxis()->SetTickSize(0.03);
   pullFrame->Draw() ;
 
-  
+  /*
   double chisq = 0;
   int nFullBinsPull = 0;
   int nBins = nMassBin; 
@@ -329,7 +315,7 @@ void doFitUpsilon_Data(
 
   int numFitPar = fitRes2->floatParsFinal().getSize();
   int ndf = nFullBinsPull - numFitPar;
-
+*/
   TLine *l1 = new TLine(massLow,0,massHigh,0);
   l1->SetLineStyle(9);
   l1->Draw("same");
@@ -354,7 +340,7 @@ void doFitUpsilon_Data(
   outh->GetXaxis()->SetBinLabel(3,"Upsilon3S");
   //  outh->GetXaxis()->SetBinLabel(4,"2S/1S");
   //  outh->GetXaxis()->SetBinLabel(5,"3S/1S");
-  
+/*  
   float temp1 = ws->var("nSig1s")->getVal();  
   float temp1err = ws->var("nSig1s")->getError();  
   float temp2 = ws->var("nSig2s")->getVal();  
@@ -372,7 +358,7 @@ void doFitUpsilon_Data(
   cout << "1S signal    =  " << outh->GetBinContent(1) << " +/- " << outh->GetBinError(1) << endl;
   cout << "2S signal    =  " << outh->GetBinContent(2) << " +/- " << outh->GetBinError(2) << endl;
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
-
+*/
   setTDRStyle();
   writeExtraText = true;
   extraText = "Preliminary";
@@ -394,16 +380,19 @@ void doFitUpsilon_Data(
   pad1->Update();
   pad2->Update();
 
-  TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
+  TFile* outf = new TFile(Form("BkgFit_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
-  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
-  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
+  c1->SaveAs(Form("BkgFit_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
+  c1->SaveAs(Form("BkgFit_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
   c1->Write();
   ws->Write();
-  cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
+
+  
+
+  //  cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
   //  void setSignalParMC(float MCn_, float MCalpha_, float MCsigma1S_, float MCm0_, float MCf_, float MCx_)
-  cout << Form(" else if ( binMatched( %.f, %.f, %.f, %.1f, %.1f) ) {setSignalParMC(",muPtCut, ptLow, ptHigh, yLow, yHigh);
-  cout <<  ws->var("n1s_1")->getVal() << ", " <<  ws->var("alpha1s_1")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
+//  cout << Form(" else if ( binMatched( %.f, %.f, %.f, %.1f, %.1f) ) {setSignalParMC(",muPtCut, ptLow, ptHigh, yLow, yHigh);
+//  cout <<  ws->var("n1s_1")->getVal() << ", " <<  ws->var("alpha1s_1")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
 //  outf->Close();
 
 

@@ -1,6 +1,6 @@
 #include <iostream>
-#include "rootFitHeaders.h"
-#include "commonUtility.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/rootFitHeaders.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/commonUtility.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -10,16 +10,16 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "cutsAndBin.h"
-#include "PsetCollection.h"
-#include "CMS_lumi.C"
-#include "tdrstyle.C"
-#include "SONGKYO.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/cutsAndBin.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/PsetCollection.h"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/CMS_lumi.C"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/tdrstyle.C"
+#include "/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/SONGKYO.h"
 
 using namespace std;
 using namespace RooFit;
-void doFitUpsilon_Data(
-       int collId = kPPDATA,  
+void doFitUpsilon_Data_pas_AA_pt02_y0408_fix_samesign(
+       int collId = kAADATA,  
        float ptLow=0, float ptHigh=2, 
        float yLow=0, float yHigh=2.4,
        int cLow=0, int cHigh=200,
@@ -99,14 +99,14 @@ void doFitUpsilon_Data(
   RooFormulaVar sigma2s_2("sigma2s_2","@0*@1",RooArgList(sigma1s_2,mRatio21) );
   RooFormulaVar sigma3s_2("sigma3s_2","@0*@1",RooArgList(sigma1s_2,mRatio31) );
   
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.621 , 1.103, 3.281);
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.612 , 1.193, 2.701);
   RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
   RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
 
-  RooRealVar n1s_1("n1s_1","power order", 2.045 , 1.114, 3.718);
+  RooRealVar n1s_1("n1s_1","power order", 1.504 , 1.161, 3.202);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n1s_2("n1s_2","1.0*@0",RooArgList(n1s_1) );
@@ -164,8 +164,8 @@ void doFitUpsilon_Data(
   RooAddPdf*  cb3s = new RooAddPdf("cb3s","Signal 3S",RooArgList(*cb3s_1,*cb3s_2), RooArgList(*f1s) );
 
   RooRealVar *nSig1s= new RooRealVar("nSig1s"," 1S signals",0,100000);
-  RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",-100,36000);
-  RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",-100,26000);
+  RooRealVar *nSig2s= new RooRealVar("nSig2s"," 2S signals",-100,3600);
+  RooRealVar *nSig3s= new RooRealVar("nSig3s"," 3S signals",-100,2600);
   
   // background : 
   initPset.SetMCBkg();
@@ -173,9 +173,6 @@ void doFitUpsilon_Data(
   double init_sigma = initPset.bkg_sigma ;
   double init_lambda = initPset.bkg_lambda ;
 
-  //  double init_mu_min = init_mu - 5; double init_mu_max = init_mu + 5;
-  //  double init_sigma_min = init_sigma - 2.; double init_sigma_max = init_sigma + 2;
-  //  double init_lambda_min = init_lambda - 10; double init_lambda_max = init_lambda + 10;
   double init_mu_min = init_mu - 10; double init_mu_max = init_mu + 10;
   double init_sigma_min = init_sigma - 10.; double init_sigma_max = init_sigma + 10;
   double init_lambda_min = init_lambda - 10; double init_lambda_max = init_lambda + 10;
@@ -185,21 +182,19 @@ void doFitUpsilon_Data(
  
   RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
   RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  //RooRealVar m_lambda("#lambda","m_lambda",  5, 0,50.123);
   RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
 
+  TFile *fileIn_parm;
+  if (collId == kPPDATA )  fileIn_parm = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/fitResults/Final_NomResult_170124/PAS_fitresults_upsilon_DoubleCB_PP_DATA_pt%.1f-%.1f_y%.1f-%.1f_muPt4.0.root",ptLow,ptHigh,yLow,yHigh));
+  else if (collId == kAADATA ) fileIn_parm= new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_RAA/upsilonRAA5TeV/fitResults/Final_NomResult_170124/PAS_fitresults_upsilon_DoubleCB_AA_DATA_pt%.1f-%.1f_y%.1f-%.1f_muPt4.0_centrality0-200_dphiEp_0.00PI_100.00PI.root",ptLow,ptHigh,yLow,yHigh));
 
- /* 
-  RooRealVar err_mu("#mu","err_mu",init_mu,  0, 25) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, 0,25);
-  RooRealVar m_lambda("#lambda","m_lambda",  5, 0,23);
-*/  //RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, 0,25);
-   
-  /*
-  RooRealVar err_mu("#mu","err_mu",init_mu,  init_mu_min, init_mu_max ) ;
-  RooRealVar err_sigma("#sigma","err_sigma", init_sigma, init_sigma_min, init_sigma_max);
-  RooRealVar m_lambda("#lambda","m_lambda",  init_lambda, init_lambda_min, init_lambda_max);
-  */
+  RooWorkspace* ws_parm;
+  ws_parm = (RooWorkspace*) fileIn_parm->Get("workspace");
+
+  err_mu.setVal(ws_parm->var("#mu")->getVal()); err_mu.setConstant();
+  err_sigma.setVal(ws_parm->var("#sigma")->getVal()); err_sigma.setConstant();
+  m_lambda.setVal(ws_parm->var("#lambda")->getVal()); m_lambda.setConstant();
+
   RooGenericPdf *bkg;
   RooGenericPdf *bkgLowPt = new RooGenericPdf("bkgLowPt","Background","TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5",RooArgList( *(ws->var("mass")), m_lambda, err_mu, err_sigma) );
   RooGenericPdf *bkgHighPt = new RooGenericPdf("bkgHighPt","Background","TMath::Exp(-@0/@1)",RooArgList(*(ws->var("mass")),m_lambda));
@@ -214,20 +209,15 @@ void doFitUpsilon_Data(
 
   ws->import(*model);
 
-
   RooPlot* myPlot2 = (RooPlot*)myPlot->Clone();
   ws->data("reducedDS")->plotOn(myPlot2,Name("dataOS_FIT"),MarkerSize(.8));
  
   
-//  RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE));
   RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Timer(kTRUE),Extended(kTRUE));
-  //RooFitResult* fitRes2 = ws->pdf("model")->fitTo(*reducedDS,Save(), Hesse(kTRUE),Range(massLow, massHigh),Minos(0), SumW2Error(kTRUE),Extended(kTRUE));
   ws->pdf("model")->plotOn(myPlot2,Name("modelHist"));
   ws->pdf("model")->plotOn(myPlot2,Name("Sig1S"),Components(RooArgSet(*cb1s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
   ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb2s)),LineColor(kMagenta+3),LineWidth(2));
   ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kOrange+7),LineWidth(2),LineStyle(2));
-  //ws->pdf("model")->plotOn(myPlot2,Components(RooArgSet(*cb3s)),LineColor(kGreen+3),LineWidth(2));
   ws->pdf("model")->plotOn(myPlot2,Name("bkgPDF"),Components(RooArgSet(*bkg)),LineColor(kBlue),LineStyle(kDashed),LineWidth(2));
 
   myPlot2->SetFillStyle(4000);
@@ -246,7 +236,7 @@ void doFitUpsilon_Data(
   TString perc = "%";
 
   float pos_text_x = 0.43;
-  float pos_text_y = 0.816;
+  float pos_text_y = 0.813;
   float pos_y_diff = 0.056;
   float text_size = 19;
   int text_color = 1;
@@ -265,7 +255,6 @@ void doFitUpsilon_Data(
     drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
     drawText("|#eta^{#mu}| < 2.4 GeV/c", pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
   }  
-//  drawText(Form("Signal Function : %s CB", SignalCB.Data() ), 0.55,0.54,1,14);
 
   TLegend* fitleg = new TLegend(0.76,0.4,0.91,0.7); fitleg->SetTextSize(19);
   fitleg->SetTextFont(43);
@@ -298,7 +287,6 @@ void doFitUpsilon_Data(
   pullFrame->GetYaxis()->SetTitleSize(0.19) ;
   pullFrame->GetYaxis()->SetLabelSize(0.113) ;
   pullFrame->GetYaxis()->SetRangeUser(-3.8,3.8) ;
-//  pullFrame->GetYaxis()->SetLimits(-6,6) ;
   pullFrame->GetYaxis()->CenterTitle();
 
   pullFrame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
@@ -307,8 +295,6 @@ void doFitUpsilon_Data(
   pullFrame->GetXaxis()->SetLabelSize(0.23) ;
   pullFrame->GetXaxis()->SetTitleSize(0.28) ;
   pullFrame->GetXaxis()->CenterTitle();
- // pullFrame->GetXaxis()->SetTitleFont(43);
- // pullFrame->GetYaxis()->SetTitleFont(43);
   
   pullFrame->GetYaxis()->SetTickSize(0.04);
   pullFrame->GetYaxis()->SetNdivisions(404);
@@ -333,18 +319,7 @@ void doFitUpsilon_Data(
   TLine *l1 = new TLine(massLow,0,massHigh,0);
   l1->SetLineStyle(9);
   l1->Draw("same");
-//  drawText(Form("chi^{2}/ndf : %.3f / %d ",chisq,ndf ),0.12,0.87,1,10);
-/*
-  TPad *pad3 = new TPad("pad3", "pad3", 0.685, 0.42, 0.885, 0.77);
-  pad3->SetBottomMargin(0);
-  pad3->SetTopMargin(0);
-  pad3->SetLeftMargin(0);
-  pad3->SetRightMargin(0);
-  pad3->SetFillColorAlpha(kWhite,1.00);
-  pad3->cd();
-*/
   pad1->Update();
-  //legFrame->findObject(Form("%s_paramBox",ws->pdf("model")->GetName()))->Draw();
               
   
   TH1D* outh = new TH1D("fitResults","fit result",20,0,20);
@@ -352,8 +327,6 @@ void doFitUpsilon_Data(
   outh->GetXaxis()->SetBinLabel(1,"Upsilon1S");
   outh->GetXaxis()->SetBinLabel(2,"Upsilon2S");
   outh->GetXaxis()->SetBinLabel(3,"Upsilon3S");
-  //  outh->GetXaxis()->SetBinLabel(4,"2S/1S");
-  //  outh->GetXaxis()->SetBinLabel(5,"3S/1S");
   
   float temp1 = ws->var("nSig1s")->getVal();  
   float temp1err = ws->var("nSig1s")->getError();  
@@ -394,29 +367,16 @@ void doFitUpsilon_Data(
   pad1->Update();
   pad2->Update();
 
-  TFile* outf = new TFile(Form("PAS_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
+  TFile* outf = new TFile(Form("Data_SameSign_fitresults_upsilon_DoubleCB_%s.root",kineLabel.Data()),"recreate");
   outh->Write();
-  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
-  c1->SaveAs(Form("PAS_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
+  c1->SaveAs(Form("Data_SameSign_fitresults_upsilon_DoubleCB_%s.pdf",kineLabel.Data()));
+  c1->SaveAs(Form("Data_SameSign_fitresults_upsilon_DoubleCB_%s.png",kineLabel.Data()));
   c1->Write();
   ws->Write();
   cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
   //  void setSignalParMC(float MCn_, float MCalpha_, float MCsigma1S_, float MCm0_, float MCf_, float MCx_)
   cout << Form(" else if ( binMatched( %.f, %.f, %.f, %.1f, %.1f) ) {setSignalParMC(",muPtCut, ptLow, ptHigh, yLow, yHigh);
   cout <<  ws->var("n1s_1")->getVal() << ", " <<  ws->var("alpha1s_1")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
-//  outf->Close();
-
-
-  ///  cout parameters :
-  /*
-  cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
-  cout << "if ( (muPtCut==(float)"<< muPtCut<<") &&  ( ptLow == (float)"<< ptLow <<" ) && (ptHigh == (float)"<<ptHigh<<" ) && (yLow == (float)"<<yLow<<" ) && (yHigh == (float)"<<yHigh<<" ) )" << endl;
-
-  //  void setSignalParMC(float MCn_, float MCalpha_, float MCsigma1S_, float MCm0_, float MCf_, float MCx_)
-  cout << " {ret.setParMC( " ;
-  cout <<  ws->var("n1s_1")->getVal() << ", " <<  ws->var("alpha1s_1")->getVal() << ", "<<  ws->var("sigma1s_1")->getVal() << ", " << endl;
-  cout <<  ws->var("m_{#Upsilon(1S)}")->getVal() << ", " <<  ws->var("f1s")->getVal() << ", "<<  ws->var("x1s")->getVal() << " );} " << endl;
-  */
 
 } 
  
