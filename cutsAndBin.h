@@ -24,7 +24,18 @@
 
 float glbMuPtCut = 4; // for acceptance
 const int nPtBins1s  = 6;   double ptBin1s[nPtBins1s+1] = {0,2,4,6,9,12,30};
+//const int nPtBins1sMC  = 6;   double ptBin1sMC[nPtBins1sMC+1] = {0,2,4,6,9,12,30};
+//const int nPtBins1s  = 3;   double ptBin1s[nPtBins1s+1] = {0,4,9,12,30};
+//const int nPtBins1sMC  = 3;   double ptBin1sMC[nPtBins1sMC+1] = {0,4,9,12,30};
+const int nPtBins1sMC  = 60;  double ptBin1sMC[nPtBins1sMC+1] = {0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15,15.5,16,16.5,17,17.5,18,18.5,19,19.5,20,20.5,21,21.5,22,22.5,23,23.5,24,24.5,25,25.5,26,26.5,27,27.5,28,28.5,29,29.5,30};  
+
 const int nPtBins2s  = 3;   double ptBin2s[nPtBins2s+1] = {0,4,9,30};
+//const int nPtBins2s  = 4;   double ptBin2s[nPtBins2s+1] = {0,4,9,12,30};
+//const int nPtBins2sMC  = 3;   double ptBin2sMC[nPtBins2sMC+1] = {0,4,9,30};
+//const int nPtBins2sMC  = 4;   double ptBin2sMC[nPtBins2sMC+1] = {0,4,9,12,30};
+//const int nPtBins2sMC  = 6;   double ptBin2sMC[nPtBins2sMC+1] = {0,2,4,6,9,12,30};
+const int nPtBins2sMC  = 60;  double ptBin2sMC[nPtBins2sMC+1] = {0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15,15.5,16,16.5,17,17.5,18,18.5,19,19.5,20,20.5,21,21.5,22,22.5,23,23.5,24,24.5,25,25.5,26,26.5,27,27.5,28,28.5,29,29.5,30};  
+
 const int nPtBins3s  = 2;   double ptBin3s[nPtBins3s+1] = {0,6,30};
 //const int nPtBins3s  = 2;   double ptBin3s[nPtBins3s+1] = {0,15,30}; 
 
@@ -84,28 +95,46 @@ double upper95_c2 = 0.07081328*1.0123  ;
 double upper95_c1 = 0.228228199*1.0621 ;
 double upper95_cint = 0.070285163*1.0123 ;
 
+//Upperlimit CrossSection value
+//double lower68XS_pt1 = 1.37188E-21*1.0123;
+//double lower68XS_pt2 = 4.11414E-22*1.0123;
+//double lower68XS_y1 = 0;
+//double lower68XS_y2 = 2.81996E-20*1.0123;
+
+double lower68XS_pt1 = 0;
+double lower68XS_pt2 = 0;
+double lower68XS_y1 = 0;
+double lower68XS_y2 = 0;
+
+double upper68XS_pt1 = 0.001096499*1.0123  ;
+double upper68XS_pt2 = 0.000220885*1.0123  ;
+double upper68XS_y1 =  0.007850736*1.0123  ;
+double upper68XS_y2 =  0.009349201*1.0123  ;
+
+//double lower95XS_pt1 = 1.15969E-21*1.0123;
+//double lower95XS_pt2 = 5.69047E-22*1.0123;
+//double lower95XS_y1 = 0;
+//double lower95XS_y2 = 1.59013E-20*1.0123;
+
+double lower95XS_pt1 = 0;
+double lower95XS_pt2 = 0;
+double lower95XS_y1 = 0;
+double lower95XS_y2 = 0;
+
+double upper95XS_pt1 = 0.002012562*1.0123  ;
+double upper95XS_pt2 = 0.00041406*1.0123  ;
+double upper95XS_y1 =  0.015289627*1.0123 ;
+double upper95XS_y2 =  0.017717748*1.0123 ;
+
 // TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA3s[nCentBins3s+1] = {15.41, 1.405, 5.607};
 
-// TAA Unc  
-
-// Old values
+// TAA Unc 
 double TAA_unc1s[nCentBins1s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc2s[nCentBins2s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12, 0.089};
-
-// Values released in https://twiki.cern.ch/twiki/bin/viewauth/CMS/GlauberTables
-double TAA_unc1sLo[nCentBins1s+1] = {0.029, 0.03, 0.032, 0.038, 0.049, 0.066, 0.088, 0.112, 0.102, 0.072};
-double TAA_unc2sLo[nCentBins2s+1] = {0.029, 0.03, 0.032, 0.038, 0.049, 0.066, 0.088, 0.112, 0.102, 0.072};
-double TAA_unc3sLo[nCentBins2s+1] = {0.031, 0.044, 0.072};
-
-double TAA_unc1sHi[nCentBins1s+1] = {0.018, 0.019, 0.023, 0.033, 0.047, 0.068, 0.092, 0.124, 0.164, 0.068};
-double TAA_unc2sHi[nCentBins2s+1] = {0.018, 0.019, 0.023, 0.033, 0.047, 0.068, 0.092, 0.124, 0.164, 0.068};
-double TAA_unc3sHi[nCentBins2s+1] = {0.021, 0.067, 0.068};
-
-
 
 const double inel_cross_PbPb = 6740;
 //const double NumberOfMBColl = 2366003000;
