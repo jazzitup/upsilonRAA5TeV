@@ -84,6 +84,38 @@ double upper95_c2 = 0.07081328*1.0123  ;
 double upper95_c1 = 0.228228199*1.0621 ;
 double upper95_cint = 0.070285163*1.0123 ;
 
+//Upperlimit CrossSection value
+//double lower68XS_pt1 = 1.37188E-21*1.0123;
+//double lower68XS_pt2 = 4.11414E-22*1.0123;
+//double lower68XS_y1 = 0;
+//double lower68XS_y2 = 2.81996E-20*1.0123;
+
+double lower68XS_pt1 = 0;
+double lower68XS_pt2 = 0;
+double lower68XS_y1 = 0;
+double lower68XS_y2 = 0;
+
+double upper68XS_pt1 = 0.001096499*1.0123  ;
+double upper68XS_pt2 = 0.000220885*1.0123  ;
+double upper68XS_y1 =  0.007850736*1.0123  ;
+double upper68XS_y2 =  0.009349201*1.0123  ;
+
+//double lower95XS_pt1 = 1.15969E-21*1.0123;
+//double lower95XS_pt2 = 5.69047E-22*1.0123;
+//double lower95XS_y1 = 0;
+//double lower95XS_y2 = 1.59013E-20*1.0123;
+
+double lower95XS_pt1 = 0;
+double lower95XS_pt2 = 0;
+double lower95XS_y1 = 0;
+double lower95XS_y2 = 0;
+
+double upper95XS_pt1 = 0.002012562*1.0123  ;
+double upper95XS_pt2 = 0.00041406*1.0123  ;
+double upper95XS_y1 =  0.015289627*1.0123 ;
+double upper95XS_y2 =  0.017717748*1.0123 ;
+
+
 // TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
@@ -117,7 +149,7 @@ const double NumberOfMBColl1 = 3092000000;
 
 // lumi Unc 
 double lumi_unc_pp = 0.023;
-double nMB_unc = 0.0224;
+double nMB_unc = TMath::Sqrt(0.02*0.02+0.01*0.01);
 
 struct ParticleMass { double JPsi, Psi2S, Y1S, Y2S, Y3S, Z, PiPlus, KaPlus; };
 ParticleMass pdgMass = {3.096, 3.686, 9.460, 10.023, 10.355, 91.188, 0.139570, 0.49367 };
