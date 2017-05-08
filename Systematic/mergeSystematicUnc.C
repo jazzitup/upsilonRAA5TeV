@@ -81,12 +81,15 @@ void mergeSystematicUnc(int state = 2) {
 
 
   // 2 : acceptance
-  TFile* f2 = new TFile(Form("../acceptance/sys_acceptance_ups%d.root",state));
+  TFile* f2 = new TFile(Form("../compareDataMc/sys_acceptance_ups%dS.root",state));
+  //TFile* f2 = new TFile(Form("../acceptance/sys_acceptance_ups%d.root",state));
   hptPP[2] = (TH1D*)f2->Get("hptSysPP");
   hptAA[2] = (TH1D*)f2->Get("hptSysAA");
   hrapPP[2] = (TH1D*)f2->Get("hrapSysPP");
   hrapAA[2] = (TH1D*)f2->Get("hrapSysAA");
-  hcentAA[2]= (TH1D*)f2->Get("hcentSysAA");
+  hcentAA[2]= (TH1D*)hcentAA[1]->Clone("hcentSysAA");
+  hcentAA[2]->Reset();
+  //hcentAA[2]= (TH1D*)f2->Get("hcentSysAA");
   hintAA[2] = (TH1D*)f2->Get("hcentSysAA_int");
   hintPP[2] = (TH1D*)f2->Get("hcentSysPP");
   
@@ -262,6 +265,7 @@ void mergeSystematicUnc(int state = 2) {
   mergeTwoInQuad( hrapRAA[5], hrapAA[5], hrapPP[5] );
   mergeTwoInQuadCent( hcentRAA[5], hcentAA[5], hintPP[5] );
   mergeTwoInQuad( hintRAA[5], hintAA[5], hintPP[5] );
+
 
   // 6 : TAA uncertainty 
   TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_%ds.root",state));
