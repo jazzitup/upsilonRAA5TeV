@@ -75,8 +75,8 @@ double upper68_pt1 = 0.084112534*1.0123    ;
 double upper68_pt2 = 0.068501262*1.0123  ;
 double upper68_y1 =  0.043720582*1.0123  ;
 double upper68_y2 =  0.064055294*1.0123   ;
-double upper68_c1 =  0.039066476*1.0621   ;
-double upper68_c2 =  0.163972120*1.0123  ;
+double upper68_c1 =  0.163972120*1.0123  ;
+double upper68_c2 =  0.039066476*1.0621   ;
 double upper68_cint =0.041672642*1.0123   ;
 
 double lower95_pt1 = 0;
