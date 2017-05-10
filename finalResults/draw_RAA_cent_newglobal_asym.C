@@ -307,11 +307,13 @@ void draw_RAA_cent_newglobal_asym(bool isArrow =true)
   double sys_global_pp[nState];
   double sys_global_val;
   double accept_sys;
+  TFile* f_acc[nState]; 
+  TH1D* hSys_glb_acc[nState];
   for(int is=0; is<nState; is++){
     hSys_glb[is] = (TH1D*) fInSys_Lo[is]->Get("hintPP_merged");
-    if(is==0) accept_sys = 0.069;
-    else if(is==1) accept_sys = 0.047;
-    else if(is==2) accept_sys = 0.037;
+    f_acc[is] = new TFile(Form("../compareDataMc/sys_acceptance_ups%dS_draft.root",is+1));
+    hSys_glb_acc[is] = (TH1D*) f_acc[is]->Get("hcentSysPP");
+    accept_sys = hSys_glb_acc[is]->GetBinContent(1);
     sys_global_pp[is] = TMath::Sqrt(hSys_glb[is]->GetBinContent(1)*hSys_glb[is]->GetBinContent(1)+accept_sys*accept_sys);
   } 
  

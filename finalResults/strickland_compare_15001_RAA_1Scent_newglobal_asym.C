@@ -327,8 +327,10 @@ void strickland_compare_15001_RAA_1Scent_newglobal_asym(int istate=1) //1 or 2 (
   double sys_global_val;
   double accept_sys;
   hSys_glb = (TH1D*) fInSys_Lo->Get("hintPP_merged");
-  if(istate==1) accept_sys = 0.069;
-  else if(istate==2) accept_sys = 0.047;
+  TFile* f_acc; 
+  TH1D* hSys_glb_acc;
+  if(istate==1) {f_acc = new TFile("../compareDataMc/sys_acceptance_ups1S_draft.root"); hSys_glb_acc = (TH1D*) f_acc->Get("hcentSysPP"); accept_sys = hSys_glb_acc->GetBinContent(1);}
+  else if(istate==2) {f_acc = new TFile("../compareDataMc/sys_acceptance_ups2S_draft.root"); hSys_glb_acc = (TH1D*) f_acc->Get("hcentSysPP"); accept_sys = hSys_glb_acc->GetBinContent(1);}
   sys_global_pp = TMath::Sqrt(hSys_glb->GetBinContent(1)*hSys_glb->GetBinContent(1)+accept_sys*accept_sys);
   
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
