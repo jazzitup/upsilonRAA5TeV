@@ -18,7 +18,7 @@ void mergeTwoInQuadCent( TH1D* h0=0, TH1D* hAA=0, TH1D* hPP=0);
 void subtractTwo( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0);
 void subtractTwoCent( TH1D* h0=0, TH1D* hAA=0, TH1D* hPP=0);
 
-void mergeSystematicUnc(int state = 2) { 
+void mergeSystematicUnc_asym(int state = 2, TString Asym="Hi") { 
   
   TH1::SetDefaultSumw2();
 
@@ -81,13 +81,13 @@ void mergeSystematicUnc(int state = 2) {
 
 
   // 2 : acceptance
-  TFile* f2 = new TFile(Form("../compareDataMc/sys_acceptance_ups%dS_draft.root",state));
   //TFile* f2 = new TFile(Form("../acceptance/sys_acceptance_ups%d.root",state));
+  TFile* f2 = new TFile(Form("../compareDataMc/sys_acceptance_ups%dS_draft.root",state));
   hptPP[2] = (TH1D*)f2->Get("hptSysPP");
   hptAA[2] = (TH1D*)f2->Get("hptSysAA");
   hrapPP[2] = (TH1D*)f2->Get("hrapSysPP");
   hrapAA[2] = (TH1D*)f2->Get("hrapSysAA");
-  hcentAA[2]= (TH1D*)hcentAA[1]->Clone("hcentSysAA");
+  hcentAA[2] = (TH1D*)hcentAA[1]->Clone("hcentSysAA");
   hcentAA[2]->Reset();
   //hcentAA[2]= (TH1D*)f2->Get("hcentSysAA");
   hintAA[2] = (TH1D*)f2->Get("hcentSysAA_int");
@@ -268,7 +268,7 @@ void mergeSystematicUnc(int state = 2) {
 
 
   // 6 : TAA uncertainty 
-  TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_%ds.root",state));
+  TFile* f6 = new TFile(Form("TAA_UNC/sys_TAA_%ds_%s.root",state,Asym.Data()));
   hptPP[6] = (TH1D*)f6->Get("hptPP"); hptPP[6]->SetName("hptPPTAA");
   hptAA[6] = (TH1D*)f6->Get("hptAA"); hptAA[6]->SetName("hptAATAA");
   hrapPP[6] = (TH1D*)f6->Get("hrapPP"); hrapPP[6]->SetName("hrapPPTAA");
@@ -366,7 +366,7 @@ void mergeSystematicUnc(int state = 2) {
   hintRAA[0]->Draw();
 
 
-  TFile* fout = new TFile(Form("mergedSys_ups%ds.root",state),"recreate" );
+  TFile* fout = new TFile(Form("mergedSys_ups%ds_asym%s.root",state,Asym.Data()),"recreate" );
   hptPP[0]->Write();
   hptAA[0]->Write();
   hrapPP[0]->Write();
