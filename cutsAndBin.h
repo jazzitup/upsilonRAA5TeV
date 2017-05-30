@@ -71,13 +71,13 @@ double lower68_c2 = 0;
 double lower68_c1 = 0.034907928;
 double lower68_cint = 0;
 
-double upper68_pt1 = 0.08240659 *1.0123    ;
-double upper68_pt2 = 0.052669265*1.0123  ;
-double upper68_y1 =  0.043679696*1.0123  ;
-double upper68_y2 =  0.086009824*1.0123   ;
-double upper68_c1 =  0.167239626*1.0123  ;
-double upper68_c2 =  0.037665745*1.0621   ;
-double upper68_cint =0.042503168*1.0123   ;
+double upper68_pt1 = 0.08240659    ;
+double upper68_pt2 = 0.052669265   ;
+double upper68_y1 =  0.043679696   ;
+double upper68_y2 =  0.086009824   ;
+double upper68_c2 =  0.037665745   ;
+double upper68_c1 =  0.175419316   ;
+double upper68_cint =0.042503168   ;
 
 double lower95_pt1 = 0;
 double lower95_pt2 = 0;
@@ -87,13 +87,13 @@ double lower95_c2 = 0;
 double lower95_c1 = 0;
 double lower95_cint = 0;
 
-double upper95_pt1 = 0.151257229*1.0123  ;
-double upper95_pt2 = 0.097294397*1.0123  ;
-double upper95_y1 =  0.085057619*1.0123 ;
-double upper95_y2 =  0.122332282*1.0123 ;
-double upper95_c1 =  0.234041406*1.0621 ;
-double upper95_c2 =  0.076585638*1.0123  ;
-double upper95_cint =0.07599279 *1.0123 ;
+double upper95_pt1 = 0.151257229  ;
+double upper95_pt2 = 0.097294397  ;
+double upper95_y1 =  0.085057619  ;
+double upper95_y2 =  0.122332282  ;
+double upper95_c2 =  0.076585638  ;
+double upper95_c1 =  0.245488371  ;
+double upper95_cint =0.07599279   ;
 
 //Upperlimit CrossSection value
 //double lower68XS_pt1 = 1.37188E-21*1.0123;
