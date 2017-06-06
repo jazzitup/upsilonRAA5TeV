@@ -77,7 +77,7 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
   
   // A : pT dependence 
   int nPtBinsA;    
-  double* ptBinPtA; 
+  double* ptBinA; 
   int nYBinsA;    
   double* yBinA; 
   // B : y dependence 
@@ -91,24 +91,24 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
     nPtBinsA = nPtBins1s;    ptBinA = ptBin1s;
     nYBinsA = 1;   yBinA = yBinInt;
     // y dependence bin 
-    nPtBinB = 1;  ptBinB = ptBinInt ; 
-    nYBinB =  nYBins1S; yBinB = yBin1S;
+    nPtBinsB = 1;  ptBinB = ptBinInt ; 
+    nYBinsB =  nYBins1S; yBinB = yBin1S;
   }
   else if ( state == 2 ) {
     nPtBinsA = nPtBins2s;    ptBinA = ptBin2s;
     nYBinsA = 1;   yBinA = yBinInt;
 
-    nPtBinB = 1;   ptBinB = ptBinInt ; 
-    nYBinB =  nYBins2S; yBinB = yBin2S;
+    nPtBinsB = 1;   ptBinB = ptBinInt ; 
+    nYBinsB =  nYBins2S; yBinB = yBin2S;
   }
   else if ( state == 3 ) {
     nPtBinsA = nPtBins3s;    ptBinA = ptBin3s;
     nYBinsA = 1;   yBinA = yBinInt;
 
-    nPtBinB = 1;   ptBinB = ptBinInt ; 
-    nYBinB =  nYBins3S; yBinB = yBin3S;
+    nPtBinsB = 1;   ptBinB = ptBinInt ; 
+    nYBinsB =  nYBins3S; yBinB = yBin3S;
   }
-  TFile *out = new TFile("acceptance_wgt_final_20170106.root","RECREATE");
+  TFile *out = new TFile("acceptance_wgt_final_XXXXXXX.root","RECREATE");
   //TFile *out = new TFile(Form("acceptance_bin%d_wgt.root",bin),"RECREATE");
 
   
@@ -124,17 +124,18 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
   hAccIntAA->SetMarkerStyle(20);hAccIntAA->SetMarkerColor(kBlue+2);
   
 
-  // pT dependence : 
-  hAccPtNoW = new TH1F("hAccPtNoW",";p_{T} (GeV/c);Acceptance of #Upsilon",nPtBinsA,ptBinA);
-  hAccPtpp = new TH1F("hAccPtpp",";p_{T} (GeV/c);Acceptance of #Upsilon",nPtBinsA,ptBinA);
-  hAccPtAA = new TH1F("hAccPtAA",";p_{T} (GeV/c);Acceptance of #Upsilon",nPtBinsA,ptBinA);
+  // pT dependence : Plan A
+  hAccPtNoW = new TH1D("hAccPtNoW",";p_{T} (GeV/c);Acceptance of #Upsilon",nPtBinsA,ptBinA);
+  hAccPtpp = new TH1D("hAccPtpp",";p_{T} (GeV/c);Acceptance of #Upsilon",nPtBinsA,ptBinA);
+  hAccPtAA = new TH1D("hAccPtAA",";p_{T} (GeV/c);Acceptance of #Upsilon",nPtBinsA,ptBinA);
   hAccPtNoW->Sumw2();
   hAccPtpp->Sumw2();
   hAccPtAA->Sumw2();
   hAccPtNoW->SetMarkerStyle(20);hAccPtNoW->SetMarkerColor(kBlue+2);
   hAccPtpp->SetMarkerStyle(20);hAccPtpp->SetMarkerColor(kBlue+2);
   hAccPtAA->SetMarkerStyle(20);hAccPtAA->SetMarkerColor(kBlue+2);
-    
+  
+  // y dependdence : Plan B
   hAccYNoW = new TH1D("hAccYNoW",";|y|;Acceptance of #Upsilon",nYBinsB,yBinB);
   hAccYpp = new TH1D("hAccYpp",";|y|;Acceptance of #Upsilon",nYBinsB,yBinB);
   hAccYAA = new TH1D("hAccYAA",";|y|;Acceptance of #Upsilon",nYBinsB,yBinB);
@@ -154,17 +155,21 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
       cout << "*===*===*===*===*  " << kRange << "  *===*===*===*===*" << endl;
       float y_noRwt = getAcceptanceSingleBin( 1, kNoWeight, kRange,kNoVar);
       float y_ppRwt = getAcceptanceSingleBin( 1, kPP, kRange,kNoVar);
-      
-      float err_ppPt = max ( abs(y_ppRwt_ptPlus/y_ppRwt-1), abs(y_ppRwt_ptMinus/y_ppRwt-1) ) ;
-      float err_ppY = max ( abs(y_ppRwt_yPlus/y_ppRwt-1), abs(y_ppRwt_yMinus/y_ppRwt-1) ) ;
       float y_aaRwt = getAcceptanceSingleBin( 1, kAA, kRange,kNoVar);
-      
-      float err_aaPt = max ( abs(y_aaRwt_ptPlus/y_aaRwt-1), abs(y_aaRwt_ptMinus/y_aaRwt-1) ) ;
-      float err_aaY = max ( abs(y_aaRwt_yPlus/y_aaRwt-1), abs(y_aaRwt_yMinus/y_aaRwt-1) ) ;
+
+      float err_ppPt = 0 ;  // tentatively stopped this function
+      float err_ppY = 0; 
+      float err_aaPt = 0;
+      float err_aaY = 0;
+
+      //      float err_ppPt = max ( abs(y_ppRwt_ptPlus/y_ppRwt-1), abs(y_ppRwt_ptMinus/y_ppRwt-1) ) ;
+      //      float err_ppY = max ( abs(y_ppRwt_yPlus/y_ppRwt-1), abs(y_ppRwt_yMinus/y_ppRwt-1) ) ;
+      //      float err_aaPt = max ( abs(y_aaRwt_ptPlus/y_aaRwt-1), abs(y_aaRwt_ptMinus/y_aaRwt-1) ) ;
+      //      float err_aaY = max ( abs(y_aaRwt_yPlus/y_aaRwt-1), abs(y_aaRwt_yMinus/y_aaRwt-1) ) ;
       
       // dmoon added systematcis : unweighted - weighted
       float err_pp = abs(y_noRwt - y_ppRwt)/y_ppRwt;
-      float err_aa = abs(y_noRwt - y_aaRwt)/y_aaRwt;
+      float err_aa = abs(y_noRwt - y_aaRwt)/y_aaRwt;    
       
       Acc_NoW[ipt][iy] = y_noRwt;
       Acc_NoW_Err[ipt][iy] = err_ppPt;
@@ -173,7 +178,8 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
       Acc_pp_Err[ipt][iy] = err_pp;
       
       Acc_AA[ipt][iy] = y_aaRwt;
-      Acc_AA_Err[ipt][iy] = err_aa;
+      Acc_AA_Err[ipt][iy] = err_aa;    
+
       
       cout << "Un-weighed acceptance :  = " << y_noRwt << endl;
       cout << "Re-weighed Acceptance : " << "pp = " << y_ppRwt << ",  PbPb = " << y_aaRwt << endl;
@@ -198,8 +204,8 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
       hAccIntNoW->SetBinError(ipt,Acc_NoW_Err[ipt][iy]);
       hAccIntpp->SetBinError(ipt,Acc_pp_Err[ipt][iy]);
       hAccIntAA->SetBinError(ipt,Acc_AA_Err[ipt][iy]);
-    }
-    
+    } // iy
+  }    // ipt
 
     // pt dependence 
     for ( int ipt = 1 ; ipt<=nPtBinsA ; ipt++ ) { 
@@ -208,13 +214,16 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
 	cout << "*===*===*===*===*  " << kRange << "  *===*===*===*===*" << endl;
 	float y_noRwt = getAcceptanceSingleBin( 1, kNoWeight, kRange,kNoVar);
 	float y_ppRwt = getAcceptanceSingleBin( 1, kPP, kRange,kNoVar);
-	
-	float err_ppPt = max ( abs(y_ppRwt_ptPlus/y_ppRwt-1), abs(y_ppRwt_ptMinus/y_ppRwt-1) ) ;
-	float err_ppY = max ( abs(y_ppRwt_yPlus/y_ppRwt-1), abs(y_ppRwt_yMinus/y_ppRwt-1) ) ;
 	float y_aaRwt = getAcceptanceSingleBin( 1, kAA, kRange,kNoVar);
 	
-	float err_aaPt = max ( abs(y_aaRwt_ptPlus/y_aaRwt-1), abs(y_aaRwt_ptMinus/y_aaRwt-1) ) ;
-	float err_aaY = max ( abs(y_aaRwt_yPlus/y_aaRwt-1), abs(y_aaRwt_yMinus/y_aaRwt-1) ) ;
+	float err_ppPt = 0 ;  // tentatively stopped this function
+	float err_ppY = 0; 
+	float err_aaPt = 0;
+	float err_aaY = 0;
+	//	float err_ppPt = max ( abs(y_ppRwt_ptPlus/y_ppRwt-1), abs(y_ppRwt_ptMinus/y_ppRwt-1) ) ;
+	//	float err_ppY = max ( abs(y_ppRwt_yPlus/y_ppRwt-1), abs(y_ppRwt_yMinus/y_ppRwt-1) ) ;
+	//      float err_aaPt = max ( abs(y_aaRwt_ptPlus/y_aaRwt-1), abs(y_aaRwt_ptMinus/y_aaRwt-1) ) ;
+	//	float err_aaY = max ( abs(y_aaRwt_yPlus/y_aaRwt-1), abs(y_aaRwt_yMinus/y_aaRwt-1) ) ;
 	
 	// dmoon added systematcis : unweighted - weighted
 	float err_pp = abs(y_noRwt - y_ppRwt)/y_ppRwt;
@@ -262,13 +271,17 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
 	cout << "*===*===*===*===*  " << kRange << "  *===*===*===*===*" << endl;
 	float y_noRwt = getAcceptanceSingleBin( 1, kNoWeight, kRange,kNoVar);
 	float y_ppRwt = getAcceptanceSingleBin( 1, kPP, kRange,kNoVar);
-	
-	float err_ppPt = max ( abs(y_ppRwt_ptPlus/y_ppRwt-1), abs(y_ppRwt_ptMinus/y_ppRwt-1) ) ;
-	float err_ppY = max ( abs(y_ppRwt_yPlus/y_ppRwt-1), abs(y_ppRwt_yMinus/y_ppRwt-1) ) ;
 	float y_aaRwt = getAcceptanceSingleBin( 1, kAA, kRange,kNoVar);
 	
-	float err_aaPt = max ( abs(y_aaRwt_ptPlus/y_aaRwt-1), abs(y_aaRwt_ptMinus/y_aaRwt-1) ) ;
-	float err_aaY = max ( abs(y_aaRwt_yPlus/y_aaRwt-1), abs(y_aaRwt_yMinus/y_aaRwt-1) ) ;
+	float err_ppPt = 0;
+	float err_ppY = 0;
+	float err_aaPt =0;
+	float err_aaY = 0;
+
+	//	float err_ppPt = max ( abs(y_ppRwt_ptPlus/y_ppRwt-1), abs(y_ppRwt_ptMinus/y_ppRwt-1) ) ;
+	//	float err_ppY = max ( abs(y_ppRwt_yPlus/y_ppRwt-1), abs(y_ppRwt_yMinus/y_ppRwt-1) ) ;
+	//	float err_aaPt = max ( abs(y_aaRwt_ptPlus/y_aaRwt-1), abs(y_aaRwt_ptMinus/y_aaRwt-1) ) ;
+	//	float err_aaY = max ( abs(y_aaRwt_yPlus/y_aaRwt-1), abs(y_aaRwt_yMinus/y_aaRwt-1) ) ;
 	
 	// dmoon added systematcis : unweighted - weighted
 	float err_pp = abs(y_noRwt - y_ppRwt)/y_ppRwt;
@@ -307,7 +320,7 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
 	hAccYAA->SetBinError(iy,Acc_AA_Err[ipt][iy]);
       } // iy
     } // ipt
-     
+  
     
     out->cd();
     
@@ -332,8 +345,7 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
     hAccYAA->Write();
     
     out->Write();
-}
-
+  }
 
 
 
