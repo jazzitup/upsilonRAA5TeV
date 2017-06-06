@@ -108,7 +108,7 @@ void getAcceptance(int doDraw = 0, int state = k1S) { // doDraw == 1 : draw, == 
     nPtBinsB = 1;   ptBinB = ptBinInt ; 
     nYBinsB =  nYBins3S; yBinB = yBin3S;
   }
-  TFile *out = new TFile("acceptance_wgt_final_XXXXXXX.root","RECREATE");
+  TFile *out = new TFile(Form("acceptance_wgt_final_XXXXXXX_%dS.root",state),"RECREATE");
   //TFile *out = new TFile(Form("acceptance_bin%d_wgt.root",bin),"RECREATE");
 
   
