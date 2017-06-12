@@ -61,6 +61,31 @@ double nColl2s[nCentBins2s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67};
 double nColl3s[nCentBins3s]   = {1079, 98.36};
 //double nColl3s[nCentBins3s]   = {1079, 98.36};  
 
+/*
+##Weighting function##
+For 1S
+TF1* fWgtPP1 = new TF1("fWgtPP1","( [0] + [1]*x + [2]*x*x ) / (  (x-[3])*(x-[3])*(x-[3])  )", 0, 30);
+Fot 2S, 3S
+TF1* fWgtPP2 = new TF1("fWgtPP2","( [0] + [1]*x )", 0, 30);
+
+##Parameters##
+  ##Nominal##
+fWgtPP1->SetParameters( 212.612, 4.63129, 25.8648, -4.56595 );
+fWgtPP2->SetParameters( 0.569212, 0.0637386 );
+fWgtAA1->SetParameters( 257.96, -96.2878, 43.8407, -4.73982 );
+fWgtAA2->SetParameters( 0.778896, 0.0209981 );
+  ##Variation1(Param+error)
+fWgtPP1->SetParameters( 212.612, 15.4104, 27.1523, -4.09505 );
+fWgtPP2->SetParameters( 0.592215, 0.066485 );
+fWgtAA1->SetParameters( 257.96, -80.4098, 47.7445, -4.16469 );
+fWgtAA2->SetParameters( 1.08026, 0.0468831 );
+  ##Variation2(Param-error)
+fWgtPP1->SetParameters( 212.612, -6.14778, 24.5773, -5.03685 );
+fWgtPP2->SetParameters( 0.546209, 0.0609922 );
+fWgtAA1->SetParameters( 257.96, -112.166, 39.9369, -5.31494 );
+fWgtAA2->SetParameters( 0.477534, -0.00488679 );
+*/
+
 //Upperlimit value
 
 double lower68_pt1 = 0;
