@@ -70,19 +70,19 @@ TF1* fWgtPP2 = new TF1("fWgtPP2","( [0] + [1]*x )", 0, 30);
 
 ##Parameters##
   ##Nominal##
-fWgtPP1->SetParameters( 212.612, 4.63129, 25.8648, -4.56595 );
+fWgtPP1->SetParameters( 200.759, 7.09569, 25.3727, -4.51979 );
 fWgtPP2->SetParameters( 0.569212, 0.0637386 );
-fWgtAA1->SetParameters( 257.96, -96.2878, 43.8407, -4.73982 );
+fWgtAA1->SetParameters( 255.074, -93.4016, 44.2256, -4.81048 );
 fWgtAA2->SetParameters( 0.778896, 0.0209981 );
   ##Variation1(Param+error)
-fWgtPP1->SetParameters( 212.612, 15.4104, 27.1523, -4.09505 );
+fWgtPP1->SetParameters( 200.759, 17.5645, 26.6928, -4.04741 );
 fWgtPP2->SetParameters( 0.592215, 0.066485 );
-fWgtAA1->SetParameters( 257.96, -80.4098, 47.7445, -4.16469 );
+fWgtAA1->SetParameters( 255.074, -77.2557, 48.3587, -4.21744 );
 fWgtAA2->SetParameters( 1.08026, 0.0468831 );
   ##Variation2(Param-error)
-fWgtPP1->SetParameters( 212.612, -6.14778, 24.5773, -5.03685 );
+fWgtPP1->SetParameters( 200.759, -3.37308, 24.0526, -4.99218 );
 fWgtPP2->SetParameters( 0.546209, 0.0609922 );
-fWgtAA1->SetParameters( 257.96, -112.166, 39.9369, -5.31494 );
+fWgtAA1->SetParameters( 255.074, -109.547, 40.0926, -5.40352 );
 fWgtAA2->SetParameters( 0.477534, -0.00488679 );
 */
 
