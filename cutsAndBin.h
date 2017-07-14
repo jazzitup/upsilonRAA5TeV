@@ -125,8 +125,8 @@ double lower68XS_pt2 = 0;
 double lower68XS_y1 = 0;
 double lower68XS_y2 = 0;
 
-double upper68XS_pt1 = 0.001099306  ;
-double upper68XS_pt2 = 0.00023631   ;
+double upper68XS_pt1 = 0.001085948  ;
+double upper68XS_pt2 = 0.000233439  ;
 double upper68XS_y1  = 0.008085618  ;
 double upper68XS_y2  = 0.009556751  ;
 
@@ -135,8 +135,8 @@ double lower95XS_pt2 = 0;
 double lower95XS_y1 = 0;
 double lower95XS_y2 = 0;
 
-double upper95XS_pt1 = 0.002017711   ;
-double upper95XS_pt2 = 0.000442716   ;
+double upper95XS_pt1 = 0.001993194   ;
+double upper95XS_pt2 = 0.000437337   ;
 double upper95XS_y1 =  0.015747069   ;
 double upper95XS_y2 =  0.018111107   ;
 
