@@ -21,19 +21,19 @@ void compare_15001_RAA_pt_asym(int istate=1) //1 or 2 (1S or 2S)
   //// 15001 values
   const int cn_1s =  5;
   double cpx_1s[cn_1s] =  {1.25, 3.75, 6.5, 10., 16.};
-  double cpy_1s[cn_1s] =  {0.455, 0.436, 0.469, 0.491, 0.435}; 
+  double cpy_1s[cn_1s] =  {0.455, 0.435, 0.468, 0.491, 0.435}; 
   double cex_1s[cn_1s] =  {0., 0., 0., 0., 0.};
-  double cey_1s[cn_1s] =  {0.026, 0.026, 0.031, 0.036, 0.040};
+  double cey_1s[cn_1s] =  {0.026, 0.027, 0.031, 0.036, 0.040};
   double cexsys_1s[cn_1s] =  {1.25, 1.25, 1.5, 2, 4.};
-  double ceysys_1s[cn_1s] =  {0.062, 0.045, 0.048, 0.042, 0.038};
+  double ceysys_1s[cn_1s] =  {0.071, 0.049, 0.058, 0.046, 0.039};
 
   const int cn_2s =  3;
   double cpx_2s[cn_2s] =  {2.5, 8.5, 16};
   double cpy_2s[cn_2s] =  {0.084, 0.068, 0.149};
   double cex_2s[cn_2s] =  {0., 0., 0.};
-  double cey_2s[cn_2s] =  {0.048, 0.-47, 0.059};
+  double cey_2s[cn_2s] =  {0.048, 0.047, 0.060};
   double cexsys_2s[cn_2s] =  {2.5, 3.5, 4.};
-  double ceysys_2s[cn_2s] =  {0.016, 0.010, 0.025};
+  double ceysys_2s[cn_2s] =  {0.030, 0.013, 0.026};
 
   ////////////////////////////////////////////////////////////////
   //// read input file : value & stat.
@@ -139,7 +139,7 @@ void compare_15001_RAA_pt_asym(int istate=1) //1 or 2 (1S or 2S)
   double sys_global_y_Lo = sys_global_val_Lo;
   double sys_global_x = 0.8;
   //double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+lumi_unc_aa*lumi_unc_aa);
-  double sys_global_y_15001 = 0.079;
+  double sys_global_y_15001 = 0.075;
   TBox *globalUncBox = new TBox(xmax-sys_global_x*2,1-sys_global_y_Lo,xmax-sys_global_x-0.05,1+sys_global_y_Hi);
   globalUncBox -> SetLineColor(kRed-2);
   globalUncBox -> SetFillColorAlpha(kPink-6,0.6);

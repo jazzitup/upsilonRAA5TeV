@@ -21,29 +21,29 @@ void compare_15001_RAA_cent_newglobal_asym(int istate=1) //1 or 2 (1S or 2S)
   //// 15001 values
   const int cn_1s =  8;
   double cpx_1s[cn_1s] =  {8.8, 42.0, 86.3, 130, 187, 261, 329, 381};
-  double cpy_1s[cn_1s] =  {1.22, 0.813, 0.604, 0.546, 0.476, 0.442, 0.408, 0.330};
+  double cpy_1s[cn_1s] =  {1.271, 0.815, 0.605, 0.546, 0.476, 0.442, 0.408, 0.330};
   double cex_1s[cn_1s] =  {0., 0., 0., 0., 0., 0., 0., 0.};
-  double cey_1s[cn_1s] =  {0.22, 0.082, 0.065, 0.047, 0.035, 0.027, 0.033, 0.029};
+  double cey_1s[cn_1s] =  {0.229, 0.083, 0.065, 0.047, 0.035, 0.028, 0.033, 0.029};
   double cexsys_1s[cn_1s] =  {boxw, boxw, boxw, boxw, boxw, boxw, boxw, boxw};
   double ceysys_1s_1[cn_1s] =  {0.32, 0.134, 0.119, 0.084, 0.056, 0.055, 0.057, 0.052};
   double ceysys_1s_2[cn_1s] =  {0.077, 0.051, 0.038, 0.034, 0.030, 0.028, 0.025, 0.021};
-  double ceysys_1s[cn_1s];
-  for (int it=0; it < cn_1s ; it++) {
-    ceysys_1s[it] = TMath::Sqrt(ceysys_1s_1[it]*ceysys_1s_1[it]+ceysys_1s_2[it]*ceysys_1s_2[it]);
-  }
+  double ceysys_1s[cn_1s] = {0.401, 0.137, 0.144, 0.120, 0.059, 0.093, 0.073, 0.070};
+ // for (int it=0; it < cn_1s ; it++) {
+ //   ceysys_1s[it] = TMath::Sqrt(ceysys_1s_1[it]*ceysys_1s_1[it]+ceysys_1s_2[it]*ceysys_1s_2[it]);
+ // }
 
   const int cn_2s =  4;
   double cpx_2s[cn_2s] =  {22.1, 108, 224, 355};
-  double cpy_2s[cn_2s] =  {0.226, 0.294, 0.091, 0.076};
+  double cpy_2s[cn_2s] =  {0.235, 0.294, 0.092, 0.076};
   double cex_2s[cn_2s] =  {0., 0., 0., 0.};
-  double cey_2s[cn_2s] =  {0.149, 0.079, 0.043, 0.044};
+  double cey_2s[cn_2s] =  {0.155, 0.079, 0.043, 0.045};
   double cexsys_2s[cn_2s] =  {boxw, boxw, boxw, boxw};
   double ceysys_2s_1[cn_2s] =  {0.106, 0.081, 0.052, 0.035};
   double ceysys_2s_2[cn_2s] =  {0.015, 0.019, 0.006, 0.005};
-  double ceysys_2s[cn_2s];
-  for (int it=0; it < cn_2s ; it++) {
-    ceysys_2s[it] = TMath::Sqrt(ceysys_2s_1[it]*ceysys_2s_1[it]+ceysys_2s_2[it]*ceysys_2s_2[it]);
-  }
+  double ceysys_2s[cn_2s] = {0.128, 0.112, 0.065, 0.038};
+//  for (int it=0; it < cn_2s ; it++) {
+//    ceysys_2s[it] = TMath::Sqrt(ceysys_2s_1[it]*ceysys_2s_1[it]+ceysys_2s_2[it]*ceysys_2s_2[it]);
+//  }
 
   const int cn_int = 1;
   double cpx_1s_int[cn_int] = {1};
@@ -51,14 +51,14 @@ void compare_15001_RAA_cent_newglobal_asym(int istate=1) //1 or 2 (1S or 2S)
   double cex_1s_int[cn_int] = {0.};
   double cey_1s_int[cn_int] = {0.014};
   double cexsys_1s_int[cn_int] = {boxw_int};
-  double ceysys_1s_int[cn_int] = {0.048};//0.029
+  double ceysys_1s_int[cn_int] = {0.046};//0.029
   
   double cpx_2s_int[cn_int] = {1};
   double cpy_2s_int[cn_int] = {0.119};
   double cex_2s_int[cn_int] = {0.};
   double cey_2s_int[cn_int] = {0.028};
   double cexsys_2s_int[cn_int] = {boxw_int};
-  double ceysys_2s_int[cn_int] = {0.014};//0.008
+  double ceysys_2s_int[cn_int] = {0.015};//0.008
 
   ////////////////////////////////////////////////////////////////
   //// read input file : value & stat.
@@ -237,15 +237,15 @@ void compare_15001_RAA_cent_newglobal_asym(int istate=1) //1 or 2 (1S or 2S)
   hSys_glb = (TH1D*) fInSys_Lo->Get("hintPP_merged");
   TFile* f_acc; 
   TH1D* hSys_glb_acc;
-  if(istate==1) {f_acc = new TFile("../compareDataMc/sys_acceptance_ups1S_draft.root"); hSys_glb_acc = (TH1D*) f_acc->Get("hcentSysPP"); accept_sys = hSys_glb_acc->GetBinContent(1);}
-  else if(istate==2) {f_acc = new TFile("../compareDataMc/sys_acceptance_ups2S_draft.root"); hSys_glb_acc = (TH1D*) f_acc->Get("hcentSysPP"); accept_sys = hSys_glb_acc->GetBinContent(1);}
+  if(istate==1) {f_acc = new TFile("../acceptance/sys_acceptance_ups1S_170622.root"); hSys_glb_acc = (TH1D*) f_acc->Get("hcentSysPP"); accept_sys = hSys_glb_acc->GetBinContent(1);}
+  else if(istate==2) {f_acc = new TFile("../acceptance/sys_acceptance_ups2S_170622.root"); hSys_glb_acc = (TH1D*) f_acc->Get("hcentSysPP"); accept_sys = hSys_glb_acc->GetBinContent(1);}
   sys_global_pp = TMath::Sqrt(hSys_glb->GetBinContent(1)*hSys_glb->GetBinContent(1)+accept_sys*accept_sys);
   
   sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp + nMB_unc*nMB_unc);
   double sys_global_y = TMath::Sqrt(sys_global_val*sys_global_val + sys_global_pp*sys_global_pp); 
   double sys_global_y_15001;
   if(istate==1) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.063*0.063); 
-  else if(istate==2) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.066*0.066); 
+  else if(istate==2) sys_global_y_15001 = TMath::Sqrt(0.032*0.032+0.069*0.069); 
   double sys_global_x = 15;
 
   cout << "sys_global_pp : " << sys_global_pp << endl;

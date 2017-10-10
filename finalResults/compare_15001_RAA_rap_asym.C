@@ -21,16 +21,16 @@ void compare_15001_RAA_rap_asym(int istate=1) //1 or 2 (1S or 2S)
   //// 15001 values
   const int cn_1s =  6;
   double cpx_1s[cn_1s] =  {0.2, 0.6, 1.0, 1.4, 1.8, 2.2};
-  double cpy_1s[cn_1s] =  {0.477, 0.416, 0.492, 0.490, 0.479, 0.399};
+  double cpy_1s[cn_1s] =  {0.446, 0.415, 0.491, 0.490, 0.479, 0.399};
   double cex_1s[cn_1s] =  {0., 0., 0., 0., 0., 0.};
   double cey_1s[cn_1s] =  {0.028, 0.028, 0.033, 0.036, 0.038, 0.060};
   double cexsys_1s[cn_1s] =  {0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
-  double ceysys_1s_1[cn_1s] =  {0.039, 0.043, 0.052, 0.060, 0.063, 0.080};
+  double ceysys_1s_1[cn_1s] =  {0.043, 0.069, 0.065, 0.072, 0.072, 0.084};
   double ceysys_1s_2[cn_1s] =  {0.035, 0.033, 0.039, 0.038, 0.038, 0.031};
-  double ceysys_1s[cn_1s];
-  for (int it=0; it < cn_1s ; it++) {
-    ceysys_1s[it] = TMath::Sqrt(ceysys_1s_1[it]*ceysys_1s_1[it]+ceysys_1s_2[it]*ceysys_1s_2[it]);
-  }
+  double ceysys_1s[cn_1s] = {0.043, 0.069, 0.065, 0.072, 0.072, 0.084};
+//  for (int it=0; it < cn_1s ; it++) {
+//    ceysys_1s[it] = TMath::Sqrt(ceysys_1s_1[it]*ceysys_1s_1[it]+ceysys_1s_2[it]*ceysys_1s_2[it]);
+//  }
 
   const int cn_2s =  2;
   double cpx_2s[cn_2s] =  {0.6, 1.8};
@@ -40,10 +40,10 @@ void compare_15001_RAA_rap_asym(int istate=1) //1 or 2 (1S or 2S)
   double cexsys_2s[cn_2s] =  {0.6, 0.6};
   double ceysys_2s_1[cn_2s] =  {0.036, 0.073};
   double ceysys_2s_2[cn_2s] =  {0.002, 0.002};
-  double ceysys_2s[cn_2s];
-  for (int it=0; it < cn_2s ; it++) {
-    ceysys_2s[it] = TMath::Sqrt(ceysys_2s_1[it]*ceysys_2s_1[it]+ceysys_2s_2[it]*ceysys_2s_2[it]);
-  }
+  double ceysys_2s[cn_2s] = {0.039, 0.064};
+//  for (int it=0; it < cn_2s ; it++) {
+//    ceysys_2s[it] = TMath::Sqrt(ceysys_2s_1[it]*ceysys_2s_1[it]+ceysys_2s_2[it]*ceysys_2s_2[it]);
+//  }
 
   ////////////////////////////////////////////////////////////////
   //// read input file : value & stat.
@@ -151,7 +151,7 @@ void compare_15001_RAA_rap_asym(int istate=1) //1 or 2 (1S or 2S)
   double sys_global_y_Lo = sys_global_val_Lo;
   double sys_global_x = 0.06;
   //double sys_global_val = TMath::Sqrt(lumi_unc_pp*lumi_unc_pp+lumi_unc_aa*lumi_unc_aa);
-  double sys_global_y_15001 = 0.079;
+  double sys_global_y_15001 = 0.075;
   TBox *globalUncBox = new TBox(xmax-sys_global_x*2,1-sys_global_y_Lo,xmax-sys_global_x-0.001,1+sys_global_y_Hi);
   globalUncBox -> SetLineColor(kRed-2);
   globalUncBox -> SetFillColorAlpha(kPink-6,0.6);
