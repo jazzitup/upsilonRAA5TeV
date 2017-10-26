@@ -311,7 +311,6 @@ void doFitUpsilon_Data_pas_overlay(
   RooAddPdf*  cb2s_pp = new RooAddPdf("cb2s_pp","Signal 2S",RooArgList(*cb2s_1_pp,*cb2s_2_pp), RooArgList(*f1s_pp) );
   RooAddPdf*  cb3s_pp = new RooAddPdf("cb3s_pp","Signal 3S",RooArgList(*cb3s_1_pp,*cb3s_2_pp), RooArgList(*f1s_pp) );
 
-
   double numtotev1 = nSig1s_pp->getVal();
   double numtotev2 = nSig2s_pp->getVal();
   double numtotev3 = nSig3s_pp->getVal();
@@ -357,7 +356,7 @@ void doFitUpsilon_Data_pas_overlay(
   if(collId != kPPDATA && collId != kPPMCUps1S && collId != kPPMCUps2S) 
   {
       drawText(Form("p_{T}^{#mu} > %.f GeV/c", muPtCut ), pos_text_x,pos_text_y-pos_y_diff*2,text_color,text_size);
-      drawText("|#eta^{#mu}| < 2.4 GeV/c", pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
+      drawText("|#eta^{#mu}| < 2.4 ", pos_text_x,pos_text_y-pos_y_diff*3,text_color,text_size);
       drawText(Form("Centrality %d-%d%s",cLow/2,cHigh/2,perc.Data()),pos_text_x,pos_text_y-pos_y_diff*4,text_color,text_size);
   }
   else {
