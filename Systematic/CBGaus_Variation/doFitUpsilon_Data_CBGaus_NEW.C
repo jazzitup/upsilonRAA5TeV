@@ -10,7 +10,7 @@
 #include "TText.h"
 #include "TArrow.h"
 #include "TFile.h"
-#include "../../cutsAndBin.h"
+#include "cutsAndBin.h"
 #include "../../PsetCollection.h"
 #include "../../CMS_lumi.C"
 #include "../../tdrstyle.C"
@@ -20,9 +20,9 @@ using namespace std;
 using namespace RooFit;
 valErr getParam(int collId=0, float ptLow=0, float ptHigh=0, float yLow=0, float yHigh=0, int muPtCut=0, int cLow=0, int cHigh=0,   float dphiEp2Low=0,  float dphiEp2High=0) ;
 void doFitUpsilon_Data_CBGaus_NEW(
-       int collId = kAADATA,  
-       float ptLow=0, float ptHigh=30, 
-       float yLow=0, float yHigh=2.4,
+       int collId = kPPDATA,  
+       float ptLow=0, float ptHigh=30,
+       float yLow=1.2, float yHigh=2.4,
        int cLow=0, int cHigh=200,
        float muPtCut=4.0,      
        bool fixParameters=0)  // DON'T FIX PARAMETERs  
@@ -106,17 +106,158 @@ void doFitUpsilon_Data_CBGaus_NEW(
   
   //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.2 , 1.10, 5.1);
   //int
-  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.3 , 1.0, 2.1);
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.53540 , 1.1, 2.23);
+  //RooRealVar n1s_1("n1s_1","power order", 3.46395, 1.395, 9.86395);
+  //AA pt 0-4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.5, 1.1, 2.2);
+  //RooRealVar n1s_1("n1s_1","power order", 2.1, 1.3, 3.8);
+  //AA pt 4-9
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.5, 1.1, 2.2);
+  //RooRealVar n1s_1("n1s_1","power order", 2.1, 1.3, 3.8);
+  //AA pt 6-30
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.3, 1.1, 2.2);
+  //RooRealVar n1s_1("n1s_1","power order", 2.0, 1.3, 3.8);
+  //AA pt 2-4
+  //AA pt 2-4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.96, 2.10, 3.99);
+  //RooRealVar n1s_1("n1s_1","power order", 2.1, 2.05, 2.90);
+  //AA pt 4-6
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.96, 2.15, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.8, 1.67, 2.90);
+  //AA pt 6-9
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.96, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.17, 1.90);
+  //AA pt 9-12
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.17, 2.40);
+  //AA pt 12-30
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.37, 2.40);
+  //AA y 0.-0.4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.37, 2.40);
+  //AA y 0.-0.8
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 3.19);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.37, 3.40);
+  //AA y 1.6.-2.4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 2.19);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.37, 2.40);
+  //AA y 0.4-0.8
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.3, 2.40);
+  //AA y 0.8-1.2
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.3, 2.40);
+  //AA y 1.2-1.6
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.3, 2.40);
+  //AA y 1.6-2.0
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.0, 1.9, 3.10);
+  //RooRealVar n1s_1("n1s_1","power order", 2.0, 1.9, 3.10);
+  //AA y 2.0-2.4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.8, 1.5, 2.80);
+  //AA cent 0.-10
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.1, 9.5);
+  //AA cent 0.-60
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.16, 1.4, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.1, 2.5);
+  //AA cent 10-20
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.5);
+  //AA cent 20-40
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.1, 1.5, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.0);
+  //AA cent 40-60
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.1, 1.5, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.0);
+  //AA cent 60-80
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.1, 1.5, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.1);
+  //AA cent 80-100
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.1, 1.5, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.1);
+  //AA cent 100-120
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.0, 1.4, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.9);
+  //AA cent 120-140
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.0, 1.4, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.9);
+  //AA cent 140-200
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.0, 1.4, 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.1, 1.0, 2.9);
+  //
+  //
+  //int
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.53540 , 1.1, 2.23);
+  //RooRealVar n1s_1("n1s_1","power order", 3.46395, 1.395, 9.86395);
+  //PP pt 0-2
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.5 , 1.0, 3.9);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.0, 3.9);
+  //PP pt 2-4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.96, 2.10, 3.99);
+  //RooRealVar n1s_1("n1s_1","power order", 2.1, 2.05, 2.90);
+  //PP pt 0-4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.1, 1.0, 4.1);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.0, 3.1);
+  //PP pt 4-9
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.5, 1.1, 2.2);
+  //RooRealVar n1s_1("n1s_1","power order", 1.3, 1.3, 2.8);
+  //PP pt 6-30
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.3, 1.1, 2.2);
+  //RooRealVar n1s_1("n1s_1","power order", 2.0, 1.3, 3.8);
+  //PP pt 2-4
+  //PP pt 2-4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.96, 2.10, 3.99);
+  //RooRealVar n1s_1("n1s_1","power order", 2.1, 2.05, 2.90);
+  //PP pt 4-6
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.96, 2.15, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.8, 1.67, 2.90);
+  //PP pt 6-9
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.96, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.17, 1.90);
+  //PP pt 9-12
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.17, 2.40);
+  //PP pt 12-30
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.66, 1., 2.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.6, 1.37, 2.40);
+  //PP y 0.-0.4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 3.1, 1.0, 4.9);
+  //RooRealVar n1s_1("n1s_1","power order", 3.1, 1.0, 3.9);
+  //PP y 0.-0.8
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.5, 1., 3.9);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.0, 3.4);
+  //PP y 1.2.-2.4
+  RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.8, 1.2, 3.9);
+  RooRealVar n1s_1("n1s_1","power order", 2.0, 1.2, 3.4);
+  //PP y 0.4-0.8
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 1.4, 1.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 3.0, 1.0, 4.40);
+  //PP y 0.8-1.2
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 1.5, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.2, 2.40);
+  //PP y 1.2-1.6
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 2.1, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.5, 1.3, 2.40);
+  //PP y 1.6-2.0
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.0, 1.9, 3.10);
+  //RooRealVar n1s_1("n1s_1","power order", 2.0, 1.9, 3.10);
+  //PP y 1.6-2.4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.0, 1.9, 3.10);
+  //RooRealVar n1s_1("n1s_1","power order", 2.0, 1.9, 3.10);
+  //PP y 2.0-2.4
+  //RooRealVar alpha1s_1("alpha1s_1","tail shift", 2.66, 1.4, 3.89);
+  //RooRealVar n1s_1("n1s_1","power order", 1.8, 1.5, 2.80);
   //RooRealVar alpha1s_1("alpha1s_1","tail shift", initPset.alpha1s_1 , 1.0, initPset.alpha1s_1*1.25);
-  RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1) );
-  RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1) );
-  RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1) );
-  RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1) );
-  RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1) );
+  RooFormulaVar alpha2s_1("alpha2s_1","1.0*@0",RooArgList(alpha1s_1));
+  RooFormulaVar alpha3s_1("alpha3s_1","1.0*@0",RooArgList(alpha1s_1));
+  RooFormulaVar alpha1s_2("alpha1s_2","1.0*@0",RooArgList(alpha1s_1));
+  RooFormulaVar alpha2s_2("alpha2s_2","1.0*@0",RooArgList(alpha1s_1));
+  RooFormulaVar alpha3s_2("alpha3s_2","1.0*@0",RooArgList(alpha1s_1));
 
   //RooRealVar n1s_1("n1s_1","power order", 1.6 , 1.3, 5.1);
-  //int
-  RooRealVar n1s_1("n1s_1","power order", 1.3, 1.0, 4.1);
   //RooRealVar n1s_1("n1s_1","power order", initPset.n1s_1 , 1.0, initPset.n1s_1*1.25);
   RooFormulaVar n2s_1("n2s_1","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_1("n3s_1","1.0*@0",RooArgList(n1s_1) );
@@ -124,43 +265,43 @@ void doFitUpsilon_Data_CBGaus_NEW(
   RooFormulaVar n2s_2("n2s_2","1.0*@0",RooArgList(n1s_1) );
   RooFormulaVar n3s_2("n3s_2","1.0*@0",RooArgList(n1s_1) );
 
-  //RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
-  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", initPset.f1s, 0, 1);
-  RooFormulaVar f2s("f2s","1.0*@0",RooArgList(*f1s) );
-  RooFormulaVar f3s("f3s","1.0*@0",RooArgList(*f1s) );
+  RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", 0.5, 0, 1);
+  //RooRealVar *f1s = new RooRealVar("f1s","1S CB fraction", initPset.f1s, 0, 1);
+  RooFormulaVar f2s("f2s","1.0*@0",RooArgList(*f1s));
+  RooFormulaVar f3s("f3s","1.0*@0",RooArgList(*f1s));
 
 
   // Set initial parameters
-  if ( initPset.n1s_1 == -1 )
-    {
-      cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
-      cout << "No Param. set for " << kineLabel << ","<<endl;
-      cout << "Fitting macro is stopped!" << endl << endl << endl;
-      return;
-    }
-  else { 
-    cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
-    cout << endl << "Setting the initial  parameters..." << endl << endl;
-    cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
-    cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
-    n1s_1.setVal(initPset.n1s_1);  
-    cout << "initPset.alpha1s_1 = " << initPset.alpha1s_1 << endl;
-    alpha1s_1.setVal(initPset.alpha1s_1);
-    cout << "initPset.sigma1s_1 = " << initPset.sigma1s_1 << endl;
-    sigma1s_1.setVal(initPset.sigma1s_1);
-    cout << "initPset.f1s = " << initPset.f1s << endl;
-    f1s->setVal(initPset.f1s); 
-    cout << "initPset.x1s = " << initPset.x1s << endl;
-    x1s->setVal(initPset.x1s);
-  } 
-  // Fix? 
-  if (fixParameters)   {
-    n1s_1.setConstant();
-    alpha1s_1.setConstant();
-    sigma1s_1.setConstant();
-    f1s->setConstant();
-    x1s->setConstant();
-  }
+  //if ( initPset.n1s_1 == -1 )
+  //  {
+  //    cout << endl << endl << endl << "#########################  ERROR!!!! ##################" << endl;
+  //    cout << "No Param. set for " << kineLabel << ","<<endl;
+  //    cout << "Fitting macro is stopped!" << endl << endl << endl;
+  //    return;
+  //  }
+  //else { 
+  //  cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+  //  cout << endl << "Setting the initial  parameters..." << endl << endl;
+  //  cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+  //  cout << "initPset.n1s_1 = " << initPset.n1s_1 << endl;
+  //  n1s_1.setVal(initPset.n1s_1);  
+  //  cout << "initPset.alpha1s_1 = " << initPset.alpha1s_1 << endl;
+  //  alpha1s_1.setVal(initPset.alpha1s_1);
+  //  cout << "initPset.sigma1s_1 = " << initPset.sigma1s_1 << endl;
+  //  sigma1s_1.setVal(initPset.sigma1s_1);
+  //  cout << "initPset.f1s = " << initPset.f1s << endl;
+  //  f1s->setVal(initPset.f1s); 
+  //  cout << "initPset.x1s = " << initPset.x1s << endl;
+  //  x1s->setVal(initPset.x1s);
+  //} 
+  //// Fix? 
+  //if (fixParameters)   {
+  //  n1s_1.setConstant();
+  //  alpha1s_1.setConstant();
+  //  sigma1s_1.setConstant();
+  //  f1s->setConstant();
+  //  x1s->setConstant();
+  //}
 
   
   RooCBShape* cb1s_1 = new RooCBShape("cball1s_1", "cystal Ball", *(ws->var("mass")), mean1s, sigma1s_1, alpha1s_1, n1s_1);
@@ -225,7 +366,6 @@ void doFitUpsilon_Data_CBGaus_NEW(
 
   cout<<"check1"<<endl;
   valErr getparam;
-  //getparam = getParam (collId, ptLow, ptHigh, yLow, yHigh, cLow, cHigh, dphiEp2Low, dphiEp2High);
   getparam = getParam (collId, ptLow, ptHigh, yLow, yHigh, muPtCut, cLow, cHigh, dphiEp2Low, dphiEp2High);
   cout<<"check2"<<endl;
   if(ptLow < 6){
@@ -420,6 +560,9 @@ void doFitUpsilon_Data_CBGaus_NEW(
   cout << "2S signal    =  " << outh->GetBinContent(2) << " +/- " << outh->GetBinError(2) << endl;
   cout << "3S signal    =  " << outh->GetBinContent(3) << " +/- " << outh->GetBinError(3) << endl;
 
+  cout<<"alpha : "<<ws->var("alpha1s_1")->getVal()-ws->var("alpha1s_1")->getError()<<" : "<<ws->var("alpha1s_1")->getVal()<<" : "<<ws->var("alpha1s_1")->getVal()+ws->var("alpha1s_1")->getError()<<endl;
+  cout<<"n : "<<ws->var("n1s_1")->getVal()-ws->var("n1s_1")->getError()<<" : "<<ws->var("n1s_1")->getVal()<<" : "<<ws->var("n1s_1")->getVal()+ws->var("n1s_1")->getError()<<endl;
+
   setTDRStyle();
   writeExtraText = true;
   extraText = "Preliminary";
@@ -452,7 +595,6 @@ void doFitUpsilon_Data_CBGaus_NEW(
   ws->Write();
 //  outf->Close();
 
-
   ///  cout parameters :
   /*
   cout << "N, alpha, sigma1s, M0, f, X double CB for data " << endl;
@@ -477,6 +619,8 @@ valErr getParam(int collId, float ptLow, float ptHigh, float yLow, float yHigh, 
   ret.sigma = ws->var("#sigma")->getVal();
   }
   ret.lambda = ws->var("#lambda")->getVal();
+  ret.alpha1s = ws->var("alpha1s_1")->getVal();
+  ret.n1s = ws->var("n1s_1")->getVal();
   //cout << kineLabel << ": " << " & " << ret.val << " $\pm$ " << ret.err << " & " <<ws->var("nBkg")->getVal() << " $\pm$ "<< ws->var("nBkg")->getError() << "\\\\" << endl;
   return ret;
 }
