@@ -52,8 +52,9 @@ const int nCentBins3s  = 2;   double centBin3s[nCentBins3s+1] = {0,60,200};
 
 // Glauber variables https://twiki.cern.ch/twiki/pub/CMS/HiCentrality2016/AN-15-080_temp_20161206.pdf
 
-double nPart1s[nCentBins1s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4}; // HIN-16-008 paper
-double nPart2s[nCentBins2s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4};
+double nPart1s[nCentBins1s]   = {8.3, 30.6,53.9, 87.0, 131.4, 189.2, 264.2, 333.3, 384.3}; // HIN-16-008 paper
+//double nPart1s[nCentBins1s]   = {15.47,30.59,53.85,86.95,131.4,189.2,264.3,333.4,384.4}; // HIN-16-008 paper
+double nPart2s[nCentBins1s]   = {8.3, 30.6,53.9, 87.0, 131.4, 189.2, 264.2, 333.3, 384.3}; // HIN-16-008 paper
 double nPart3s[nCentBins3s]   = {46.81, 270.7};
 //double nPart3s[nCentBins3s]   = {46.81, 270.7};
 double nColl1s[nCentBins1s]   = {1819,1432,1005,606,349,186,90.7,40.1,7.67}; 
