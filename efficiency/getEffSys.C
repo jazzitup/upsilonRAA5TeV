@@ -24,9 +24,13 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 void addInQuad ( TH1D* h0=0, TH1D* h1=0) ;
 void getDevRatio ( TH1D* h0=0, TH1D* h1=0) ;
 void getMaxTH1D ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0) ;
+void getMaxTH1D_eight ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0,TH1D* h5=0,TH1D* h6=0, TH1D* h7=0,TH1D* h8=0) ;
+void getMaxTH1D_six ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0,TH1D* h5=0,TH1D* h6=0) ;
+void getMaxTH1D_four ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0) ;
 void addInQuadFive ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D* h5=0);
 void addInQuadSix ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D* h5=0, TH1D* h6=0);
 void addInQuadNine ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D* h5=0, TH1D* h6=0, TH1D* h7=0, TH1D* h8=0, TH1D* h9=0);
+void addInQuadEight ( TH1D* h0=0, TH1D* h1=0, TH1D* h2=0, TH1D* h3=0, TH1D* h4=0, TH1D* h5=0, TH1D* h6=0, TH1D* h7=0, TH1D* h8=0);
 void getEffSys(int state =1, int Nsamples=100) { 
   TH1::SetDefaultSumw2();
 
@@ -114,13 +118,13 @@ void getEffSys(int state =1, int Nsamples=100) {
   relTrgVar6_2->Add( eff6, -1 );     relTrgVar6_2->Divide( eff6);
   relTrgVar7_2->Add( eff7, -1 );     relTrgVar7_2->Divide( eff7);
   // get Max deviation of each bin:
-  getMaxTH1D(eff1TrgVar, relTrgVar1_2, relTrgVar1_2);
-  getMaxTH1D(eff2TrgVar, relTrgVar2_2, relTrgVar2_2);
-  getMaxTH1D(eff3TrgVar, relTrgVar3_2, relTrgVar3_2);
-  getMaxTH1D(eff4TrgVar, relTrgVar4_2, relTrgVar4_2);
-  getMaxTH1D(eff5TrgVar, relTrgVar5_2, relTrgVar5_2);
-  getMaxTH1D(eff6TrgVar, relTrgVar6_2, relTrgVar6_2);
-  getMaxTH1D(eff7TrgVar, relTrgVar7_2, relTrgVar7_2);
+  getMaxTH1D(eff1TrgVar, relTrgVar1_1, relTrgVar1_2);
+  getMaxTH1D(eff2TrgVar, relTrgVar2_1, relTrgVar2_2);
+  getMaxTH1D(eff3TrgVar, relTrgVar3_1, relTrgVar3_2);
+  getMaxTH1D(eff4TrgVar, relTrgVar4_1, relTrgVar4_2);
+  getMaxTH1D(eff5TrgVar, relTrgVar5_1, relTrgVar5_2);
+  getMaxTH1D(eff6TrgVar, relTrgVar6_1, relTrgVar6_2);
+  getMaxTH1D(eff7TrgVar, relTrgVar7_1, relTrgVar7_2);
 
 
 
@@ -165,13 +169,13 @@ void getEffSys(int state =1, int Nsamples=100) {
   relMuIdVar6_2->Add( eff6, -1 );     relMuIdVar6_2->Divide( eff6);
   relMuIdVar7_2->Add( eff7, -1 );     relMuIdVar7_2->Divide( eff7);
   // get Max deviation of each bin:
-  getMaxTH1D(eff1MuIdVar, relMuIdVar1_2, relMuIdVar1_2);
-  getMaxTH1D(eff2MuIdVar, relMuIdVar2_2, relMuIdVar2_2);
-  getMaxTH1D(eff3MuIdVar, relMuIdVar3_2, relMuIdVar3_2);
-  getMaxTH1D(eff4MuIdVar, relMuIdVar4_2, relMuIdVar4_2);
-  getMaxTH1D(eff5MuIdVar, relMuIdVar5_2, relMuIdVar5_2);
-  getMaxTH1D(eff6MuIdVar, relMuIdVar6_2, relMuIdVar6_2);
-  getMaxTH1D(eff7MuIdVar, relMuIdVar7_2, relMuIdVar7_2);
+  getMaxTH1D(eff1MuIdVar, relMuIdVar1_1, relMuIdVar1_2);
+  getMaxTH1D(eff2MuIdVar, relMuIdVar2_1, relMuIdVar2_2);
+  getMaxTH1D(eff3MuIdVar, relMuIdVar3_1, relMuIdVar3_2);
+  getMaxTH1D(eff4MuIdVar, relMuIdVar4_1, relMuIdVar4_2);
+  getMaxTH1D(eff5MuIdVar, relMuIdVar5_1, relMuIdVar5_2);
+  getMaxTH1D(eff6MuIdVar, relMuIdVar6_1, relMuIdVar6_2);
+  getMaxTH1D(eff7MuIdVar, relMuIdVar7_1, relMuIdVar7_2);
 
   ///////////////////// sys. sta variation
   TH1D* eff1StaVar = (TH1D*)eff1sys->Clone("hptEffPPStaVar"); 
@@ -214,13 +218,13 @@ void getEffSys(int state =1, int Nsamples=100) {
   relStaVar6_2->Add( eff6, -1 );     relStaVar6_2->Divide( eff6);
   relStaVar7_2->Add( eff7, -1 );     relStaVar7_2->Divide( eff7);
   // get Max deviation of each bin:
-  getMaxTH1D(eff1StaVar, relStaVar1_2, relStaVar1_2);
-  getMaxTH1D(eff2StaVar, relStaVar2_2, relStaVar2_2);
-  getMaxTH1D(eff3StaVar, relStaVar3_2, relStaVar3_2);
-  getMaxTH1D(eff4StaVar, relStaVar4_2, relStaVar4_2);
-  getMaxTH1D(eff5StaVar, relStaVar5_2, relStaVar5_2);
-  getMaxTH1D(eff6StaVar, relStaVar6_2, relStaVar6_2);
-  getMaxTH1D(eff7StaVar, relStaVar7_2, relStaVar7_2);
+  getMaxTH1D(eff1StaVar, relStaVar1_1, relStaVar1_2);
+  getMaxTH1D(eff2StaVar, relStaVar2_1, relStaVar2_2);
+  getMaxTH1D(eff3StaVar, relStaVar3_1, relStaVar3_2);
+  getMaxTH1D(eff4StaVar, relStaVar4_1, relStaVar4_2);
+  getMaxTH1D(eff5StaVar, relStaVar5_1, relStaVar5_2);
+  getMaxTH1D(eff6StaVar, relStaVar6_1, relStaVar6_2);
+  getMaxTH1D(eff7StaVar, relStaVar7_1, relStaVar7_2);
 
 
   ///////////////////// sys. trk variation
@@ -264,13 +268,13 @@ void getEffSys(int state =1, int Nsamples=100) {
   relTrkVar6_2->Add( eff6, -1 );     relTrkVar6_2->Divide( eff6);
   relTrkVar7_2->Add( eff7, -1 );     relTrkVar7_2->Divide( eff7);
   // get Max deviation of each bin:
-  getMaxTH1D(eff1TrkVar, relTrkVar1_2, relTrkVar1_2);
-  getMaxTH1D(eff2TrkVar, relTrkVar2_2, relTrkVar2_2);
-  getMaxTH1D(eff3TrkVar, relTrkVar3_2, relTrkVar3_2);
-  getMaxTH1D(eff4TrkVar, relTrkVar4_2, relTrkVar4_2);
-  getMaxTH1D(eff5TrkVar, relTrkVar5_2, relTrkVar5_2);
-  getMaxTH1D(eff6TrkVar, relTrkVar6_2, relTrkVar6_2);
-  getMaxTH1D(eff7TrkVar, relTrkVar7_2, relTrkVar7_2);
+  getMaxTH1D(eff1TrkVar, relTrkVar1_1, relTrkVar1_2);
+  getMaxTH1D(eff2TrkVar, relTrkVar2_1, relTrkVar2_2);
+  getMaxTH1D(eff3TrkVar, relTrkVar3_1, relTrkVar3_2);
+  getMaxTH1D(eff4TrkVar, relTrkVar4_1, relTrkVar4_2);
+  getMaxTH1D(eff5TrkVar, relTrkVar5_1, relTrkVar5_2);
+  getMaxTH1D(eff6TrkVar, relTrkVar6_1, relTrkVar6_2);
+  getMaxTH1D(eff7TrkVar, relTrkVar7_1, relTrkVar7_2);
 
   // SF from binnined table:
   TFile* fid_10 = new TFile(Form("efficiencyTableSys/efficiency_ups%ds_useDataPtWeight1_tnp_trgId-10_trkId0_muId-100_staId-100.root",state ) );
@@ -298,14 +302,193 @@ void getEffSys(int state =1, int Nsamples=100) {
   
   
   // pT reweight (nothing to do with TNP
-  TFile* fid_ptw = new TFile(Form("efficiencyTable/efficiency_ups%ds_useDataPtWeight0_tnp_trgId0_trkId0_muId-100_staId-100.root",state )) ;
-  TH1D* eff1ptw = (TH1D*)fid_ptw->Get("hptEffPP");
-  TH1D* eff2ptw = (TH1D*)fid_ptw->Get("hptEffAA");
-  TH1D* eff3ptw = (TH1D*)fid_ptw->Get("hrapEffPP");
-  TH1D* eff4ptw = (TH1D*)fid_ptw->Get("hrapEffAA");
-  TH1D* eff5ptw = (TH1D*)fid_ptw->Get("hcentintEffPP");
-  TH1D* eff6ptw = (TH1D*)fid_ptw->Get("hcentintEffAA");
-  TH1D* eff7ptw = (TH1D*)fid_ptw->Get("hcentEffAA");
+  
+  TH1D* eff1_Cup; 
+  TH1D* eff2_Cup; 
+  TH1D* eff3_Cup; 
+  TH1D* eff4_Cup; 
+  TH1D* eff5_Cup; 
+  TH1D* eff6_Cup; 
+  TH1D* eff7_Cup; 
+
+  TH1D* eff1_Dup; 
+  TH1D* eff2_Dup; 
+  TH1D* eff3_Dup; 
+  TH1D* eff4_Dup; 
+  TH1D* eff5_Dup; 
+  TH1D* eff6_Dup; 
+  TH1D* eff7_Dup; 
+
+  TH1D* eff1_Cdo; 
+  TH1D* eff2_Cdo; 
+  TH1D* eff3_Cdo; 
+  TH1D* eff4_Cdo; 
+  TH1D* eff5_Cdo; 
+  TH1D* eff6_Cdo; 
+  TH1D* eff7_Cdo; 
+
+  TH1D* eff1_Ddo; 
+  TH1D* eff2_Ddo; 
+  TH1D* eff3_Ddo; 
+  TH1D* eff4_Ddo; 
+  TH1D* eff5_Ddo; 
+  TH1D* eff6_Ddo; 
+  TH1D* eff7_Ddo; 
+
+
+  TFile* fAup = new TFile(Form("efficiencyTable/VarAup_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+  TFile* fAdo = new TFile(Form("efficiencyTable/VarAdo_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+  TFile* fBup = new TFile(Form("efficiencyTable/VarBup_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+  TFile* fBdo = new TFile(Form("efficiencyTable/VarBdo_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+  TFile* fCup;
+  TFile* fDup;
+  TFile* fCdo;
+  TFile* fDdo;
+  if(state == 1)
+  {
+    fCup = new TFile(Form("efficiencyTable/VarCup_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+    fCdo = new TFile(Form("efficiencyTable/VarCdo_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+    fDup = new TFile(Form("efficiencyTable/VarDup_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+    fDdo = new TFile(Form("efficiencyTable/VarDdo_efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root",state) );
+    eff1_Cup = (TH1D*)fCup->Get("hptEffPP");
+    eff2_Cup = (TH1D*)fCup->Get("hptEffAA");
+    eff3_Cup = (TH1D*)fCup->Get("hrapEffPP");
+    eff4_Cup = (TH1D*)fCup->Get("hrapEffAA");
+    eff5_Cup = (TH1D*)fCup->Get("hcentintEffPP");
+    eff6_Cup = (TH1D*)fCup->Get("hcentintEffAA");
+    eff7_Cup = (TH1D*)fCup->Get("hcentEffAA");
+
+    eff1_Dup = (TH1D*)fDup->Get("hptEffPP");
+    eff2_Dup = (TH1D*)fDup->Get("hptEffAA");
+    eff3_Dup = (TH1D*)fDup->Get("hrapEffPP");
+    eff4_Dup = (TH1D*)fDup->Get("hrapEffAA");
+    eff5_Dup = (TH1D*)fDup->Get("hcentintEffPP");
+    eff6_Dup = (TH1D*)fDup->Get("hcentintEffAA");
+    eff7_Dup = (TH1D*)fDup->Get("hcentEffAA");
+
+    eff1_Cdo = (TH1D*)fCdo->Get("hptEffPP");
+    eff2_Cdo = (TH1D*)fCdo->Get("hptEffAA");
+    eff3_Cdo = (TH1D*)fCdo->Get("hrapEffPP");
+    eff4_Cdo = (TH1D*)fCdo->Get("hrapEffAA");
+    eff5_Cdo = (TH1D*)fCdo->Get("hcentintEffPP");
+    eff6_Cdo = (TH1D*)fCdo->Get("hcentintEffAA");
+    eff7_Cdo = (TH1D*)fCdo->Get("hcentEffAA");
+
+    eff1_Ddo = (TH1D*)fDdo->Get("hptEffPP");
+    eff2_Ddo = (TH1D*)fDdo->Get("hptEffAA");
+    eff3_Ddo = (TH1D*)fDdo->Get("hrapEffPP");
+    eff4_Ddo = (TH1D*)fDdo->Get("hrapEffAA");
+    eff5_Ddo = (TH1D*)fDdo->Get("hcentintEffPP");
+    eff6_Ddo = (TH1D*)fDdo->Get("hcentintEffAA");
+    eff7_Ddo = (TH1D*)fDdo->Get("hcentEffAA");
+  
+    eff1_Cup->Add( eff1, -1 );     eff1_Cup->Divide( eff1);
+    eff2_Cup->Add( eff2, -1 );     eff2_Cup->Divide( eff2);
+    eff3_Cup->Add( eff3, -1 );     eff3_Cup->Divide( eff3);
+    eff4_Cup->Add( eff4, -1 );     eff4_Cup->Divide( eff4);
+    eff5_Cup->Add( eff5, -1 );     eff5_Cup->Divide( eff5);
+    eff6_Cup->Add( eff6, -1 );     eff6_Cup->Divide( eff6);
+    eff7_Cup->Add( eff7, -1 );     eff7_Cup->Divide( eff7);
+
+    eff1_Dup->Add( eff1, -1 );     eff1_Dup->Divide( eff1);
+    eff2_Dup->Add( eff2, -1 );     eff2_Dup->Divide( eff2);
+    eff3_Dup->Add( eff3, -1 );     eff3_Dup->Divide( eff3);
+    eff4_Dup->Add( eff4, -1 );     eff4_Dup->Divide( eff4);
+    eff5_Dup->Add( eff5, -1 );     eff5_Dup->Divide( eff5);
+    eff6_Dup->Add( eff6, -1 );     eff6_Dup->Divide( eff6);
+    eff7_Dup->Add( eff7, -1 );     eff7_Dup->Divide( eff7);
+
+    eff1_Cdo->Add( eff1, -1 );     eff1_Cdo->Divide( eff1);
+    eff2_Cdo->Add( eff2, -1 );     eff2_Cdo->Divide( eff2);
+    eff3_Cdo->Add( eff3, -1 );     eff3_Cdo->Divide( eff3);
+    eff4_Cdo->Add( eff4, -1 );     eff4_Cdo->Divide( eff4);
+    eff5_Cdo->Add( eff5, -1 );     eff5_Cdo->Divide( eff5);
+    eff6_Cdo->Add( eff6, -1 );     eff6_Cdo->Divide( eff6);
+    eff7_Cdo->Add( eff7, -1 );     eff7_Cdo->Divide( eff7);
+
+    eff1_Ddo->Add( eff1, -1 );     eff1_Ddo->Divide( eff1);
+    eff2_Ddo->Add( eff2, -1 );     eff2_Ddo->Divide( eff2);
+    eff3_Ddo->Add( eff3, -1 );     eff3_Ddo->Divide( eff3);
+    eff4_Ddo->Add( eff4, -1 );     eff4_Ddo->Divide( eff4);
+    eff5_Ddo->Add( eff5, -1 );     eff5_Ddo->Divide( eff5);
+    eff6_Ddo->Add( eff6, -1 );     eff6_Ddo->Divide( eff6);
+    eff7_Ddo->Add( eff7, -1 );     eff7_Ddo->Divide( eff7);
+
+  }
+
+  TH1D* eff1_Aup = (TH1D*)fAup->Get("hptEffPP");
+  TH1D* eff2_Aup = (TH1D*)fAup->Get("hptEffAA");
+  TH1D* eff3_Aup = (TH1D*)fAup->Get("hrapEffPP");
+  TH1D* eff4_Aup = (TH1D*)fAup->Get("hrapEffAA");
+  TH1D* eff5_Aup = (TH1D*)fAup->Get("hcentintEffPP");
+  TH1D* eff6_Aup = (TH1D*)fAup->Get("hcentintEffAA");
+  TH1D* eff7_Aup = (TH1D*)fAup->Get("hcentEffAA");
+
+  TH1D* eff1_Bup = (TH1D*)fBup->Get("hptEffPP");
+  TH1D* eff2_Bup = (TH1D*)fBup->Get("hptEffAA");
+  TH1D* eff3_Bup = (TH1D*)fBup->Get("hrapEffPP");
+  TH1D* eff4_Bup = (TH1D*)fBup->Get("hrapEffAA");
+  TH1D* eff5_Bup = (TH1D*)fBup->Get("hcentintEffPP");
+  TH1D* eff6_Bup = (TH1D*)fBup->Get("hcentintEffAA");
+  TH1D* eff7_Bup = (TH1D*)fBup->Get("hcentEffAA");
+
+  TH1D* eff1_Ado = (TH1D*)fAdo->Get("hptEffPP");
+  TH1D* eff2_Ado = (TH1D*)fAdo->Get("hptEffAA");
+  TH1D* eff3_Ado = (TH1D*)fAdo->Get("hrapEffPP");
+  TH1D* eff4_Ado = (TH1D*)fAdo->Get("hrapEffAA");
+  TH1D* eff5_Ado = (TH1D*)fAdo->Get("hcentintEffPP");
+  TH1D* eff6_Ado = (TH1D*)fAdo->Get("hcentintEffAA");
+  TH1D* eff7_Ado = (TH1D*)fAdo->Get("hcentEffAA");
+
+  TH1D* eff1_Bdo = (TH1D*)fBdo->Get("hptEffPP");
+  TH1D* eff2_Bdo = (TH1D*)fBdo->Get("hptEffAA");
+  TH1D* eff3_Bdo = (TH1D*)fBdo->Get("hrapEffPP");
+  TH1D* eff4_Bdo = (TH1D*)fBdo->Get("hrapEffAA");
+  TH1D* eff5_Bdo = (TH1D*)fBdo->Get("hcentintEffPP");
+  TH1D* eff6_Bdo = (TH1D*)fBdo->Get("hcentintEffAA");
+  TH1D* eff7_Bdo = (TH1D*)fBdo->Get("hcentEffAA");
+
+
+  eff1_Aup->Add( eff1, -1 );     eff1_Aup->Divide( eff1);
+  eff2_Aup->Add( eff2, -1 );     eff2_Aup->Divide( eff2);
+  eff3_Aup->Add( eff3, -1 );     eff3_Aup->Divide( eff3);
+  eff4_Aup->Add( eff4, -1 );     eff4_Aup->Divide( eff4);
+  eff5_Aup->Add( eff5, -1 );     eff5_Aup->Divide( eff5);
+  eff6_Aup->Add( eff6, -1 );     eff6_Aup->Divide( eff6);
+  eff7_Aup->Add( eff7, -1 );     eff7_Aup->Divide( eff7);
+
+  eff1_Bup->Add( eff1, -1 );     eff1_Bup->Divide( eff1);
+  eff2_Bup->Add( eff2, -1 );     eff2_Bup->Divide( eff2);
+  eff3_Bup->Add( eff3, -1 );     eff3_Bup->Divide( eff3);
+  eff4_Bup->Add( eff4, -1 );     eff4_Bup->Divide( eff4);
+  eff5_Bup->Add( eff5, -1 );     eff5_Bup->Divide( eff5);
+  eff6_Bup->Add( eff6, -1 );     eff6_Bup->Divide( eff6);
+  eff7_Bup->Add( eff7, -1 );     eff7_Bup->Divide( eff7);
+
+  eff1_Ado->Add( eff1, -1 );     eff1_Ado->Divide( eff1);
+  eff2_Ado->Add( eff2, -1 );     eff2_Ado->Divide( eff2);
+  eff3_Ado->Add( eff3, -1 );     eff3_Ado->Divide( eff3);
+  eff4_Ado->Add( eff4, -1 );     eff4_Ado->Divide( eff4);
+  eff5_Ado->Add( eff5, -1 );     eff5_Ado->Divide( eff5);
+  eff6_Ado->Add( eff6, -1 );     eff6_Ado->Divide( eff6);
+  eff7_Ado->Add( eff7, -1 );     eff7_Ado->Divide( eff7);
+
+  eff1_Bdo->Add( eff1, -1 );     eff1_Bdo->Divide( eff1);
+  eff2_Bdo->Add( eff2, -1 );     eff2_Bdo->Divide( eff2);
+  eff3_Bdo->Add( eff3, -1 );     eff3_Bdo->Divide( eff3);
+  eff4_Bdo->Add( eff4, -1 );     eff4_Bdo->Divide( eff4);
+  eff5_Bdo->Add( eff5, -1 );     eff5_Bdo->Divide( eff5);
+  eff6_Bdo->Add( eff6, -1 );     eff6_Bdo->Divide( eff6);
+  eff7_Bdo->Add( eff7, -1 );     eff7_Bdo->Divide( eff7);
+
+  TH1D* eff1ptw = (TH1D*)eff1_Aup->Clone("hptRelSysPtwPP");   eff1ptw->Reset();
+  TH1D* eff2ptw = (TH1D*)eff2_Aup->Clone("hptRelSysPtwAA");   eff2ptw->Reset();
+  TH1D* eff3ptw = (TH1D*)eff3_Aup->Clone("hrapRelSysPtwPP");   eff3ptw->Reset();
+  TH1D* eff4ptw = (TH1D*)eff4_Aup->Clone("hrapRelSysPtwAA");   eff4ptw->Reset();
+  TH1D* eff5ptw = (TH1D*)eff5_Aup->Clone("hcentintRelSysPtwPP");   eff5ptw->Reset();
+  TH1D* eff6ptw = (TH1D*)eff6_Aup->Clone("hcentintRelSysPtwAA");   eff6ptw->Reset();
+  TH1D* eff7ptw = (TH1D*)eff7_Aup->Clone("hcentRelSysPtwAA");   eff7ptw->Reset();
+  
   eff1ptw ->SetName("hptRelSysPtwPP");
   eff2ptw ->SetName("hptRelSysPtwAA");
   eff3ptw ->SetName("hrapRelSysPtwPP");
@@ -313,14 +496,32 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff5ptw ->SetName("hcentintRelSysPtwPP");
   eff6ptw ->SetName("hcentintRelSysPtwAA");
   eff7ptw ->SetName("hcentRelSysPtwAA");
-  eff1ptw->Add( eff1, -1 );     eff1ptw->Divide( eff1);
-  eff2ptw->Add( eff2, -1 );     eff2ptw->Divide( eff2);
-  eff3ptw->Add( eff3, -1 );     eff3ptw->Divide( eff3);
-  eff4ptw->Add( eff4, -1 );     eff4ptw->Divide( eff4);
-  eff5ptw->Add( eff5, -1 );     eff5ptw->Divide( eff5);
-  eff6ptw->Add( eff6, -1 );     eff6ptw->Divide( eff6);
-  eff7ptw->Add( eff7, -1 );     eff7ptw->Divide( eff7);
 
+  cout << "eff1_Aup : " << eff1_Aup->GetBinContent(1) << endl;
+  if(state == 1)
+  {
+    getMaxTH1D_eight(eff1ptw, eff1_Aup, eff1_Ado, eff1_Bup, eff1_Bdo, eff1_Cup, eff1_Cdo, eff1_Dup, eff1_Ddo);
+    getMaxTH1D_eight(eff2ptw, eff2_Aup, eff2_Ado, eff2_Bup, eff2_Bdo, eff2_Cup, eff2_Cdo, eff2_Dup, eff2_Ddo);
+    getMaxTH1D_eight(eff3ptw, eff3_Aup, eff3_Ado, eff3_Bup, eff3_Bdo, eff3_Cup, eff3_Cdo, eff3_Dup, eff3_Ddo);
+    getMaxTH1D_eight(eff4ptw, eff4_Aup, eff4_Ado, eff4_Bup, eff4_Bdo, eff4_Cup, eff4_Cdo, eff4_Dup, eff4_Ddo);
+    getMaxTH1D_eight(eff5ptw, eff5_Aup, eff5_Ado, eff5_Bup, eff5_Bdo, eff5_Cup, eff5_Cdo, eff5_Dup, eff5_Ddo);
+    getMaxTH1D_eight(eff6ptw, eff6_Aup, eff6_Ado, eff6_Bup, eff6_Bdo, eff6_Cup, eff6_Cdo, eff6_Dup, eff6_Ddo);
+    getMaxTH1D_eight(eff7ptw, eff7_Aup, eff7_Ado, eff7_Bup, eff7_Bdo, eff7_Cup, eff7_Cdo, eff7_Dup, eff7_Ddo);
+  }
+  else if(state != 1)
+  {
+    getMaxTH1D_four(eff1ptw, eff1_Bup, eff1_Bdo, eff1_Aup, eff1_Ado);
+    getMaxTH1D_four(eff2ptw, eff2_Bup, eff2_Bdo, eff2_Aup, eff2_Ado);
+    getMaxTH1D_four(eff3ptw, eff3_Bup, eff3_Bdo, eff3_Aup, eff3_Ado);
+    getMaxTH1D_four(eff4ptw, eff4_Bup, eff4_Bdo, eff4_Aup, eff4_Ado);
+    getMaxTH1D_four(eff5ptw, eff5_Bup, eff5_Bdo, eff5_Aup, eff5_Ado);
+    getMaxTH1D_four(eff6ptw, eff6_Bup, eff6_Bdo, eff6_Aup, eff6_Ado);
+    getMaxTH1D_four(eff7ptw, eff7_Bup, eff7_Bdo, eff7_Aup, eff7_Ado);
+  }
+
+
+  cout << "ptw output : " << eff1ptw->GetBinContent(1) << endl;
+  
   // stat trig
   for ( int idx=1 ; idx<= Nsamples ; idx++) {
     if ( idx%50 == 0) { cout <<"Reading "  << idx<<"th file..." << endl;} 
@@ -333,6 +534,10 @@ void getEffSys(int state =1, int Nsamples=100) {
     TH1D* relativeDev6 = (TH1D*)fid->Get("hcentintEffAA");
     TH1D* relativeDev7 = (TH1D*)fid->Get("hcentEffAA");
     
+    cout << " id : " << idx << endl;
+    cout << "relativeDev1 : " << relativeDev1->GetBinContent(1) << endl;
+    cout << "efficiency : " << eff1->GetBinContent(1) << endl;
+    cout << endl;
     relativeDev1->Add( eff1, -1 );     relativeDev1->Divide( eff1);
     relativeDev2->Add( eff2, -1 );     relativeDev2->Divide( eff2);
     relativeDev3->Add( eff3, -1 );     relativeDev3->Divide( eff3);
@@ -340,6 +545,7 @@ void getEffSys(int state =1, int Nsamples=100) {
     relativeDev5->Add( eff5, -1 );     relativeDev5->Divide( eff5);
     relativeDev6->Add( eff6, -1 );     relativeDev6->Divide( eff6);
     relativeDev7->Add( eff7, -1 );     relativeDev7->Divide( eff7);
+
 
     addInQuad( eff1statTrg, relativeDev1 ) ;
     addInQuad( eff2statTrg, relativeDev2 ) ;
@@ -357,6 +563,9 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff5statTrg->Scale( 1./sqrt( float(Nsamples) ) );
   eff6statTrg->Scale( 1./sqrt( float(Nsamples) ) );
   eff7statTrg->Scale( 1./sqrt( float(Nsamples) ) );
+
+  cout << "stat Tgr :!!! " << eff1statTrg->GetBinContent(1) << endl; 
+
 
   // stat muid
   for ( int idx=1 ; idx<= Nsamples ; idx++) {
@@ -433,6 +642,15 @@ void getEffSys(int state =1, int Nsamples=100) {
   eff7statSta->Scale( 1./sqrt( float(Nsamples) ) );
   
 
+  cout << " eff3TrgVar : " << eff3TrgVar->GetBinContent(1) << endl;
+  cout << " eff3MuIdVar : " << eff3MuIdVar->GetBinContent(1) << endl;
+  cout << " eff3StaVar : " << eff3StaVar->GetBinContent(1) << endl;
+  cout << " eff3TrkVar : " << eff3TrkVar->GetBinContent(1) << endl;
+  cout << " eff3binned : " << eff3binned->GetBinContent(1) << endl;
+  cout << " eff3ptw : " << eff1ptw->GetBinContent(1) << endl;
+  cout << " eff3statTrg : " << eff3statTrg->GetBinContent(1) << endl;
+  cout << " eff3statMuId : " << eff3statMuId->GetBinContent(1) << endl;
+  cout << " eff3statsta : " << eff3statSta->GetBinContent(1) << endl;
   // Merge them! 
   addInQuadNine( eff1sys,  eff1TrgVar, eff1MuIdVar, eff1StaVar, eff1TrkVar, eff1binned, eff1ptw, eff1statTrg, eff1statMuId, eff1statSta);
   addInQuadNine( eff2sys,  eff2TrgVar, eff2MuIdVar, eff2StaVar, eff2TrkVar, eff2binned, eff2ptw, eff2statTrg, eff2statMuId, eff2statSta);
@@ -442,6 +660,14 @@ void getEffSys(int state =1, int Nsamples=100) {
   addInQuadNine( eff6sys,  eff6TrgVar, eff6MuIdVar, eff6StaVar, eff6TrkVar, eff6binned, eff6ptw, eff6statTrg, eff6statMuId, eff6statSta);
   addInQuadNine( eff7sys,  eff7TrgVar, eff7MuIdVar, eff7StaVar, eff7TrkVar, eff7binned, eff7ptw, eff7statTrg, eff7statMuId, eff7statSta);
   
+/*  addInQuadEight( eff1sys,  eff1TrgVar, eff1MuIdVar, eff1StaVar, eff1TrkVar, eff1binned, eff1statTrg, eff1statMuId, eff1statSta);
+  addInQuadEight( eff2sys,  eff2TrgVar, eff2MuIdVar, eff2StaVar, eff2TrkVar, eff2binned, eff2statTrg, eff2statMuId, eff2statSta);
+  addInQuadEight( eff3sys,  eff3TrgVar, eff3MuIdVar, eff3StaVar, eff3TrkVar, eff3binned, eff3statTrg, eff3statMuId, eff3statSta);
+  addInQuadEight( eff4sys,  eff4TrgVar, eff4MuIdVar, eff4StaVar, eff4TrkVar, eff4binned, eff4statTrg, eff4statMuId, eff4statSta);
+  addInQuadEight( eff5sys,  eff5TrgVar, eff5MuIdVar, eff5StaVar, eff5TrkVar, eff5binned, eff5statTrg, eff5statMuId, eff5statSta);
+  addInQuadEight( eff6sys,  eff6TrgVar, eff6MuIdVar, eff6StaVar, eff6TrkVar, eff6binned, eff6statTrg, eff6statMuId, eff6statSta);
+  addInQuadEight( eff7sys,  eff7TrgVar, eff7MuIdVar, eff7StaVar, eff7TrkVar, eff7binned, eff7statTrg, eff7statMuId, eff7statSta);
+  */
   TFile* fout = new TFile(Form("sys_efficiency_ups%d.root",state),"recreate");
   eff1sys->Write(); // eff1sysVar->Write(); eff1binned->Write(); eff1sta->Write(); eff1muid->Write(); eff1stat->Write(); eff1ptw->Write();
   eff2sys->Write(); // eff2sysVar->Write(); eff2binned->Write(); eff2sta->Write(); eff2muid->Write(); eff2stat->Write(); eff2ptw->Write();
@@ -601,6 +827,106 @@ void addInQuadNine ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5,
   }
 }
 
+void addInQuadEight ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5, TH1D* h6, TH1D* h7, TH1D* h8) {
+  if ( h0->GetNbinsX() != h1->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h2->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h3->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h4->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h5->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h6->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h7->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h8->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  for ( int i=1 ;  i<=h0->GetNbinsX(); i++) {
+    float x1 =  h1->GetBinContent(i);
+    float x2 =  h2->GetBinContent(i);
+    float x3 =  h3->GetBinContent(i);
+    float x4 =  h4->GetBinContent(i);
+    float x5 =  h5->GetBinContent(i);
+    float x6 =  h6->GetBinContent(i);
+    float x7 =  h7->GetBinContent(i);
+    float x8 =  h8->GetBinContent(i);
+    h0->SetBinContent(i,  sqrt ( x1*x1 + x2*x2 + x3*x3 + x4*x4 + x5*x5 + x6*x6 + x7*x7 + x8*x8) );
+  }
+}
+
+void getMaxTH1D_eight ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5, TH1D* h6, TH1D* h7, TH1D* h8) {
+  if ( h0->GetNbinsX() != h1->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h2->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h3->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h4->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h5->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h6->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h7->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h8->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+
+  for ( int i=1 ;  i<=h0->GetNbinsX(); i++) {
+    float x1 =  fabs(h1->GetBinContent(i));
+    float x2 =  fabs(h2->GetBinContent(i));
+    float x3 =  fabs(h3->GetBinContent(i));
+    float x4 =  fabs(h4->GetBinContent(i));
+    float x5 =  fabs(h5->GetBinContent(i));
+    float x6 =  fabs(h6->GetBinContent(i));
+    float x7 =  fabs(h7->GetBinContent(i));
+    float x8 =  fabs(h8->GetBinContent(i));
+    float x = 0;
+    if ( x1 > x2 ) x = x1;
+    else x = x2;
+    if ( x <= x3) x = x3;
+    if ( x <= x4) x = x4;
+    if ( x <= x5) x = x5;
+    if ( x <= x6) x = x6;
+    if ( x <= x7) x = x7;
+    if ( x <= x8) x = x8;
+    h0->SetBinContent(i, x );
+  }
+}
+
+
+void getMaxTH1D_six ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4, TH1D* h5, TH1D* h6) {
+  if ( h0->GetNbinsX() != h1->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h2->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h3->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h4->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h5->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h6->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+
+  for ( int i=1 ;  i<=h0->GetNbinsX(); i++) {
+    float x1 =  fabs(h1->GetBinContent(i));
+    float x2 =  fabs(h2->GetBinContent(i));
+    float x3 =  fabs(h3->GetBinContent(i));
+    float x4 =  fabs(h4->GetBinContent(i));
+    float x5 =  fabs(h5->GetBinContent(i));
+    float x6 =  fabs(h6->GetBinContent(i));
+    float x = 0;
+    if ( x1 > x2 ) x = x1;
+    else x = x2;
+    if ( x <= x3) x = x3;
+    if ( x <= x4) x = x4;
+    if ( x <= x5) x = x5;
+    if ( x <= x6) x = x6;
+    h0->SetBinContent(i, x );
+  }
+}
+
+void getMaxTH1D_four ( TH1D* h0, TH1D* h1, TH1D* h2, TH1D* h3, TH1D* h4) {
+  if ( h0->GetNbinsX() != h1->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h2->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h3->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+  if ( h0->GetNbinsX() != h4->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
+
+  for ( int i=1 ;  i<=h0->GetNbinsX(); i++) {
+    float x1 =  fabs(h1->GetBinContent(i));
+    float x2 =  fabs(h2->GetBinContent(i));
+    float x3 =  fabs(h3->GetBinContent(i));
+    float x4 =  fabs(h4->GetBinContent(i));
+    float x = 0;
+    if ( x1 > x2 ) x = x1;
+    else x = x2;
+    if ( x <= x3) x = x3;
+    if ( x <= x4) x = x4;
+    h0->SetBinContent(i, x );
+  }
+}
 
 void getMaxTH1D ( TH1D* h0, TH1D* h1, TH1D* h2) {
   if ( h0->GetNbinsX() != h1->GetNbinsX() )   cout << " Bin numbers are not consistent!" << endl;
@@ -614,5 +940,5 @@ void getMaxTH1D ( TH1D* h0, TH1D* h1, TH1D* h2) {
     else
       h0->SetBinContent(i, x2 );
   }
-  
 }
+

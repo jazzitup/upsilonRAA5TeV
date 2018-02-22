@@ -14,11 +14,12 @@ TLegend *leg = new TLegend(0.55,0.2, 0.85,0.4,NULL,"brNDC");
 
 
 
-void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true, 
-			  int trgIdx=0,  int trkIdx=0, int muIdx=0,  int staIdx=0 //  id = -100 means no correction on this 
+void getEfficiencyUpsilon(int state = 3, bool useDataWeight=true, 
+			  int trgIdx=0,  int trkIdx=0, int muIdx=-100,  int staIdx=-100 //  id = -100 means no correction on this 
 			  ) {  // 1S, 2S, 3S
   TH1::SetDefaultSumw2();
-  
+  gStyle->SetOptStat(0);
+
   TH1D* ncoll1SBin = new TH1D("ncoll1sbin","", nCentBins1s, centBin1s );
   for ( int ii = 1 ; ii <= nCentBins1s ; ii++ )
     {
@@ -31,7 +32,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
   
   
   float massLow = 8;
-  float massHigh = 13;
+  float massHigh = 14;
   
   int nPtBins=0;
   double* ptBin;
@@ -100,18 +101,62 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
   
   TString fnameAA;
   TString fnamePP;
+
+  TF1 *fWgtAA;
+  TF1 *fWgtPP;
+
+  double parm_AA1[4] = {255.074, -93.4016, 44.2256, -4.81048};
+  double parm_AA2[2] = {0.778896, 0.0209981};
+  double parm_PP1[4] = {200.759, 7.09569, 25.3727, -4.51979};
+  double parm_PP2[2] = {0.569212, 0.0637386};
+
+  double parm_AA1_up[4] = {320.738, -77.2557, 48.3587, -4.21744};
+  double parm_AA2_up[2] = {1.08026, 0.0468831};
+  double parm_PP1_up[4] = {254.905, 17.5645, 26.6928, -4.04741};
+  double parm_PP2_up[2] = {0.592215, 0.066485};
+
+  double parm_AA1_do[4] = {189.409, -109.547, 40.0926, -5.40352};
+  double parm_AA2_do[2] = {0.477534, -0.00488679};
+  double parm_PP1_do[4] = {146.613, -3.37308, 24.0526, -4.99218};
+  double parm_PP2_do[2] = { 0.546209, 0.0609922};
+
   if ( state == 1) { 
-    fnamePP = "../skimmedFilesWeight2/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281226_.root"; 
-    fnameAA = "../skimmedFilesWeight2/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281233_.root";  
+    fnamePP = "../skimmedFiles/yskimPP_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281226_.root"; 
+    fnameAA = "../skimmedFiles/yskimAA_MC_Ups1S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281233_.root";  
+    fWgtAA = new TF1("fWgtAA","( [0] + [1]*x + [2]*x*x ) / (  (x-[3])*(x-[3])*(x-[3])  )", 0, 30);
+    fWgtPP = new TF1("fWgtPP","( [0] + [1]*x + [2]*x*x ) / (  (x-[3])*(x-[3])*(x-[3])  )", 0, 30);
+    fWgtAA -> SetParameters(parm_AA1[0],parm_AA1[1],parm_AA1[2],parm_AA1[3] );
+    fWgtPP -> SetParameters(parm_PP1[0],parm_PP1[1],parm_PP1[2],parm_PP1[3] );
+    //fWgtAA -> SetParameters(parm_AA1_up[0],parm_AA1_up[1],parm_AA1_up[2],parm_AA1_up[3] );
+    //fWgtPP -> SetParameters(parm_PP1_up[0],parm_PP1_up[1],parm_PP1_up[2],parm_PP1_up[3] );
+    //fWgtAA -> SetParameters(parm_AA1_do[0],parm_AA1_do[1],parm_AA1_do[2],parm_AA1_do[3] );
+    //fWgtPP -> SetParameters(parm_PP1_do[0],parm_PP1_do[1],parm_PP1_do[2],parm_PP1_do[3] );
   }
   else if ( state == 2 ) { 
-    fnamePP = "../skimmedFilesWeight2/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281228_.root";
-    fnameAA = "../skimmedFilesWeight2/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281234_.root";
+    fnamePP = "../skimmedFiles/yskimPP_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281228_.root";
+    fnameAA = "../skimmedFiles/yskimAA_MC_Ups2S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281234_.root";
+    fWgtAA = new TF1("fWgtAA","( [0] + [1]*x )", 0, 30);   
+    fWgtPP = new TF1("fWgtPP","( [0] + [1]*x )", 0, 30);
+    fWgtAA -> SetParameters(parm_AA2[0],parm_AA2[1] );
+    fWgtPP -> SetParameters(parm_PP2[0],parm_PP2[1] );
+    //fWgtAA -> SetParameters(parm_AA2_up[0],parm_AA2_up[1]);
+    //fWgtPP -> SetParameters(parm_PP2_up[0],parm_PP2_up[1]);
+    //fWgtAA -> SetParameters(parm_AA2_do[0],parm_AA2_do[1]);
+    //fWgtPP -> SetParameters(parm_PP2_do[0],parm_PP2_do[1]);
   }
   else if ( state == 3 ) { 
-    fnamePP = "../skimmedFilesWeight2/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281230_.root"; 
-    fnameAA = "../skimmedFilesWeight2/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281235_.root"; 
+    fnamePP = "../skimmedFiles/yskimPP_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281230_.root"; 
+    fnameAA = "../skimmedFiles/yskimAA_MC_Ups3S_Trig-L1DoubleMu0_OpSign_EP-OppositeHF_20161281235_.root"; 
+    fWgtAA = new TF1("fWgtAA","( [0] + [1]*x )", 0, 30);
+    fWgtPP = new TF1("fWgtPP","( [0] + [1]*x )", 0, 30);
+    fWgtAA -> SetParameters(parm_AA2[0],parm_AA2[1] );
+    fWgtPP -> SetParameters(parm_PP2[0],parm_PP2[1] );
+    //fWgtAA -> SetParameters(parm_AA2_up[0],parm_AA2_up[1]);
+    //fWgtPP -> SetParameters(parm_PP2_up[0],parm_PP2_up[1]);
+    //fWgtAA -> SetParameters(parm_AA2_do[0],parm_AA2_do[1]);
+    //fWgtPP -> SetParameters(parm_PP2_do[0],parm_PP2_do[1]);
   }
+    
   
   TChain *mmAA = new TChain("mm");
   mmAA->Add(fnameAA);
@@ -134,9 +179,11 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
 	       && ( fabs(dmAA.y) < yMax)	      )
 	  )
       continue;
-    
+
+
     float ptWeight = dmAA.weight0; 
-    if (useDataWeight) ptWeight = dmAA.weight;
+    if (useDataWeight) ptWeight = dmAA.weight0 * fWgtAA->Eval(dmAA.pt);
+    //if (useDataWeight) ptWeight = dmAA.weight;
     float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmAA.cBin ) ) ;
     float tnpWeight = 1;
     if ( trgIdx > -100 )   {
@@ -181,7 +228,8 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
       continue;
     
     float ptWeight = dmGenAA.weight0;
-    if (useDataWeight) ptWeight = dmGenAA.weight;
+    if (useDataWeight) ptWeight = dmGenAA.weight0 * fWgtAA->Eval(dmGenAA.pt);
+    //if (useDataWeight) ptWeight = dmGenAA.weight;
     float ncollWeight =  ncoll1SBin->GetBinContent(  ncoll1SBin->FindBin( dmGenAA.cBin ) ) ;
     hcentintGenAA->Fill( dmGenAA.cBin, ptWeight*ncollWeight);
     hcentGenAA->Fill   ( dmGenAA.cBin, ptWeight*ncollWeight);
@@ -213,7 +261,8 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
       continue;
     
     float ptWeight = dmPP.weight0;
-    if (useDataWeight) ptWeight = dmPP.weight;
+    if (useDataWeight) ptWeight = dmPP.weight0 * fWgtPP->Eval(dmPP.pt);
+    //if (useDataWeight) ptWeight = dmPP.weight;
     float tnpWeight = 1; 
   
     if ( trgIdx > -100 )   {
@@ -259,7 +308,8 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
         continue;
       
       float ptWeight = dmGenPP.weight0;
-      if (useDataWeight) ptWeight = dmGenPP.weight;
+      if (useDataWeight) ptWeight = dmGenPP.weight0 * fWgtPP->Eval(dmGenPP.pt);
+      //if (useDataWeight) ptWeight = dmGenPP.weight;
       hcentintGenPP->Fill( dmGenPP.cBin, ptWeight);
       hptGenPP->Fill     ( dmGenPP.pt,   ptWeight);
       hrapGenPP->Fill    ( dmGenPP.y,    ptWeight);
@@ -364,7 +414,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
   leg2->AddEntry(hptEffAA, "PbPb (0-100%)");
   leg2->AddEntry(hptEffPP, "pp");
   leg2->Draw();
-  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
+  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.17,0.82,1,15);
   jumSun(0,1,30,1);
 
   //Print the results for AN table 
@@ -396,12 +446,12 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
   hrapEffPP->SetMarkerStyle(24);
   hrapEffPP->Draw("same");
   TLegend* leg3 = new TLegend(0.4046176,0.3500982,0.8492568,0.5304435,NULL,"brNDC");
-  easyLeg(leg3,"p_{T} < 30 GEV/c");
+  easyLeg(leg3,"p_{T} < 30 GeV/c");
   leg3->AddEntry(hrapEffAA, "PbPb (0-100%)");
   leg3->AddEntry(hrapEffPP, "pp");
   leg3->Draw();
-  jumSun(0,1,30,1);
-  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
+  jumSun(0,1,2.4,1);
+  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.17,0.82,1,15);
 
   // Print the results for the table in for AN
   for ( int ii = 1 ; ii<= nYBins ; ii++)   {
@@ -444,7 +494,7 @@ void getEfficiencyUpsilon(int state = 1, bool useDataWeight=true,
   leg4->AddEntry(hcentintEffAA, "PbPb (0-100%)","l");
   leg4->AddEntry(hcentEffAA, "PbPb","pl");
   leg4->Draw();
-  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.25,0.87,1,15);
+  drawText(Form("#Upsilon(%dS),  p_{T}^{#mu} > 4GeV/c",state),0.17,0.82,1,15);
   jumSun(0,1,200,1);
 
 
