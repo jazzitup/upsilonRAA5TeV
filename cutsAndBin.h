@@ -159,7 +159,7 @@ double lower68_pt2  = 0.00E+00     ;
 double lower68_y1   = 0.00E+00     ;
 double lower68_y2   = 0.00E+00     ;
 double lower68_c2   = 0.00E+00     ;
-double lower68_c1   = 0.00490948   ;
+double lower68_c1   = 0.048408272   ;
 double lower68_cint = 0.00E+00     ;
 
 double upper68_pt1  = 0.091511678 ;
