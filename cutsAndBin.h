@@ -184,7 +184,7 @@ double upper95_y1 =   0.099952628;
 double upper95_y2 =   0.125994869;
 double upper95_c2 =   0.076087933;
 double upper95_c1 =   0.253908129;
-double upper95_cint = 0.094665641;
+double upper95_cint = 0.094618599;
 //Upperlimit CrossSection value
 //double lower68XS_pt1 = 0;
 //double lower68XS_pt2 = 0;
@@ -228,15 +228,36 @@ double upper95_cint = 0.094665641;
 //double upper95XS_y2 =  0.01917852    ;
 
 //Upperlimit CrossSection value 2018_0219
+//double lower68XS_pt1 = 0;
+//double lower68XS_pt2 = 0;
+//double lower68XS_y1 = 0;
+//double lower68XS_y2 = 0;
+//
+//double upper68XS_pt1 = 0.001347207 ;
+//double upper68XS_pt2 = 0.000181412 ;
+//double upper68XS_y1  = 0.010154671 ;
+//double upper68XS_y2  = 0.00991101  ;
+//
+//double lower95XS_pt1 = 0;
+//double lower95XS_pt2 = 0;
+//double lower95XS_y1 = 0;
+//double lower95XS_y2 = 0;
+//
+//double upper95XS_pt1 = 0.001961598 ;
+//double upper95XS_pt2 = 0.000336498 ;
+//double upper95XS_y1 =  0.017516703 ;
+//double upper95XS_y2 =  0.018173723 ;
+
+//Upperlimit CrossSection value 2018_0507
 double lower68XS_pt1 = 0;
 double lower68XS_pt2 = 0;
 double lower68XS_y1 = 0;
 double lower68XS_y2 = 0;
 
-double upper68XS_pt1 = 0.001347207 ;
-double upper68XS_pt2 = 0.000181412 ;
-double upper68XS_y1  = 0.010154671 ;
-double upper68XS_y2  = 0.00991101  ;
+double upper68XS_pt1 = 0.001347207  ;
+double upper68XS_pt2 = 0.000181412  ;
+double upper68XS_y1  = 0.010154671  ;
+double upper68XS_y2  = 0.009911025  ;
 
 double lower95XS_pt1 = 0;
 double lower95XS_pt2 = 0;
@@ -247,7 +268,6 @@ double upper95XS_pt1 = 0.001961598 ;
 double upper95XS_pt2 = 0.000336498 ;
 double upper95XS_y1 =  0.017516703 ;
 double upper95XS_y2 =  0.018173723 ;
-
 // TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
