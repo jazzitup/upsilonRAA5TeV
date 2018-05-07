@@ -159,7 +159,7 @@ double lower68_pt2  = 0.00E+00     ;
 double lower68_y1   = 0.00E+00     ;
 double lower68_y2   = 0.00E+00     ;
 double lower68_c2   = 0.00E+00     ;
-double lower68_c1   = 0.036170831  ;
+double lower68_c1   = 0.00490948   ;
 double lower68_cint = 0.00E+00     ;
 
 double upper68_pt1  = 0.091511678 ;
@@ -168,7 +168,7 @@ double upper68_y1   = 0.057943188 ;
 double upper68_y2   = 0.06871151  ;
 double upper68_c2   = 0.038991035 ;
 double upper68_c1   = 0.18472074  ;
-double upper68_cint = 0.058286666 ;
+double upper68_cint = 0.058262811 ;
 
 double lower95_pt1 = 0;
 double lower95_pt2 = 0;
@@ -264,10 +264,10 @@ double lower95XS_pt2 = 0;
 double lower95XS_y1 = 0;
 double lower95XS_y2 = 0;
 
-double upper95XS_pt1 = 0.001961598 ;
-double upper95XS_pt2 = 0.000336498 ;
-double upper95XS_y1 =  0.017516703 ;
-double upper95XS_y2 =  0.018173723 ;
+double upper95XS_pt1 = 0.002285294  ;
+double upper95XS_pt2 = 0.000336498  ;
+double upper95XS_y1 =  0.017516703  ;
+double upper95XS_y2 =  0.018173723  ;
 // TAA Value
 double TAA1s[nCentBins1s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
 double TAA2s[nCentBins2s+1] = {25.98, 20.46, 14.35, 8.66, 4.978, 2.66, 1.296, 0.5729, 0.1095, 5.607};
