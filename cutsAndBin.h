@@ -258,6 +258,14 @@ double TAA_unc1s[nCentBins1s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081
 double TAA_unc2s[nCentBins2s+1] = {0.017, 0.017, 0.02, 0.028, 0.04, 0.058, 0.081, 0.11, 0.18, 0.089};
 double TAA_unc3s[nCentBins3s+1] = {0.022, 0.12, 0.089};
 
+double TAA_unc1sLo[nCentBins1s+1] = {0.029, 0.03, 0.032, 0.038, 0.049, 0.066, 0.088, 0.112, 0.102, 0.034};
+double TAA_unc2sLo[nCentBins2s+1] = {0.029, 0.03, 0.032, 0.038, 0.049, 0.066, 0.088, 0.112, 0.102, 0.034};
+double TAA_unc3sLo[nCentBins2s+1] = {0.031, 0.044, 0.034};
+
+double TAA_unc1sHi[nCentBins1s+1] = {0.018, 0.019, 0.023, 0.033, 0.047, 0.068, 0.092, 0.124, 0.164, 0.028};
+double TAA_unc2sHi[nCentBins2s+1] = {0.018, 0.019, 0.023, 0.033, 0.047, 0.068, 0.092, 0.124, 0.164, 0.028};
+double TAA_unc3sHi[nCentBins2s+1] = {0.021, 0.067, 0.028};
+
 const double inel_cross_PbPb = 6740;
 //const double NumberOfMBColl = 2366003000;
 const double NumberOfMBColl =  2454000000;
